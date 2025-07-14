@@ -1,0 +1,70 @@
+.insights-container {
+    font-family: sans-serif;
+    padding: 16px;
+    margin-top: 10px;
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .back-icon {
+    font-size: 24px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .header h2{
+    font-size: 24px;
+    margin: 0;
+  }
+  
+  .offer-card {
+    margin-top: 20px;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .offer-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+  
+  .offer-title {
+    position: absolute;
+    bottom: 20px;
+    left: 12px;
+    color: white;
+    font-size: 16px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  }
+  
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    text-align: center;
+    margin-top: 24px;
+    gap: 0;
+  }
+  
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .stat-value {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .stat-label {
+    font-size: 13px;
+    color: #555;
+    margin-top: 4px;
+  }
+  

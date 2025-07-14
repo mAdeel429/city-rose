@@ -1,0 +1,180 @@
+/* .card-detail-screen {
+    font-family: Arial, sans-serif;
+    max-width: 400px;
+    margin: 0 auto;
+    background: #fff;
+    overflow: hidden;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: #000;
+    color: #fff;
+  }
+  
+  .time {
+    font-size: 14px;
+  }
+  
+  .heart-icon {
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .main-image {
+    width: 100%;
+    height: auto;
+  }
+  
+  .info-buttons {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+  }
+  
+  .info-btn {
+    background: #f0f0f0;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+  .details {
+    padding: 10px;
+  }
+  
+  h2 {
+    margin: 0 0 10px;
+  }
+  
+  .detail-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .icon {
+    margin-right: 10px;
+    color: #ff6347;
+  }
+  
+  .gallery {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+  }
+  
+  .gallery-img {
+    width: 30%;
+    height: auto;
+    border-radius: 10px;
+  }
+  
+  .footer-image {
+    width: 100%;
+    height: auto;
+    margin-top: 10px;
+  }
+  
+  .footer-heart {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+  } */
+
+/* CardDetailScreen.css */
+
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f9f9f9;
+  }
+  
+  .screen-container {
+    position: relative;
+  }
+  
+  /* --- Header Image Section --- */
+  .header-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+  
+  .header-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* --- Top Icons --- */
+  .icon {
+    position: absolute;
+    padding: 10px;
+    border-radius: 50%;
+    z-index: 2;
+  }
+  
+  .no-bg {
+    background: none;
+    box-shadow: none;
+    color: white;
+  }
+  
+  .back-icon {
+    top: 16px;
+    left: 16px;
+    font-size: 18px;
+  }
+  
+  .heart-icon {
+    top: 16px;
+    right: 16px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .heart-filled {
+    color: red;
+  }
+  
+  /* --- Tabs Card --- */
+  .tabs-card {
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border-radius: 20px;
+    padding: 8px 16px;
+    display: flex;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    z-index: 3;
+  }
+  
+  /* --- Pill Tabs --- */
+  .pill-tab {
+    background: transparent;
+    border: 1px solid #ccc;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #333;
+    transition: background 0.2s ease;
+  }
+  
+  .pill-tab:hover {
+    background: rgba(0, 0, 0, 0.03);
+  }
+  
