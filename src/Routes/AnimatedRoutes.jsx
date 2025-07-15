@@ -50,6 +50,7 @@ const EditProfile = lazy(() => import('../pages/EditProfile'));
 const Insights = lazy(() => import('../pages/Insights'));
 const Settings = lazy(() => import('../pages/Settings'));
 const CardDetailScreen = lazy(() => import('../components/CardDetailScreen'));
+const NearMe = lazy(() => import('../pages/NearMe'));
 
 export default function AnimatedRoutes() {
   const location = useLocation();
@@ -95,6 +96,7 @@ export default function AnimatedRoutes() {
               <Route path="/insights" element={<Insights />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/details" element={<CardDetailScreen />} />
+              <Route path="/near-me" element={<NearMe />} />
             </Routes>
           </Suspense>
         </animated.div>

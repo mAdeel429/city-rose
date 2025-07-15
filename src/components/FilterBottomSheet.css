@@ -1,0 +1,65 @@
+.filter-options {
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 80px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.radio-circle {
+    width: 20px;
+    height: 20px;
+    border: 2px solid black;
+    border-radius: 50%;
+    margin-right: 16px;
+    position: relative;
+}
+
+.radio-circle {
+    width: 20px;
+    height: 20px;
+    border: 2px solid black;
+    border-radius: 50%;
+    margin-right: 16px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.radio-circle::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: black;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.radio-option.active .radio-circle::after {
+    opacity: 1;
+}
+
+
+.bottom-sheet-close-btn {
+    margin-top: auto;
+    background: black;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    width: 90%;
+    margin: 24px auto 10px;
+    font-size: 16px;
+    cursor: pointer;
+}

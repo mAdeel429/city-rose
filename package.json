@@ -25,6 +25,7 @@
     "react-spring": "^10.0.1",
     "react-swipeable": "^7.0.2",
     "styled-components": "^6.1.19",
+    "swiper": "^11.2.10",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

@@ -1,0 +1,141 @@
+/* .filter-options {
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.radio-circle {
+    width: 20px;
+    height: 20px;
+    border: 2px solid black;
+    border-radius: 50%;
+    margin-right: 16px;
+    position: relative;
+}
+
+.radio-circle {
+    width: 20px;
+    height: 20px;
+    border: 2px solid black;
+    border-radius: 50%;
+    margin-right: 16px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.radio-circle::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: black;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.radio-option.active .radio-circle::after {
+    opacity: 1;
+} */
+
+.points-sheet-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    z-index: 999;
+  }
+  
+  .points-sheet-container {
+    background: #fff;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    padding: 16px;
+    padding-bottom: 80px; /* to ensure button is not cut off by bottom nav */
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .points-sheet-handle {
+    width: 40px;
+    height: 5px;
+    background: #ccc;
+    border-radius: 999px;
+    margin: 0 auto 12px;
+  }
+  
+  .points-sheet-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .points-sheet-option {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .points-sheet-circle {
+    width: 20px;
+    height: 20px;
+    border: 2px solid black;
+    border-radius: 50%;
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  .points-sheet-circle::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: black;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+  
+  .points-sheet-option.active .points-sheet-circle::after {
+    opacity: 1;
+  }
+  
+  .points-sheet-close-btn {
+    background: black;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    width: 90%;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 24px;
+    align-self: center;
+    margin-bottom: 40px;
+  }
+  

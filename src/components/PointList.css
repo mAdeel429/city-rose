@@ -118,7 +118,10 @@
 }
 
 .option.logout {
-  margin-bottom: 70px;
+  margin-bottom: 90px;
   display: flex; /* Ensure it displays */
   align-items: center;
 }
+
+
+
