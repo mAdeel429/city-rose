@@ -1,43 +1,3 @@
-// import React from 'react';
-// import { Route, Routes } from 'react-router-dom';
-// import BottomBar from './components/BottomBar';
-// import HomePage from './pages/HomePage';
-// import EditProfile from './pages/EditProfile'
-// import './App.css'
-
-// const App = () => {
-//   return (
-//     <>
-//       <Routes>
-//         <Route path="/" element={<HomePage />} />
-//         <Route path="/explore" element={<HomePage />} />
-//         <Route path="/favorites" element={<HomePage />} />
-//         <Route path="/profile" element={<HomePage />} />
-//         <Route path="/editProfile" element={<EditProfile />} />
-//       </Routes>
-//       <BottomBar />
-//     </>
-//   );
-// };
-
-// export default App;
-
-
-// import React from 'react';
-// import BottomBar from './components/BottomBar';
-// import AnimatedRoutes from './Routes/AnimatedRoutes';
-// import './App.css';
-
-// export default function App() {
-//   return (
-//     <>
-//       <AnimatedRoutes />
-//       <BottomBar />
-//     </>
-//   );
-// }
-
-
 import React from 'react';
 import AnimatedLayout from './Routes/AnimatedRoutes';
 import BottomBar from './components/BottomBar';
@@ -51,5 +11,39 @@ export default function App() {
     </>
   );
 }
+
+
+
+
+// import React from 'react';
+// import { GoogleMap, LoadScript } from '@react-google-maps/api';
+// import './App.css';
+
+// const containerStyle = {
+//   width: '100%',
+//   height: '400px',
+// };
+
+// const center = {
+//   lat: 24.8607,  // Karachi coordinates
+//   lng: 67.0011,
+// };
+
+// export default function App() {
+//   return (
+//     <div>
+//       <h2>My Google Map</h2>
+//       <LoadScript googleMapsApiKey={'AIzaSyAvJVIP2hU3dlLigoB7dmhWoutpwJ12wDM'}>
+//         <GoogleMap
+//           mapContainerStyle={containerStyle}
+//           center={center}
+//           zoom={12}
+//         >
+//           {/* You can add <Marker /> here */}
+//         </GoogleMap>
+//       </LoadScript>
+//     </div>
+//   );
+// }
 
 

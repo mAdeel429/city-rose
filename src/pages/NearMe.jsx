@@ -1,266 +1,272 @@
-// import React, { useState } from 'react';
-// import {
-//   MapContainer,
-//   TileLayer,
-//   ZoomControl,
-//   Marker,
-//   Popup,
-// } from 'react-leaflet';
-// import { motion } from 'framer-motion';
-// import 'leaflet/dist/leaflet.css';
+// import React, { useState, useRef, useEffect } from 'react';
+// import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+// import { motion, AnimatePresence } from 'framer-motion';
 // import './NearMe.css';
 // import mockPoints from '../data/mockPoints';
+// import FilterBottomSheet from '../components/PointsBottomSheet';
+// import CardSlider from '../components/CardSlider';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faSliders } from '@fortawesome/free-solid-svg-icons';
 
-// import { Swiper, SwiperSlide } from 'swiper/react';
-// import { Navigation } from 'swiper/modules';
-// import 'swiper/css';
-// import 'swiper/css/navigation';
-
-// import L from 'leaflet';
-// import markerIconPng from 'leaflet/dist/images/marker-icon.png';
-// import markerShadowPng from 'leaflet/dist/images/marker-shadow.png';
-
-// L.Marker.prototype.options.icon = L.icon({
-//   iconUrl: markerIconPng,
-//   shadowUrl: markerShadowPng,
-//   iconAnchor: [12, 41],
-// });
+// const containerStyle = {
+//   width: '100%',
+//   height: 'calc(100vh - 100px)',
+// };
 
 // export default function NearMe() {
 //   const [points] = useState(mockPoints);
 //   const [selectedType, setSelectedType] = useState("All");
-//   const [showTypeDropdown, setShowTypeDropdown] = useState(false);
+//   const [searchTerm, setSearchTerm] = useState('');
+//   const [showFilterSheet, setShowFilterSheet] = useState(false);
+//   const [activeMarker, setActiveMarker] = useState(null);
+//   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+//   const [showCardSheet, setShowCardSheet] = useState(true);
+//   const [isSheetCollapsed, setIsSheetCollapsed] = useState(false);
+//   const [activeFiltersCount, setActiveFiltersCount] = useState(0);
 
-//   const filteredPoints =
-//     selectedType === "All"
-//       ? points
-//       : points.filter((point) => point.type === selectedType);
+//   const [macro, setMacro] = useState(null);
+//   const [tags, setTags] = useState([]);
 
-//   const types = ["All", ...new Set(points.map((point) => point.type))];
+//   const mapRef = useRef(null);
+//   const [mapLoaded, setMapLoaded] = useState(false);
+
+//   const types = ["All", ...new Set(points.map((p) => p.type))];
+
+//   // Filtering
+//   const filteredPoints = points.filter((p) => {
+//     const typeMatch = selectedType === "All" || p.type === selectedType;
+//     const searchMatch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+//     return typeMatch && searchMatch;
+//   });
+
+//   const selectedPoint = points.find(p => p.id === activeMarker);
+
+//   useEffect(() => {
+//     if (mapLoaded && mapRef.current && filteredPoints.length > 0 && window.google?.maps?.LatLngBounds) {
+//       const bounds = new window.google.maps.LatLngBounds();
+//       filteredPoints.forEach((p) => bounds.extend({ lat: p.lat, lng: p.lng }));
+//       mapRef.current.fitBounds(bounds, { padding: { top: 250, bottom: 50, left: 100, right: 100 } });
+//     }
+//   }, [filteredPoints, mapLoaded]);
 
 //   return (
 //     <div className="nearme-container">
-//       {/* Top Buttons */}
-//       <motion.div
-//         className="top-buttons"
-//         initial={{ y: -50 }}
-//         animate={{ y: 0 }}
-//         transition={{ duration: 0.5 }}
-//       >
-//         <button className="top-btn">Points</button>
-//         <button
-//           className="top-btn"
-//           onClick={() => setShowTypeDropdown((prev) => !prev)}
-//         >
-//           Type
-//         </button>
-//       </motion.div>
-
-//       {showTypeDropdown && (
-//         <div className="type-dropdown">
-//           {types.map((type) => (
-//             <button
-//               key={type}
-//               className={`dropdown-item ${selectedType === type ? 'active' : ''}`}
-//               onClick={() => {
-//                 setSelectedType(type);
-//                 setShowTypeDropdown(false);
-//               }}
-//             >
-//               {type}
-//             </button>
-//           ))}
-//         </div>
-//       )}
-
-//       <MapContainer
-//         center={[28.6448, 77.216721]}
-//         zoom={16}
-//         scrollWheelZoom={true}
-//         className="map"
-//         zoomControl={false}
-//       >
-//         <TileLayer
-//           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-//           attribution="© OpenStreetMap contributors"
+//       <div className="nearme-header">
+//         <input
+//           type="text"
+//           placeholder="Search places..."
+//           className="search-input"
+//           onChange={(e) => setSearchTerm(e.target.value)}
 //         />
-//         <ZoomControl position="topright" />
 
-//         {filteredPoints.map((point) => (
-//           <Marker key={point.id} position={[point.lat, point.lng]}>
-//             <Popup>
-//               <div className="popup-card">
-//                 <div style={{ position: 'relative' }}>
-//                   <Swiper
-//                     modules={[Navigation]}
-//                     navigation={{
-//                       nextEl: `.next-btn-${point.id}`,
-//                       prevEl: `.prev-btn-${point.id}`,
-//                     }}
-//                     spaceBetween={10}
-//                     slidesPerView={1}
-//                   >
-//                     {point.images.map((imgUrl, index) => (
-//                       <SwiperSlide key={index}>
-//                         <img
-//                           src={imgUrl}
-//                           alt={`${point.name}-${index}`}
-//                           className="popup-img"
-//                         />
-//                       </SwiperSlide>
-//                     ))}
-//                   </Swiper>
+//         <div className="filter-btn-wrapper" onClick={() => setShowFilterSheet(true)}>
+//           <button className="filter-btn">
+//             <FontAwesomeIcon icon={faSliders} />
+//           </button>
+//           {activeFiltersCount > 0 && <span className="filter-badge">{activeFiltersCount}</span>}
+//         </div>
+//       </div>
 
-//                   <button className={`swiper-btn prev-btn-${point.id}`}>‹</button>
-//                   <button className={`swiper-btn next-btn-${point.id}`}>›</button>
-//                 </div>
+//       <CardSlider
+//         show={showCardSheet}
+//         points={filteredPoints}
+//         onCollapseChange={setIsSheetCollapsed}
+//       />
 
-//                 <div className="popup-info">
-//                   <strong className="popup-title">{point.name}</strong>
-//                   <p className="popup-distance">{point.distance}</p>
-//                   <p className="popup-desc">{point.description}</p>
-//                   <p className="popup-hours">
-//                     <strong>Hours:</strong> {point.openingHours}
-//                   </p>
-//                 </div>
+//       <FilterBottomSheet
+//         show={showFilterSheet}
+//         onClose={() => setShowFilterSheet(false)}
+//         selectedType={selectedType}
+//         setSelectedType={setSelectedType}
+//         setActiveFiltersCount={setActiveFiltersCount}
+//       />
+
+//       <LoadScript googleMapsApiKey={'AIzaSyAvJVIP2hU3dlLigoB7dmhWoutpwJ12wDM'}>
+//         <GoogleMap
+//           mapContainerStyle={containerStyle}
+//           onLoad={(map) => {
+//             mapRef.current = map;
+//             setMapLoaded(true);
+//           }}
+//           options={{
+//             mapTypeControl: false,
+//             zoomControl: false,
+//             streetViewControl: false,
+//             fullscreenControl: false,
+//           }}
+//         >
+//           {filteredPoints.map((point) => (
+//             <Marker
+//               key={point.id}
+//               position={{ lat: point.lat, lng: point.lng }}
+//               onClick={() => {
+//                 setActiveMarker(point.id);
+//                 setBottomSheetVisible(true);
+//               }}
+//             />
+//           ))}
+//         </GoogleMap>
+//       </LoadScript>
+
+//       <AnimatePresence>
+//         {bottomSheetVisible && selectedPoint && (
+//           <motion.div
+//             className="card-popup"
+//             initial={{ opacity: 0, scale: 0.8 }}
+//             animate={{ opacity: 1, scale: 1 }}
+//             exit={{ opacity: 0, scale: 0.8 }}
+//             transition={{ duration: 0.2 }}
+//           >
+//             <div className="card-content">
+//               <div className="card-image-container">
+//                 <img src={selectedPoint.images[0]} className="card-img" alt="Full" />
+//                 <span className="close-icon" onClick={() => setBottomSheetVisible(false)}>×</span>
 //               </div>
-//             </Popup>
-//           </Marker>
-//         ))}
-//       </MapContainer>
+//               <div className="card-text">
+//                 <h2>{selectedPoint.name}</h2>
+//                 <p style={{ margin: '4px 0px' }}>Vintage hotel · Jul 17–22</p>
+//                 <p>{selectedPoint.description}</p>
+//                 <p><span style={{ fontWeight: 'bold' }}>$100</span> for 5 nights</p>
+//               </div>
+//             </div>
+//           </motion.div>
+//         )}
+//       </AnimatePresence>
 //     </div>
 //   );
 // }
 
 
 
-import React, { useState } from 'react';
-import {
-    MapContainer,
-    TileLayer,
-    ZoomControl,
-    Marker,
-    Popup,
-} from 'react-leaflet';
-import { motion } from 'framer-motion';
-import 'leaflet/dist/leaflet.css';
+import React, { useState, useRef, useEffect } from 'react';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { motion, AnimatePresence } from 'framer-motion';
 import './NearMe.css';
 import mockPoints from '../data/mockPoints';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import L from 'leaflet';
-import markerIconPng from 'leaflet/dist/images/marker-icon.png';
-import markerShadowPng from 'leaflet/dist/images/marker-shadow.png';
-import FilterBottomSheet from '../components/NearMeBottomSheet';
-import PointsBottomSheet from '../components/PointsBottomSheet';
+import FilterBottomSheet from '../components/PointsBottomSheet';
+import CardSlider from '../components/CardSlider';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSliders } from '@fortawesome/free-solid-svg-icons';
 
-
-L.Marker.prototype.options.icon = L.icon({
-    iconUrl: markerIconPng,
-    shadowUrl: markerShadowPng,
-    iconAnchor: [12, 41],
-});
+const containerStyle = {
+  width: '100%',
+  height: 'calc(100vh - 100px)',
+};
 
 export default function NearMe() {
-    const [points] = useState(mockPoints);
-    const [selectedType, setSelectedType] = useState("All");
-    const [showFilterSheet, setShowFilterSheet] = useState(false);
-    const [showPointsSheet, setShowPointsSheet] = useState(false);
+  const [points] = useState(mockPoints);
+  const [macro, setMacro] = useState(null);
+  const [tags, setTags] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showFilterSheet, setShowFilterSheet] = useState(false);
+  const [activeMarker, setActiveMarker] = useState(null);
+  const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+  const [showCardSheet, setShowCardSheet] = useState(true);
+  const [isSheetCollapsed, setIsSheetCollapsed] = useState(false);
+  const [activeFiltersCount, setActiveFiltersCount] = useState(0);
 
-    const filteredPoints =
-        selectedType === "All"
-            ? points
-            : points.filter((point) => point.type === selectedType);
+  const mapRef = useRef(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
 
-    const types = ["All", ...new Set(points.map((point) => point.type))];
+  const filteredPoints = points.filter((p) => {
+    const macroMatch = !macro || p.macro === macro;
+    const tagMatch = tags.length === 0 || tags.some(tag => p.tags.includes(tag));
+    const searchMatch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return macroMatch && tagMatch && searchMatch;
+  });
 
-    return (
-        <div className="nearme-container">
-            {/* Top Buttons */}
-            <motion.div
-                className="top-buttons"
-                initial={{ y: -50 }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.5 }}
-            >
-                <button className="top-btn" onClick={() => setShowPointsSheet(true)}>Points</button>
-                <button className="top-btn" onClick={() => setShowFilterSheet(true)}>
-                    Type
-                </button>
-            </motion.div>
+  const selectedPoint = points.find(p => p.id === activeMarker);
 
-            {/* Filter Bottom Sheet */}
-            <FilterBottomSheet
-                show={showFilterSheet}
-                onClose={() => setShowFilterSheet(false)}
-                types={types}
-                selectedType={selectedType}
-                setSelectedType={setSelectedType}
-            />
-            <PointsBottomSheet
-                show={showPointsSheet}
-                onClose={() => setShowPointsSheet(false)}
-                points={filteredPoints}
-            />
+  useEffect(() => {
+    if (mapLoaded && mapRef.current && filteredPoints.length > 0 && window.google?.maps?.LatLngBounds) {
+      const bounds = new window.google.maps.LatLngBounds();
+      filteredPoints.forEach((p) => bounds.extend({ lat: p.lat, lng: p.lng }));
+      mapRef.current.fitBounds(bounds, { padding: { top: 250, bottom: 50, left: 100, right: 100 } });
+    }
+  }, [filteredPoints, mapLoaded]);
 
-
-            <MapContainer
-                center={[28.6448, 77.216721]}
-                zoom={16}
-                scrollWheelZoom={true}
-                className="map"
-                zoomControl={false}
-            >
-                <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution="© OpenStreetMap contributors"
-                />
-                <ZoomControl position="topright" />
-
-                {filteredPoints.map((point) => (
-                    <Marker key={point.id} position={[point.lat, point.lng]}>
-                        <Popup>
-                            <div className="popup-card">
-                                <div style={{ position: 'relative' }}>
-                                    <Swiper
-                                        modules={[Navigation]}
-                                        navigation={{
-                                            nextEl: `.next-btn-${point.id}`,
-                                            prevEl: `.prev-btn-${point.id}`,
-                                        }}
-                                        spaceBetween={10}
-                                        slidesPerView={1}
-                                    >
-                                        {point.images.map((imgUrl, index) => (
-                                            <SwiperSlide key={index}>
-                                                <img
-                                                    src={imgUrl}
-                                                    alt={`${point.name}-${index}`}
-                                                    className="popup-img"
-                                                />
-                                            </SwiperSlide>
-                                        ))}
-                                    </Swiper>
-
-                                    <button className={`swiper-btn prev-btn-${point.id}`}>‹</button>
-                                    <button className={`swiper-btn next-btn-${point.id}`}>›</button>
-                                </div>
-
-                                <div className="popup-info">
-                                    <strong className="popup-title">{point.name}</strong>
-                                    <p className="popup-distance">{point.distance}</p>
-                                    <p className="popup-desc">{point.description}</p>
-                                    <p className="popup-hours">
-                                        <strong>Hours:</strong> {point.openingHours}
-                                    </p>
-                                </div>
-                            </div>
-                        </Popup>
-                    </Marker>
-                ))}
-            </MapContainer>
+  return (
+    <div className="nearme-container">
+      <div className="nearme-header">
+        <input
+          type="text"
+          placeholder="Search places..."
+          className="search-input"
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <div className="filter-btn-wrapper" onClick={() => setShowFilterSheet(true)}>
+          <button className="filter-btn">
+            <FontAwesomeIcon icon={faSliders} />
+          </button>
+          {activeFiltersCount > 0 && <span className="filter-badge">{activeFiltersCount}</span>}
         </div>
-    );
+      </div>
+
+      <CardSlider
+        show={showCardSheet}
+        points={filteredPoints}
+        onCollapseChange={setIsSheetCollapsed}
+      />
+
+      <FilterBottomSheet
+        show={showFilterSheet}
+        onClose={() => setShowFilterSheet(false)}
+        setMacro={setMacro}
+        setTags={setTags}
+        setActiveFiltersCount={setActiveFiltersCount}
+      />
+
+      <LoadScript googleMapsApiKey={'AIzaSyAvJVIP2hU3dlLigoB7dmhWoutpwJ12wDM'}>
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          onLoad={(map) => {
+            mapRef.current = map;
+            setMapLoaded(true);
+          }}
+          options={{
+            mapTypeControl: false,
+            zoomControl: false,
+            streetViewControl: false,
+            fullscreenControl: false,
+          }}
+        >
+          {filteredPoints.map((point) => (
+            <Marker
+              key={point.id}
+              position={{ lat: point.lat, lng: point.lng }}
+              onClick={() => {
+                setActiveMarker(point.id);
+                setBottomSheetVisible(true);
+              }}
+            />
+          ))}
+        </GoogleMap>
+      </LoadScript>
+
+      <AnimatePresence>
+        {bottomSheetVisible && selectedPoint && (
+          <motion.div
+            className="card-popup"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="card-content">
+              <div className="card-image-container">
+                <img src={selectedPoint.images[0]} className="card-img" alt="Full" />
+                <span className="close-icon" onClick={() => setBottomSheetVisible(false)}>×</span>
+              </div>
+              <div className="card-text">
+                <h2>{selectedPoint.name}</h2>
+                <p style={{ margin: '4px 0px' }}>Vintage hotel · Jul 17–22</p>
+                <p>{selectedPoint.description}</p>
+                <p><span style={{ fontWeight: 'bold' }}>$100</span> for 5 nights</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 }
