@@ -219,7 +219,8 @@ export default function PointsBottomSheet({
               <p className="macro-title">Choose Macro</p>
               <div className="macro-options">
                 {Object.keys(macroOptions).map((macro) => (
-                  <button
+                  <div
+                  style={{border: '0'}}
                     key={macro}
                     className={`macro-btn ${localMacro === macro ? 'selected' : ''}`}
                     onClick={() => {
@@ -228,7 +229,7 @@ export default function PointsBottomSheet({
                     }}
                   >
                     {macro}
-                  </button>
+                  </div>
                 ))}
               </div>
             </div>

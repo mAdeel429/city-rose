@@ -101,8 +101,8 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import './CardSlider.css';
 
-const PEEK_HEIGHT = 200;
-const MAX_HEIGHT = window.innerHeight * 0.9;
+const PEEK_HEIGHT = 150;
+const MAX_HEIGHT = window.innerHeight * 1;
 
 export default function CardSlider({ show, points, onClose }) {
   const y = useMotionValue(0);
