@@ -1,23 +1,11 @@
-/* .page-container {
-  min-height: 100vh;
-  height: auto;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 80px;
-} */
-
-
-
 .attractions-wrapper h2 {
   margin: 8px;
   margin-top: 12px;
   margin-bottom: 12px;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 500;
 }
 .attractions-wrapper{
-  margin: 0px 5px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
 }
@@ -29,7 +17,7 @@
 
 .motion-scroll {
   display: flex;
-  gap: 16px;
+  gap: 8px;
   width: max-content;
 }
 

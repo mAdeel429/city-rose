@@ -51,12 +51,14 @@ const Insights = lazy(() => import('../pages/Insights'));
 const Settings = lazy(() => import('../pages/Settings'));
 const CardDetailScreen = lazy(() => import('../components/CardDetailScreen'));
 const NearMe = lazy(() => import('../pages/NearMe'));
+const Offers = lazy(() => import('../pages/Offers'));
+const AroundYou = lazy(() => import('../pages/AroundYou'));
+const CategoryDetails = lazy(() => import('../pages/CategoryDetails'));
 
 export default function AnimatedRoutes() {
   const location = useLocation();
-  const navigationType = useNavigationType(); // 'PUSH', 'POP', or 'REPLACE'
+  const navigationType = useNavigationType();
 
-  // Determine animation direction
   const isBack = navigationType === 'POP';
 
   const transitions = useTransition(location, {
@@ -95,8 +97,14 @@ export default function AnimatedRoutes() {
               <Route path="/editProfile" element={<EditProfile />} />
               <Route path="/insights" element={<Insights />} />
               <Route path="/settings" element={<Settings />} />
-              <Route path="/details" element={<CardDetailScreen />} />
+              <Route path="/offers" element={<Offers />} />
+              <Route path="/around-you" element={<AroundYou />} />
+              <Route
+                path="/details"
+                element={<CardDetailScreen key={location.key}/>}
+              />
               <Route path="/near-me" element={<NearMe />} />
+              <Route path="/category/:category" element={<CategoryDetails />} />
             </Routes>
           </Suspense>
         </animated.div>

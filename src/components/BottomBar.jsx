@@ -1,67 +1,76 @@
-// import React from 'react';
-// import { Link } from 'react-router-dom';
-// import { FaMapMarkerAlt, FaTag, FaPlay, FaHeart, FaUser } from 'react-icons/fa';
-// import './PointList.css';
-
-// const BottomBar = () => {
-//   return (
-//     <div className="bottom-tabs">
-//       <Link to="/near-me" className="tab-item">
-//         <FaMapMarkerAlt />
-//       </Link>
-//       <Link to="/explore" className="tab-item">
-//         <FaTag />
-//       </Link>
-//       <Link to="/favorites" className="tab-item" style={{ fontSize: '24px', color: 'black' }}>
-//   <FaPlay />
-// </Link>
-//       <Link to="/profile" className="tab-item">
-//         <FaUser />
-//       </Link>
-//       <Link to="/profile" className="tab-item">
-//         <FaHeart />
-//       </Link>
-//     </div>
-//   );
-// };
-
-// export default BottomBar;
-
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaMapMarkerAlt, FaTag, FaPlay, FaHeart, FaUser } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaTag, FaHeart, FaUser } from 'react-icons/fa';
 import './PointList.css';
+import CenterIcon from '../assets/new.png';
+import NearMeIcon from '../assets/icon 1.png';
+import folderMap from '../assets/folder map new.png';
 
 const BottomBar = () => {
-  const location = useLocation(); // 👈 Get current route path
+  const location = useLocation();
 
   return (
     <div className="bottom-tabs">
-      <Link to="/near-me" className="tab-item">
-        <FaMapMarkerAlt
-          color={location.pathname === '/near-me' ? 'black' : '#9a98a3'}
+      <Link to="/around-you" className="tab-item">
+        <img
+          src={NearMeIcon}
+          alt="Near Me Icon"
+          className="tab-icon"
+          style={{
+            height: '30px',
+            width: '22px',
+            opacity: location.pathname === '/around-you' ? 1 : 0.4,
+          }}
         />
       </Link>
-      <Link to="/explore" className="tab-item">
+      <Link to="/offers" className="tab-item">
         <FaTag
-          color={location.pathname === '/explore' ? 'black' : '#9a98a3'}
+          style={{
+            transform: 'rotate(90deg)',
+            color: 'black',
+            opacity: location.pathname === '/offers' ? 1 : 0.4,
+          }}
         />
       </Link>
-      <Link to="/" className="tab-item">
-        <FaPlay
-          color={location.pathname === '/' ? 'black' : '#9a98a3'}
+
+      <Link to="/" className="tab-item center-tab">
+        {location.pathname === '/' ? (
+          <img
+            src={CenterIcon}
+            alt="Center Icon Active"
+            className="center-icon"
+          />
+        ) : (
+          <img
+            src={CenterIcon}
+            alt="Center Icon Inactive"
+            className="center-icon"
+            style={{ opacity: 0.4 }}
+          />
+        )}
+
+      </Link>
+      <Link to="/near-me" className="tab-item">
+        <img
+          src={folderMap}
+          alt="Profile Icon"
+          className="tab-icon"
+          style={{
+            height: '26px',
+            width: '26px',
+            opacity: location.pathname === '/near-me' ? 1 : 0.4,
+          }}
         />
       </Link>
-      <Link to="/profile" className="tab-item">
-        <FaUser
-          color={location.pathname === '/profile' ? 'black' : '#9a98a3'}
-        />
-      </Link>
+
       <Link to="/likes" className="tab-item">
         <FaHeart
-          color={location.pathname === '/likes' ? 'black' : '#9a98a3'}
+          style={{
+            color: 'black',
+            opacity: location.pathname === '/likes' ? 1 : 0.4,
+          }}
         />
+
       </Link>
     </div>
   );

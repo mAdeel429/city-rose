@@ -70,9 +70,9 @@ export default function BottomSheet({ show, onClose }) {
 
   const handleDragEnd = (event, info) => {
     if (info.offset.y > 100) {
-      onClose(); // Dragged down enough to close
+      onClose();
     } else {
-      setDragY(0); // Snap back
+      setDragY(0);
     }
   };
 

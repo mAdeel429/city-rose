@@ -16,9 +16,9 @@ export default function EditProfile() {
   return (
     <>
       <div className="edit-profile-container">
-        <div className="header">
+        <div className="Edit-Profile-header">
           <Link to='/'>
-          <FiArrowLeft className="back-icon" />
+          <FiArrowLeft className="back-icon" style={{color: 'black'}}/>
           </Link>
           <h2>Edit profile</h2>
         </div>

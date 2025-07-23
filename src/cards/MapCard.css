@@ -1,0 +1,33 @@
+.map-card {
+    width: 100%;
+    margin: 20px auto;
+    cursor: pointer;
+    font-family: sans-serif;
+  }
+  
+  .map-image {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .map-label {
+    margin-top: 10px;
+    margin-bottom: 8px;
+    font-size: 18px;
+  }
+  
+  .map-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 14px;
+  }
+  
+  .map-tag {
+    background-color: #f1f1f1;
+    padding: 6px 10px;
+    border-radius: 16px;
+  }
+  

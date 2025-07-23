@@ -1,0 +1,115 @@
+.category-details-page {
+    padding: 8px;
+    font-family: sans-serif;
+    padding-bottom: 100px;
+    user-select: none;
+}
+
+.heading-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-direction: row;
+}
+
+.hc-icon{
+    font-size: 24px;
+    margin-top: 3px;
+}
+
+h2 {
+    font-size: 24px;
+    /* margin-bottom: 12px; */
+}
+
+.vertical-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.custom-card {
+    border-radius: 18px;
+    background: white;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.custom-card-image-container {
+    position: relative;
+    height: 180px;
+}
+
+.custom-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.custom-heart-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: white;
+    font-size: 22px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 5px;
+    border-radius: 50%;
+}
+
+.custom-card-category {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 3px 10px;
+    font-size: 14px;
+    border-radius: 10px;
+}
+
+.custom-card-details {
+    padding: 12px;
+}
+
+.custom-card-details h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.custom-card-details p {
+    margin: 5px 0 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.filter-button{
+    padding:12px 14px;
+}
+
+@media (max-width: 400px) {
+    .filter-button {
+    padding:10px 12px;
+    font-size: 14px;
+    }
+}
+
+@media (max-width: 380px) {
+    .filter-button {
+    padding: 9px 11px;
+    font-size: 14px;
+    }
+    .button-group{
+        gap: 4px;
+    }
+}
+
+@media (max-width: 360px) {
+    .filter-button {
+    padding: 8px 10px;
+    font-size: 14px;
+    }
+    .button-group{
+        gap: 3px;
+    }
+}
