@@ -54,6 +54,8 @@ const NearMe = lazy(() => import('../pages/NearMe'));
 const Offers = lazy(() => import('../pages/Offers'));
 const AroundYou = lazy(() => import('../pages/AroundYou'));
 const CategoryDetails = lazy(() => import('../pages/CategoryDetails'));
+const AddToFavorite = lazy(() => import('../pages/AddToFavorite'));
+
 
 export default function AnimatedRoutes() {
   const location = useLocation();
@@ -105,6 +107,7 @@ export default function AnimatedRoutes() {
               />
               <Route path="/near-me" element={<NearMe />} />
               <Route path="/category/:category" element={<CategoryDetails />} />
+              <Route path="/add-to-favorite" element={<AddToFavorite />} />
             </Routes>
           </Suspense>
         </animated.div>

@@ -63,11 +63,11 @@ const BottomBar = () => {
         />
       </Link>
 
-      <Link to="/likes" className="tab-item">
+      <Link to="/add-to-favorite" className="tab-item">
         <FaHeart
           style={{
             color: 'black',
-            opacity: location.pathname === '/likes' ? 1 : 0.4,
+            opacity: location.pathname === '/add-to-favorite' ? 1 : 0.4,
           }}
         />
 
