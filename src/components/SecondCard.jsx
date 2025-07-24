@@ -1,17 +1,3 @@
-// import React from 'react';
-// import './SecondCard.css';
-
-// export default function SecondCard() {
-//   return (
-//     <div className="second-card">
-//       <div className="overlay">
-//         <button className="visit-button">Visit us</button>
-//       </div>
-//     </div>
-//   );
-// }
-
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import './SecondCard.css';

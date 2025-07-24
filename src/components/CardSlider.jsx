@@ -95,7 +95,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, animate, useMotionValue } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -157,8 +157,7 @@ export default function CardSlider({ show, points, onClose }) {
             style={{ marginBottom: index === points.length - 1 ? '80px' : '12px' }}
           >
             <Swiper
-              modules={[Navigation, Pagination]}
-              navigation
+              modules={[Pagination]}
               pagination={{ clickable: true }}
               className="swiper-container"
             >

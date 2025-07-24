@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import AttractionCard from './AttractionCard';
-import './AttractionRow.css';
+import styles from './AttractionRow.module.css';
 import { useNavigate } from 'react-router-dom';
 
 export default function AttractionRow({ title, data }) {
@@ -9,12 +9,12 @@ export default function AttractionRow({ title, data }) {
   const navigate = useNavigate();
 
   return (
-    <div className="page-container" style={{ margin: '20px 0' }}>
-      <div className="attractions-wrapper">
+    <div className={styles.pageContainer} style={{ margin: '20px 0' }}>
+      <div className={styles.attractionsWrapper}>
         <h2>{title}</h2>
-        <div className="scroll-container" ref={constraintsRef}>
+        <div className={styles.scrollContainer} ref={constraintsRef}>
           <motion.div
-            className="motion-scroll"
+            className={styles.motionScroll}
             drag="x"
             dragConstraints={constraintsRef}
             dragElastic={0.2}

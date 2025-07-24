@@ -15,7 +15,8 @@
 
 // export default function NearMe() {
 //   const [points] = useState(mockPoints);
-//   const [selectedType, setSelectedType] = useState("All");
+//   const [macro, setMacro] = useState(null);
+//   const [tags, setTags] = useState([]);
 //   const [searchTerm, setSearchTerm] = useState('');
 //   const [showFilterSheet, setShowFilterSheet] = useState(false);
 //   const [activeMarker, setActiveMarker] = useState(null);
@@ -24,19 +25,14 @@
 //   const [isSheetCollapsed, setIsSheetCollapsed] = useState(false);
 //   const [activeFiltersCount, setActiveFiltersCount] = useState(0);
 
-//   const [macro, setMacro] = useState(null);
-//   const [tags, setTags] = useState([]);
-
 //   const mapRef = useRef(null);
 //   const [mapLoaded, setMapLoaded] = useState(false);
 
-//   const types = ["All", ...new Set(points.map((p) => p.type))];
-
-//   // Filtering
 //   const filteredPoints = points.filter((p) => {
-//     const typeMatch = selectedType === "All" || p.type === selectedType;
+//     const macroMatch = !macro || p.macro === macro;
+//     const tagMatch = tags.length === 0 || tags.some(tag => p.tags.includes(tag));
 //     const searchMatch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
-//     return typeMatch && searchMatch;
+//     return macroMatch && tagMatch && searchMatch;
 //   });
 
 //   const selectedPoint = points.find(p => p.id === activeMarker);
@@ -58,7 +54,6 @@
 //           className="search-input"
 //           onChange={(e) => setSearchTerm(e.target.value)}
 //         />
-
 //         <div className="filter-btn-wrapper" onClick={() => setShowFilterSheet(true)}>
 //           <button className="filter-btn">
 //             <FontAwesomeIcon icon={faSliders} />
@@ -76,8 +71,8 @@
 //       <FilterBottomSheet
 //         show={showFilterSheet}
 //         onClose={() => setShowFilterSheet(false)}
-//         selectedType={selectedType}
-//         setSelectedType={setSelectedType}
+//         setMacro={setMacro}
+//         setTags={setTags}
 //         setActiveFiltersCount={setActiveFiltersCount}
 //       />
 
@@ -137,7 +132,6 @@
 // }
 
 
-
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -147,6 +141,9 @@ import FilterBottomSheet from '../components/PointsBottomSheet';
 import CardSlider from '../components/CardSlider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSliders } from '@fortawesome/free-solid-svg-icons';
+
+// ✅ Custom marker image import
+import customMarkerIcon from '../assets/pointer.png';
 
 const containerStyle = {
   width: '100%',
@@ -232,13 +229,18 @@ export default function NearMe() {
         >
           {filteredPoints.map((point) => (
             <Marker
-              key={point.id}
-              position={{ lat: point.lat, lng: point.lng }}
-              onClick={() => {
-                setActiveMarker(point.id);
-                setBottomSheetVisible(true);
-              }}
-            />
+            key={point.id}
+            position={{ lat: point.lat, lng: point.lng }}
+            onClick={() => {
+              setActiveMarker(point.id);
+              setBottomSheetVisible(true);
+            }}
+            icon={mapLoaded && window.google ? {
+              url: customMarkerIcon,
+              scaledSize: new window.google.maps.Size(40, 40),
+            } : undefined}
+          />
+          
           ))}
         </GoogleMap>
       </LoadScript>

@@ -1,26 +1,26 @@
-.attractions-wrapper h2 {
+.attractionsWrapper h2 {
   margin: 8px;
   margin-top: 12px;
   margin-bottom: 12px;
   font-size: 18px;
   font-weight: 500;
 }
-.attractions-wrapper{
+.attractionsWrapper{
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
 }
 
-.scroll-container {
+.scrollContainer {
   overflow: hidden;
   padding-bottom: 10px;
 }
 
-.motion-scroll {
+.motionScroll {
   display: flex;
   gap: 8px;
   width: max-content;
 }
 
-.motion-scroll:active {
+.motionScroll:active {
   cursor: grabbing;
 }

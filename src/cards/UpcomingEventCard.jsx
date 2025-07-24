@@ -1,5 +1,5 @@
 import React from 'react';
-import './UpcomingEventCard.css';
+import styles from './UpcomingEventCard.module.css';
 
 export default function UpcomingEventCard({
   title = 'Aperitivo in piazza',
@@ -8,12 +8,12 @@ export default function UpcomingEventCard({
 }) {
   return (
     <>
-    <div className="event-heading">Upcoming Events</div>
-    <div className="event-card">
-      <img src={imageUrl} alt={title} className="event-image" />
-      <div className="event-content">
-        <h4 className="event-title">{title}</h4>
-        <p className="event-date">{date}</p>
+    <div className={styles.eventHeading}>Upcoming Events</div>
+    <div className={styles.eventCard} >
+      <img src={imageUrl} alt={title} className={styles.eventImage} />
+      <div className={styles.eventContent}>
+        <h4 className={styles.eventTitle}>{title}</h4>
+        <p className={styles.eventDate}>{date}</p>
       </div>
     </div>
     </>

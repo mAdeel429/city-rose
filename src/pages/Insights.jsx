@@ -7,7 +7,7 @@ export default function Insights() {
   return (
     <div className="insights-container">
       <div className="header">
-      <Link to='/'>
+      <Link to='/' style={{textDecoration: 'none'}}>
         <FiArrowLeft className="back-icon" />
         </Link>
         <h2>Le tue offerte</h2>

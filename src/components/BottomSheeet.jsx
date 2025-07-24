@@ -1,19 +1,19 @@
 // import React from 'react';
 // import { motion, AnimatePresence } from 'framer-motion';
-// import './bottomSheeet.css';
+// import styles from './bottomSheeet.module.css';
 
-// const BottomSheet = ({ title, options, onClose, onSelect }) => {
+// const BottomSheet = ({ title, options, selectedOption, onClose, onSelect }) => {
 //   return (
 //     <AnimatePresence>
 //       <motion.div
-//         className="offers-bottom-sheet-backdrop"
+//         className={styles.offersBottomSheetBackdrop}
 //         onClick={onClose}
 //         initial={{ opacity: 0 }}
 //         animate={{ opacity: 1 }}
 //         exit={{ opacity: 0 }}
 //       >
 //         <motion.div
-//           className="offers-bottom-sheet"
+//           className={styles.offersBottomSheet}
 //           onClick={(e) => e.stopPropagation()}
 //           initial={{ y: '100%' }}
 //           animate={{ y: 0 }}
@@ -23,27 +23,21 @@
 //           dragConstraints={{ top: 0, bottom: 0 }}
 //           dragElastic={0.2}
 //         >
-//           <div className="offers-handle-bar" />
-//           <div className="offers-filter-options">
+//           <div className={styles.offersFilterOptions}>
 //             <h3 style={{ padding: '0 16px' }}>{title}</h3>
-//             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', padding: '10px 16px' }}>
+//             <div>
 //               {options.map((opt, idx) => (
 //                 <div
 //                   key={idx}
 //                   onClick={() => onSelect(opt)}
-//                   className="offers-radio-option"
-//                   style={{
-//                     padding: '8px 12px',
-//                     border: '1px solid black',
-//                     borderRadius: '20px',
-//                     cursor: 'pointer'
-//                   }}
+//                   className={`${styles['offersRadioOption']} ${opt === selectedOption ? styles['offersActive'] : ''}`}
 //                 >
-//                   {opt}
+//                   <div className={styles.offersRadioCircle}/>
+//                   <span>{opt}</span>
 //                 </div>
 //               ))}
 //             </div>
-//             <button className="offers-bottom-sheet-close-btn" onClick={onClose}>Close</button>
+//             <button className={styles.offersBottomSheetCloseBtn} onClick={onClose}>Close</button>
 //           </div>
 //         </motion.div>
 //       </motion.div>
@@ -53,22 +47,24 @@
 
 // export default BottomSheet;
 
+
+
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import './bottomSheeet.css';
+import styles from './bottomSheeet.module.css'; // CSS Module import
 
 const BottomSheet = ({ title, options, selectedOption, onClose, onSelect }) => {
   return (
     <AnimatePresence>
       <motion.div
-        className="offers-bottom-sheet-backdrop"
+        className={styles.offersBottomSheetBackdrop}
         onClick={onClose}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
         <motion.div
-          className="offers-bottom-sheet"
+          className={styles.offersBottomSheet}
           onClick={(e) => e.stopPropagation()}
           initial={{ y: '100%' }}
           animate={{ y: 0 }}
@@ -78,22 +74,26 @@ const BottomSheet = ({ title, options, selectedOption, onClose, onSelect }) => {
           dragConstraints={{ top: 0, bottom: 0 }}
           dragElastic={0.2}
         >
-          <div className="offers-handle-bar" />
-          <div className="offers-filter-options">
+          <div className={styles.offersFilterOptions}>
             <h3 style={{ padding: '0 16px' }}>{title}</h3>
             <div>
               {options.map((opt, idx) => (
                 <div
                   key={idx}
                   onClick={() => onSelect(opt)}
-                  className={`offers-radio-option ${opt === selectedOption ? 'offers-active' : ''}`}
+                  className={`${styles.offersRadioOption} ${opt === selectedOption ? styles.offersRadioActive : ''}`}
                 >
-                  <div className="offers-radio-circle" />
+                  <div className={styles.offersRadioCircle} />
                   <span>{opt}</span>
                 </div>
               ))}
             </div>
-            <button className="offers-bottom-sheet-close-btn" onClick={onClose}>Close</button>
+            <button
+              className={styles['offers-bottom-sheet-close-btn']}
+              onClick={onClose}
+            >
+              Close
+            </button>
           </div>
         </motion.div>
       </motion.div>

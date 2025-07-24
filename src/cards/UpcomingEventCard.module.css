@@ -1,4 +1,4 @@
-.event-card {
+.eventCard {
     display: flex;
     width: 100%;
     height: 100px;
@@ -10,20 +10,20 @@
     font-family: sans-serif;
   }
   
-  .event-heading {
+  .eventHeading {
     font-weight: bold;
     margin-top: 20px;
     margin-bottom: 20px;
     font-size: 16px;
   }
-  .event-image {
+  .eventImage {
     width: 100px;
     height: 100%;
     object-fit: cover;
     flex-shrink: 0;
   }
   
-  .event-content {
+  .eventContent {
     padding: 10px 14px;
     display: flex;
     flex-direction: column;
@@ -31,7 +31,7 @@
     flex: 1;
   }
   
-  .event-title {
+  .eventTitle {
     font-size: 16px;
     font-weight: bold;
     margin: 0;
@@ -39,7 +39,7 @@
     margin-top: 20px;
   }
   
-  .event-date {
+  .eventDate {
     font-size: 13px;
     margin: 0;
     align-self: flex-end;

@@ -1,4 +1,4 @@
-.bottom-tabs {
+.bottomTabs {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -11,7 +11,7 @@
   border-top: 1px solid #e0e0e0;
   box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
 }
-.tab-item {
+.tabItem {
   text-align: center;
   text-decoration: none;
   color: #9a98a3;
@@ -23,7 +23,7 @@
 }
 
 
-.tab-item.active {
+.tabItem.active {
   color: #1DA1F2;
 }
 
@@ -45,7 +45,7 @@
   cursor: pointer;
 }
 
-.bottom-sheet-backdrop {
+.bottomSheetBackdrop {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
@@ -55,7 +55,7 @@
   align-items: flex-end;
 }
 
-.bottom-sheet {
+.bottomSheet {
   width: 100%;
   max-width: 480px;
   background: white;
@@ -65,7 +65,7 @@
   box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.2);
 }
 
-.handle-bar {
+.handleBar {
   width: 40px;
   height: 4px;
   background: #ccc;
@@ -73,7 +73,7 @@
   margin: 0 auto 20px;
 }
 
-.profile-section {
+.profileSection {
   display: flex;
   align-items: center;
 
@@ -81,7 +81,7 @@
   margin-bottom: 24px;
 }
 
-.profile-icon {
+.profileIcon {
   width: 60px;
   height: 60px;
   background-color: #219f8a;
@@ -93,12 +93,12 @@
   border-radius: 10px;
 }
 
-.profile-name {
+.profileName {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
-.sheet-options {
+.sheetOptions {
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -113,7 +113,7 @@
   cursor: pointer;
 }
 
-.option-icon {
+.optionIcon {
   font-size: 18px;
   color: #555;
 }
@@ -126,13 +126,13 @@
 
 
 
-.center-icon {
+.centerIcon {
   width: 34px;
   height: 34px;
   border-radius: 20px;
 }
 
-.center-tab {
+.centerTab {
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import './MapCard.css';
+import styles from './MapCard.module.css'
 
 const containerStyle = {
   width: '100%',
@@ -16,8 +16,8 @@ export default function MapCard({ lat = 43.7780, lng = 11.2486 }) {
   };
 
   return (
-    <div className="map-card" onClick={handleClick}>
-      <div className="map-label">Map</div>
+    <div className={styles.mapCard} onClick={handleClick}>
+      <div className={styles.mapLabel}>Map</div>
       <LoadScript googleMapsApiKey="AIzaSyAvJVIP2hU3dlLigoB7dmhWoutpwJ12wDM">
         <GoogleMap
           mapContainerStyle={containerStyle}

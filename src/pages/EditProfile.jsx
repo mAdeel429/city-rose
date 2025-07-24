@@ -21,6 +21,7 @@ export default function EditProfile() {
           <FiArrowLeft className="back-icon" style={{color: 'black'}}/>
           </Link>
           <h2>Edit profile</h2>
+          <div></div>
         </div>
 
         <div className="profile-edit">

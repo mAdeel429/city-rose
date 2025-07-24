@@ -32,9 +32,17 @@
   flex-direction: column;
 }
 
-.location-icon {
+/* .location-icon {
   margin-right: 4px;
+} */
+
+.location-icon-img {
+  width: 20px;
+  height: 20px;
+  /* margin-right: 4px; */
+  vertical-align: middle;
 }
+
 
 .menu-icon {
   font-size: 24px;

@@ -1,25 +1,57 @@
 import React from 'react';
 import { FaHeart } from 'react-icons/fa';
-import './OfferCard.css';
+import styles from './OfferCard.module.css';
+import { useFavorites } from '../data/FavoritesContext';
+import { useNavigate } from 'react-router-dom';
+import Image from '../assets/images.jpeg'
 
-export default function OfferCard() {
+export default function OfferCard({ image, title, description }) {
+  const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
+  const isFavorite = favorites.some(item => item.title === title);
+
+  const navigate = useNavigate();
+
+  const handleHeartClick = (e) => {
+    e.stopPropagation();
+    const item = {
+      image: Image,
+      title,
+      category: 'Offers',
+      description,
+      buttonLabel: 'Show Offer'
+    };
+
+    if (isFavorite) {
+      removeFromFavorites(title);
+    } else {
+      addToFavorites(item);
+    }
+  };
+
   return (
-    <div className="offer-card">
-      <div className="offer-image-container">
+    <div className={styles.offerCard}>
+      <div className={styles.offerImageContainer}>
         <img
-          className="offer-image"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRly1SlyJilx_6cUbIusa6ggJQa9ykMp_3sFgD42JGi9SENuHw0N3kaXIjh319zQ0KbIY8&usqp=CAU"
-          alt="Free Extra Scoop Offer"
+          src={Image}
+          alt={title}
+          className={styles.offerImage}
         />
-        <div className="offer-heart-icon">
+
+        <div
+          className={styles.offerHeartIcon}
+          onClick={handleHeartClick}
+          style={{ color: isFavorite ? 'red' : 'white', cursor: 'pointer', }}
+        >
           <FaHeart />
         </div>
-        <div className="offer-text-overlay">
-          <h4>Free Extra Scoop on Your Cone!</h4>
-          <p>One cone, two scoops—on us! Get a free extra scoop with your gelato cone.</p>
+
+        <div className={styles.offerTextOverlay}>
+          <h4>{title}</h4>
+          <p>{description}</p>
         </div>
       </div>
-      <button className="show-offer-button">Show Offer</button>
+      
+      <button className={styles.showOfferButton}>Show Offer</button>
     </div>
   );
 }
