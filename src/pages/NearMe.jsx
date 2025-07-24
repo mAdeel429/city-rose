@@ -1,17 +1,31 @@
 // import React, { useState, useRef, useEffect } from 'react';
 // import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-// import { motion, AnimatePresence } from 'framer-motion';
 // import './NearMe.css';
 // import mockPoints from '../data/mockPoints';
 // import FilterBottomSheet from '../components/PointsBottomSheet';
 // import CardSlider from '../components/CardSlider';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faSliders } from '@fortawesome/free-solid-svg-icons';
+// import customMarkerIcon from '../assets/pointer.png';
 
 // const containerStyle = {
 //   width: '100%',
 //   height: 'calc(100vh - 100px)',
 // };
+
+// function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+//   const R = 6371;
+//   const dLat = ((lat2 - lat1) * Math.PI) / 180;
+//   const dLon = ((lon2 - lon1) * Math.PI) / 180;
+//   const a =
+//     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+//     Math.cos((lat1 * Math.PI) / 180) *
+//       Math.cos((lat2 * Math.PI) / 180) *
+//       Math.sin(dLon / 2) *
+//       Math.sin(dLon / 2);
+//   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+//   return R * c;
+// }
 
 // export default function NearMe() {
 //   const [points] = useState(mockPoints);
@@ -20,28 +34,55 @@
 //   const [searchTerm, setSearchTerm] = useState('');
 //   const [showFilterSheet, setShowFilterSheet] = useState(false);
 //   const [activeMarker, setActiveMarker] = useState(null);
-//   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-//   const [showCardSheet, setShowCardSheet] = useState(true);
-//   const [isSheetCollapsed, setIsSheetCollapsed] = useState(false);
+//   const [showCardSheet, setShowCardSheet] = useState(false);
 //   const [activeFiltersCount, setActiveFiltersCount] = useState(0);
+//   const [userLocation, setUserLocation] = useState(null);
 
 //   const mapRef = useRef(null);
 //   const [mapLoaded, setMapLoaded] = useState(false);
+
+//   useEffect(() => {
+//     if (navigator.geolocation) {
+//       navigator.geolocation.getCurrentPosition(
+//         (pos) => {
+//           const location = {
+//             lat: pos.coords.latitude,
+//             lng: pos.coords.longitude,
+//           };
+//           setUserLocation(location);
+
+//           // Set default zoom and center like Google Maps
+//           if (mapRef.current) {
+//             mapRef.current.setCenter(location);
+//             mapRef.current.setZoom(16); // Moderate zoom level
+//           }
+//         },
+//         (err) => console.error('Geolocation error:', err),
+//         { enableHighAccuracy: true }
+//       );
+//     }
+//   }, [mapLoaded]);
 
 //   const filteredPoints = points.filter((p) => {
 //     const macroMatch = !macro || p.macro === macro;
 //     const tagMatch = tags.length === 0 || tags.some(tag => p.tags.includes(tag));
 //     const searchMatch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
-//     return macroMatch && tagMatch && searchMatch;
+//     const proximityMatch = userLocation
+//       ? getDistanceFromLatLonInKm(userLocation.lat, userLocation.lng, p.lat, p.lng) <= 5
+//       : true;
+
+//     return macroMatch && tagMatch && searchMatch && proximityMatch;
 //   });
 
-//   const selectedPoint = points.find(p => p.id === activeMarker);
-
 //   useEffect(() => {
-//     if (mapLoaded && mapRef.current && filteredPoints.length > 0 && window.google?.maps?.LatLngBounds) {
-//       const bounds = new window.google.maps.LatLngBounds();
-//       filteredPoints.forEach((p) => bounds.extend({ lat: p.lat, lng: p.lng }));
-//       mapRef.current.fitBounds(bounds, { padding: { top: 250, bottom: 50, left: 100, right: 100 } });
+//     if (mapLoaded && mapRef.current && window.google?.maps?.LatLngBounds) {
+//       if (filteredPoints.length > 0) {
+//         const bounds = new window.google.maps.LatLngBounds();
+//         filteredPoints.forEach((p) => bounds.extend({ lat: p.lat, lng: p.lng }));
+//         mapRef.current.fitBounds(bounds, {
+//           padding: { top: 250, bottom: 50, left: 100, right: 100 },
+//         });
+//       }
 //     }
 //   }, [filteredPoints, mapLoaded]);
 
@@ -58,14 +99,17 @@
 //           <button className="filter-btn">
 //             <FontAwesomeIcon icon={faSliders} />
 //           </button>
-//           {activeFiltersCount > 0 && <span className="filter-badge">{activeFiltersCount}</span>}
+//           {activeFiltersCount > 0 && (
+//             <span className="filter-badge">{activeFiltersCount}</span>
+//           )}
 //         </div>
 //       </div>
 
 //       <CardSlider
 //         show={showCardSheet}
 //         points={filteredPoints}
-//         onCollapseChange={setIsSheetCollapsed}
+//         activeMarker={activeMarker}
+//         setShowCardSheet={setShowCardSheet}
 //       />
 
 //       <FilterBottomSheet
@@ -89,66 +133,81 @@
 //             streetViewControl: false,
 //             fullscreenControl: false,
 //           }}
+//           zoom={16} // Set default zoom level
+//           center={userLocation || { lat: 0, lng: 0 }} // Temporary center before GPS loads
 //         >
+//           {userLocation && (
+//             <Marker
+//               position={userLocation}
+//               icon={{
+//                 path: window.google.maps.SymbolPath.CIRCLE,
+//                 scale: 8,
+//                 fillColor: '#4285F4',
+//                 fillOpacity: 1,
+//                 strokeWeight: 2,
+//                 strokeColor: 'white',
+//               }}
+//             />
+//           )}
+
 //           {filteredPoints.map((point) => (
 //             <Marker
 //               key={point.id}
 //               position={{ lat: point.lat, lng: point.lng }}
 //               onClick={() => {
-//                 setActiveMarker(point.id);
-//                 setBottomSheetVisible(true);
+//                 setActiveMarker(null);
+//                 setShowCardSheet(false);
+//                 setTimeout(() => {
+//                   setActiveMarker(point.id);
+//                   setShowCardSheet(true);
+//                 }, 50);
 //               }}
+//               icon={
+//                 mapLoaded && window.google
+//                   ? {
+//                       url: customMarkerIcon,
+//                       scaledSize: new window.google.maps.Size(40, 40),
+//                     }
+//                   : undefined
+//               }
 //             />
 //           ))}
 //         </GoogleMap>
 //       </LoadScript>
-
-//       <AnimatePresence>
-//         {bottomSheetVisible && selectedPoint && (
-//           <motion.div
-//             className="card-popup"
-//             initial={{ opacity: 0, scale: 0.8 }}
-//             animate={{ opacity: 1, scale: 1 }}
-//             exit={{ opacity: 0, scale: 0.8 }}
-//             transition={{ duration: 0.2 }}
-//           >
-//             <div className="card-content">
-//               <div className="card-image-container">
-//                 <img src={selectedPoint.images[0]} className="card-img" alt="Full" />
-//                 <span className="close-icon" onClick={() => setBottomSheetVisible(false)}>×</span>
-//               </div>
-//               <div className="card-text">
-//                 <h2>{selectedPoint.name}</h2>
-//                 <p style={{ margin: '4px 0px' }}>Vintage hotel · Jul 17–22</p>
-//                 <p>{selectedPoint.description}</p>
-//                 <p><span style={{ fontWeight: 'bold' }}>$100</span> for 5 nights</p>
-//               </div>
-//             </div>
-//           </motion.div>
-//         )}
-//       </AnimatePresence>
 //     </div>
 //   );
 // }
 
 
+
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import { motion, AnimatePresence } from 'framer-motion';
 import './NearMe.css';
 import mockPoints from '../data/mockPoints';
 import FilterBottomSheet from '../components/PointsBottomSheet';
 import CardSlider from '../components/CardSlider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSliders } from '@fortawesome/free-solid-svg-icons';
-
-// ✅ Custom marker image import
 import customMarkerIcon from '../assets/pointer.png';
 
 const containerStyle = {
   width: '100%',
   height: 'calc(100vh - 100px)',
 };
+
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
 
 export default function NearMe() {
   const [points] = useState(mockPoints);
@@ -157,30 +216,62 @@ export default function NearMe() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilterSheet, setShowFilterSheet] = useState(false);
   const [activeMarker, setActiveMarker] = useState(null);
-  const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-  const [showCardSheet, setShowCardSheet] = useState(true);
-  const [isSheetCollapsed, setIsSheetCollapsed] = useState(false);
+  const [showCardSheet, setShowCardSheet] = useState(false);
   const [activeFiltersCount, setActiveFiltersCount] = useState(0);
+  const [userLocation, setUserLocation] = useState(null);
+  const [mapInteracted, setMapInteracted] = useState(false);
 
   const mapRef = useRef(null);
   const [mapLoaded, setMapLoaded] = useState(false);
 
+  // Get user location
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const location = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+          };
+          setUserLocation(location);
+
+          if (mapRef.current) {
+            mapRef.current.setCenter(location);
+            mapRef.current.setZoom(15);
+          }
+        },
+        (err) => console.error('Geolocation error:', err),
+        { enableHighAccuracy: true }
+      );
+    }
+  }, [mapLoaded]);
+
+  // Filter points based on search, filters, and location (if map not interacted)
   const filteredPoints = points.filter((p) => {
     const macroMatch = !macro || p.macro === macro;
-    const tagMatch = tags.length === 0 || tags.some(tag => p.tags.includes(tag));
+    const tagMatch = tags.length === 0 || tags.some((tag) => p.tags.includes(tag));
     const searchMatch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
-    return macroMatch && tagMatch && searchMatch;
+
+    const proximityMatch =
+      !userLocation || mapInteracted
+        ? true
+        : getDistanceFromLatLonInKm(userLocation.lat, userLocation.lng, p.lat, p.lng) <= 1;
+
+    return macroMatch && tagMatch && searchMatch && proximityMatch;
   });
 
-  const selectedPoint = points.find(p => p.id === activeMarker);
-
+  // Fit bounds on initial load
   useEffect(() => {
-    if (mapLoaded && mapRef.current && filteredPoints.length > 0 && window.google?.maps?.LatLngBounds) {
-      const bounds = new window.google.maps.LatLngBounds();
-      filteredPoints.forEach((p) => bounds.extend({ lat: p.lat, lng: p.lng }));
-      mapRef.current.fitBounds(bounds, { padding: { top: 250, bottom: 50, left: 100, right: 100 } });
+    if (mapLoaded && mapRef.current && window.google?.maps?.LatLngBounds) {
+      if (filteredPoints.length > 0 && !mapInteracted) {
+        const bounds = new window.google.maps.LatLngBounds();
+        filteredPoints.forEach((p) => bounds.extend({ lat: p.lat, lng: p.lng }));
+        mapRef.current.fitBounds(bounds, {
+          padding: { top: 250, bottom: 50, left: 100, right: 100 },
+        });
+      }
     }
-  }, [filteredPoints, mapLoaded]);
+  }, [filteredPoints, mapLoaded, mapInteracted]);
 
   return (
     <div className="nearme-container">
@@ -195,14 +286,17 @@ export default function NearMe() {
           <button className="filter-btn">
             <FontAwesomeIcon icon={faSliders} />
           </button>
-          {activeFiltersCount > 0 && <span className="filter-badge">{activeFiltersCount}</span>}
+          {activeFiltersCount > 0 && (
+            <span className="filter-badge">{activeFiltersCount}</span>
+          )}
         </div>
       </div>
 
       <CardSlider
         show={showCardSheet}
         points={filteredPoints}
-        onCollapseChange={setIsSheetCollapsed}
+        activeMarker={activeMarker}
+        setShowCardSheet={setShowCardSheet}
       />
 
       <FilterBottomSheet
@@ -220,55 +314,56 @@ export default function NearMe() {
             mapRef.current = map;
             setMapLoaded(true);
           }}
+          onZoomChanged={() => setMapInteracted(true)}
+          onDragEnd={() => setMapInteracted(true)}
           options={{
             mapTypeControl: false,
             zoomControl: false,
             streetViewControl: false,
             fullscreenControl: false,
           }}
+          zoom={17}
+          center={userLocation || { lat: 0, lng: 0 }}
         >
+          {userLocation && (
+            <Marker
+              position={userLocation}
+              icon={{
+                path: window.google.maps.SymbolPath.CIRCLE,
+                scale: 8,
+                fillColor: '#4285F4',
+                fillOpacity: 1,
+                strokeWeight: 2,
+                strokeColor: 'white',
+              }}
+            />
+          )}
+
           {filteredPoints.map((point) => (
             <Marker
-            key={point.id}
-            position={{ lat: point.lat, lng: point.lng }}
-            onClick={() => {
-              setActiveMarker(point.id);
-              setBottomSheetVisible(true);
-            }}
-            icon={mapLoaded && window.google ? {
-              url: customMarkerIcon,
-              scaledSize: new window.google.maps.Size(40, 40),
-            } : undefined}
-          />
-          
+              key={point.id}
+              position={{ lat: point.lat, lng: point.lng }}
+              onClick={() => {
+                setActiveMarker(null);
+                setShowCardSheet(false);
+                setTimeout(() => {
+                  setActiveMarker(point.id);
+                  setShowCardSheet(true);
+                }, 50);
+              }}
+              icon={
+                mapLoaded && window.google
+                  ? {
+                      url: customMarkerIcon,
+                      scaledSize: new window.google.maps.Size(40, 40),
+                    }
+                  : undefined
+              }
+            />
           ))}
         </GoogleMap>
       </LoadScript>
-
-      <AnimatePresence>
-        {bottomSheetVisible && selectedPoint && (
-          <motion.div
-            className="card-popup"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.2 }}
-          >
-            <div className="card-content">
-              <div className="card-image-container">
-                <img src={selectedPoint.images[0]} className="card-img" alt="Full" />
-                <span className="close-icon" onClick={() => setBottomSheetVisible(false)}>×</span>
-              </div>
-              <div className="card-text">
-                <h2>{selectedPoint.name}</h2>
-                <p style={{ margin: '4px 0px' }}>Vintage hotel · Jul 17–22</p>
-                <p>{selectedPoint.description}</p>
-                <p><span style={{ fontWeight: 'bold' }}>$100</span> for 5 nights</p>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
+

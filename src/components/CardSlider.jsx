@@ -1,18 +1,29 @@
 // import React, { useEffect, useState } from 'react';
 // import { motion, animate, useMotionValue } from 'framer-motion';
 // import { Swiper, SwiperSlide } from 'swiper/react';
-// import { Navigation, Pagination } from 'swiper/modules';
+// import { Pagination } from 'swiper/modules';
 // import 'swiper/css';
 // import 'swiper/css/navigation';
 // import 'swiper/css/pagination';
 // import './CardSlider.css';
 
-// const PEEK_HEIGHT = 200;
-// const MAX_HEIGHT = window.innerHeight * 0.9;
+// const PEEK_HEIGHT = 150;
+// const MAX_HEIGHT = window.innerHeight * 1;
 
-// export default function CardSlider({ show, points, onCollapseChange }) {
+// export default function CardSlider({ show, points, onClose }) {
 //   const y = useMotionValue(0);
 //   const [isCollapsed, setIsCollapsed] = useState(false);
+
+//   useEffect(() => {
+//     if (show) {
+//       setIsCollapsed(false);
+//     }
+//   }, [show]);
+
+//   if (!show || !points?.length) {
+//     console.log("CardSlider not shown");
+//     return null;
+//   }
 
 //   const snapTo = (targetY) => {
 //     animate(y, window.innerHeight - targetY, {
@@ -25,24 +36,14 @@
 //   const handleDragEnd = (_, info) => {
 //     if (info.offset.y > 100) {
 //       setIsCollapsed(true);
-//       onCollapseChange?.(true);
 //       snapTo(PEEK_HEIGHT);
 //     } else if (info.offset.y < -100) {
 //       setIsCollapsed(false);
-//       onCollapseChange?.(false);
 //       snapTo(MAX_HEIGHT);
 //     } else {
-//       setIsCollapsed(false);
-//       onCollapseChange?.(false);
+//       snapTo(isCollapsed ? PEEK_HEIGHT : MAX_HEIGHT);
 //     }
 //   };
-
-//   useEffect(() => {
-//     if (show) {
-//       setIsCollapsed(false);
-//       onCollapseChange?.(false);
-//     }
-//   }, [show]);
 
 //   return (
 //     <motion.div
@@ -61,27 +62,28 @@
 //             className="card-vertical"
 //             style={{ marginBottom: index === points.length - 1 ? '80px' : '12px' }}
 //           >
-//             {/* Swiper Image Slider */}
 //             <Swiper
-//               modules={[Navigation, Pagination]}
-//               navigation
+//               modules={[Pagination]}
 //               pagination={{ clickable: true }}
 //               className="swiper-container"
 //             >
 //               {point.images.map((img, idx) => (
 //                 <SwiperSlide key={idx}>
-//                   <img
-//                     src={img}
-//                     alt={`${point.name}-${idx}`}
-//                     className="swiper-img"
-//                   />
+//                   <img src={img} alt={`${point.name}-${idx}`} className="swiper-img" />
 //                 </SwiperSlide>
 //               ))}
 //             </Swiper>
 
 //             <div className="card-info">
+//               {/* <h3>{point.name}</h3>
+//               <p>{point.description}</p> */}
 //               <h3>{point.name}</h3>
-//               <p>{point.description}</p>
+//               {/* <p>{point.description}</p> */}
+//               <p><strong>Macro:</strong> {point.macro}</p>
+//               <p><strong>Tags:</strong> {point.tags?.join(', ')}</p>
+//               <p><strong>Hours:</strong> {point.openingHours}</p>
+//               <p><strong>Distance:</strong> {point.distance}</p>
+
 //             </div>
 //           </div>
 //         ))}
@@ -92,7 +94,7 @@
 
 
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, animate, useMotionValue } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
@@ -104,20 +106,29 @@ import './CardSlider.css';
 const PEEK_HEIGHT = 150;
 const MAX_HEIGHT = window.innerHeight * 1;
 
-export default function CardSlider({ show, points, onClose }) {
+export default function CardSlider({ show, points, activeMarker, setShowCardSheet }) {
   const y = useMotionValue(0);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    if (show) {
+    if (activeMarker && show) {
       setIsCollapsed(false);
-    }
-  }, [show]);
+      animate(y, window.innerHeight - MAX_HEIGHT, {
+        type: 'spring',
+        stiffness: 300,
+        damping: 30,
+      });
 
-  if (!show || !points?.length) {
-    console.log("CardSlider not shown");
-    return null;
-  }
+      const index = points.findIndex((p) => p.id === activeMarker);
+      if (index !== -1 && containerRef.current) {
+        const child = containerRef.current.children[index];
+        if (child) {
+          child.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    }
+  }, [activeMarker, show]);
 
   const snapTo = (targetY) => {
     animate(y, window.innerHeight - targetY, {
@@ -139,6 +150,8 @@ export default function CardSlider({ show, points, onClose }) {
     }
   };
 
+  if (!show || !points?.length) return null;
+
   return (
     <motion.div
       className="bottom-sheet-card"
@@ -149,7 +162,7 @@ export default function CardSlider({ show, points, onClose }) {
       dragElastic={0.2}
     >
       <div className="handle-bar" />
-      <div className="card-vertical-scroll">
+      <div className="card-vertical-scroll" ref={containerRef}>
         {points.map((point, index) => (
           <div
             key={point.id}
@@ -169,15 +182,11 @@ export default function CardSlider({ show, points, onClose }) {
             </Swiper>
 
             <div className="card-info">
-              {/* <h3>{point.name}</h3>
-              <p>{point.description}</p> */}
               <h3>{point.name}</h3>
-              {/* <p>{point.description}</p> */}
               <p><strong>Macro:</strong> {point.macro}</p>
               <p><strong>Tags:</strong> {point.tags?.join(', ')}</p>
               <p><strong>Hours:</strong> {point.openingHours}</p>
               <p><strong>Distance:</strong> {point.distance}</p>
-
             </div>
           </div>
         ))}
