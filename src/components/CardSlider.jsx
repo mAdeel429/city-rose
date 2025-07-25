@@ -102,8 +102,10 @@
 
 
 
+
+
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, animate, useMotionValue } from 'framer-motion';
+import { motion, animate, useMotionValue, useDragControls } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css';
@@ -115,9 +117,11 @@ const PEEK_HEIGHT = 150;
 const MAX_HEIGHT = window.innerHeight;
 
 export default function CardSlider({ show, points, activeMarker, setShowCardSheet }) {
-  const y = useMotionValue(0);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const y = useMotionValue(window.innerHeight - PEEK_HEIGHT);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const containerRef = useRef(null);
+  const scrollRef = useRef(null);
+  const dragControls = useDragControls();
 
   useEffect(() => {
     if (activeMarker && show) {
@@ -164,6 +168,14 @@ export default function CardSlider({ show, points, activeMarker, setShowCardShee
     }
   };
 
+  const handlePointerDown = (event) => {
+    const scrollElement = scrollRef.current;
+    if (scrollElement && scrollElement.scrollTop <= 0) {
+      // Only allow drag if scroll is at top
+      dragControls.start(event);
+    }
+  };
+
   if (!show || !points?.length) return null;
 
   return (
@@ -171,12 +183,23 @@ export default function CardSlider({ show, points, activeMarker, setShowCardShee
       className="bottom-sheet-card"
       style={{ y }}
       drag="y"
-      dragElastic={0.4}           // More natural drag elasticity
-      dragMomentum={true}         // Continue motion on fast swipe
+      dragElastic={0.4}
+      dragMomentum={true}
+      dragListener={false} // disable default drag trigger
+      dragControls={dragControls}
       onDragEnd={handleDragEnd}
     >
-      <div className="handle-bar" />
-      <div className="card-vertical-scroll" ref={containerRef}>
+      <div className="handle-bar" onPointerDown={handlePointerDown} />
+      
+      {/* Scrollable content area — check scrollTop before allowing drag */}
+      <div
+        className="card-vertical-scroll"
+        ref={(el) => {
+          scrollRef.current = el;
+          containerRef.current = el;
+        }}
+        onPointerDown={handlePointerDown}
+      >
         {points.map((point, index) => (
           <div
             key={point.id}
