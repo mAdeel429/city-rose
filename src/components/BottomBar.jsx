@@ -81,7 +81,7 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaTag, FaHeart } from 'react-icons/fa';
+import { FaTag, FaHeart, FaUser } from 'react-icons/fa'; // 👈 Add FaUser
 import styles from './PointList.module.css';
 import CenterIcon from '../assets/new.png';
 import NearMeIcon from '../assets/icon 1.png';
@@ -91,6 +91,7 @@ const BottomBar = () => {
 
   return (
     <div className={styles.bottomTabs}>
+      {/* 1. Near Me */}
       <Link to="/near-me" className={styles.tabItem}>
         <img
           src={NearMeIcon}
@@ -104,6 +105,7 @@ const BottomBar = () => {
         />
       </Link>
 
+      {/* 2. Offers */}
       <Link to="/offers" className={styles.tabItem}>
         <FaTag
           style={{
@@ -114,22 +116,34 @@ const BottomBar = () => {
         />
       </Link>
 
-      <Link to="/" className={styles.tabItem}>
+      {/* 3. Home Page - FIXED */}
+      <Link to="/home" className={styles.tabItem}>
         <img
           src={CenterIcon}
           alt="Center Icon"
           className={styles.centerIcon}
           style={{
-            opacity: location.pathname === '/' ? 1 : 0.4,
+            opacity: location.pathname === '/home' ? 1 : 0.4,
           }}
         />
       </Link>
 
+      {/* 4. Favorite */}
       <Link to="/add-to-favorite" className={styles.tabItem}>
         <FaHeart
           style={{
             color: 'black',
             opacity: location.pathname === '/add-to-favorite' ? 1 : 0.4,
+          }}
+        />
+      </Link>
+
+      {/* 5. Profile Tab */}
+      <Link to="/editProfile" className={styles.tabItem}>
+        <FaUser
+          style={{
+            color: 'black',
+            opacity: location.pathname === '/editProfile' ? 1 : 0.4,
           }}
         />
       </Link>

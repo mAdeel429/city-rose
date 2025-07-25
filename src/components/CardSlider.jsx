@@ -1,4 +1,5 @@
-// import React, { useEffect, useState } from 'react';
+
+// import React, { useEffect, useRef, useState } from 'react';
 // import { motion, animate, useMotionValue } from 'framer-motion';
 // import { Swiper, SwiperSlide } from 'swiper/react';
 // import { Pagination } from 'swiper/modules';
@@ -10,20 +11,29 @@
 // const PEEK_HEIGHT = 150;
 // const MAX_HEIGHT = window.innerHeight * 1;
 
-// export default function CardSlider({ show, points, onClose }) {
+// export default function CardSlider({ show, points, activeMarker, setShowCardSheet }) {
 //   const y = useMotionValue(0);
 //   const [isCollapsed, setIsCollapsed] = useState(false);
+//   const containerRef = useRef(null);
 
 //   useEffect(() => {
-//     if (show) {
+//     if (activeMarker && show) {
 //       setIsCollapsed(false);
-//     }
-//   }, [show]);
+//       animate(y, window.innerHeight - MAX_HEIGHT, {
+//         type: 'spring',
+//         stiffness: 300,
+//         damping: 30,
+//       });
 
-//   if (!show || !points?.length) {
-//     console.log("CardSlider not shown");
-//     return null;
-//   }
+//       const index = points.findIndex((p) => p.id === activeMarker);
+//       if (index !== -1 && containerRef.current) {
+//         const child = containerRef.current.children[index];
+//         if (child) {
+//           child.scrollIntoView({ behavior: 'smooth', block: 'start' });
+//         }
+//       }
+//     }
+//   }, [activeMarker, show]);
 
 //   const snapTo = (targetY) => {
 //     animate(y, window.innerHeight - targetY, {
@@ -45,6 +55,8 @@
 //     }
 //   };
 
+//   if (!show || !points?.length) return null;
+
 //   return (
 //     <motion.div
 //       className="bottom-sheet-card"
@@ -55,7 +67,7 @@
 //       dragElastic={0.2}
 //     >
 //       <div className="handle-bar" />
-//       <div className="card-vertical-scroll">
+//       <div className="card-vertical-scroll" ref={containerRef}>
 //         {points.map((point, index) => (
 //           <div
 //             key={point.id}
@@ -75,15 +87,11 @@
 //             </Swiper>
 
 //             <div className="card-info">
-//               {/* <h3>{point.name}</h3>
-//               <p>{point.description}</p> */}
 //               <h3>{point.name}</h3>
-//               {/* <p>{point.description}</p> */}
 //               <p><strong>Macro:</strong> {point.macro}</p>
 //               <p><strong>Tags:</strong> {point.tags?.join(', ')}</p>
 //               <p><strong>Hours:</strong> {point.openingHours}</p>
 //               <p><strong>Distance:</strong> {point.distance}</p>
-
 //             </div>
 //           </div>
 //         ))}
@@ -104,7 +112,7 @@ import 'swiper/css/pagination';
 import './CardSlider.css';
 
 const PEEK_HEIGHT = 150;
-const MAX_HEIGHT = window.innerHeight * 1;
+const MAX_HEIGHT = window.innerHeight;
 
 export default function CardSlider({ show, points, activeMarker, setShowCardSheet }) {
   const y = useMotionValue(0);
@@ -116,8 +124,9 @@ export default function CardSlider({ show, points, activeMarker, setShowCardShee
       setIsCollapsed(false);
       animate(y, window.innerHeight - MAX_HEIGHT, {
         type: 'spring',
-        stiffness: 300,
-        damping: 30,
+        stiffness: 200,
+        damping: 25,
+        mass: 0.5,
       });
 
       const index = points.findIndex((p) => p.id === activeMarker);
@@ -133,16 +142,21 @@ export default function CardSlider({ show, points, activeMarker, setShowCardShee
   const snapTo = (targetY) => {
     animate(y, window.innerHeight - targetY, {
       type: 'spring',
-      stiffness: 300,
-      damping: 30,
+      stiffness: 200,
+      damping: 25,
+      mass: 0.5,
     });
   };
 
   const handleDragEnd = (_, info) => {
-    if (info.offset.y > 100) {
+    const velocityY = info.velocity.y;
+    const offsetY = info.offset.y;
+    const DRAG_THRESHOLD = window.innerHeight * 0.15;
+
+    if (offsetY > DRAG_THRESHOLD || velocityY > 500) {
       setIsCollapsed(true);
       snapTo(PEEK_HEIGHT);
-    } else if (info.offset.y < -100) {
+    } else if (offsetY < -DRAG_THRESHOLD || velocityY < -500) {
       setIsCollapsed(false);
       snapTo(MAX_HEIGHT);
     } else {
@@ -157,9 +171,9 @@ export default function CardSlider({ show, points, activeMarker, setShowCardShee
       className="bottom-sheet-card"
       style={{ y }}
       drag="y"
-      dragConstraints={{ top: 0, bottom: 0 }}
+      dragElastic={0.4}           // More natural drag elasticity
+      dragMomentum={true}         // Continue motion on fast swipe
       onDragEnd={handleDragEnd}
-      dragElastic={0.2}
     >
       <div className="handle-bar" />
       <div className="card-vertical-scroll" ref={containerRef}>

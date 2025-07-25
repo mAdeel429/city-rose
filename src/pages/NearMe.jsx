@@ -1,3 +1,11 @@
+// import foodIcon from '../assets/foodIcon.png';
+// import toursIcon from '../assets/foodIcon.png';
+// import fashionIcon from '../assets/fashionIcon.png';
+// import nightlifeIcon from '../assets/foodIcon.png';
+// import educationIcon from '../assets/foodIcon.png';
+// import defaultIcon from '../assets/pointer.png';
+
+
 // import React, { useState, useRef, useEffect } from 'react';
 // import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 // import './NearMe.css';
@@ -7,6 +15,16 @@
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faSliders } from '@fortawesome/free-solid-svg-icons';
 // import customMarkerIcon from '../assets/pointer.png';
+
+
+// const macroIcons = {
+//   Food: foodIcon,
+//   Tours: toursIcon,
+//   Fashion: fashionIcon,
+//   Nightlife: nightlifeIcon,
+//   Education: educationIcon,
+//   // Add other categories if needed
+// };
 
 // const containerStyle = {
 //   width: '100%',
@@ -37,10 +55,12 @@
 //   const [showCardSheet, setShowCardSheet] = useState(false);
 //   const [activeFiltersCount, setActiveFiltersCount] = useState(0);
 //   const [userLocation, setUserLocation] = useState(null);
+//   const [mapInteracted, setMapInteracted] = useState(false);
 
 //   const mapRef = useRef(null);
 //   const [mapLoaded, setMapLoaded] = useState(false);
 
+//   // Get user location
 //   useEffect(() => {
 //     if (navigator.geolocation) {
 //       navigator.geolocation.getCurrentPosition(
@@ -51,10 +71,9 @@
 //           };
 //           setUserLocation(location);
 
-//           // Set default zoom and center like Google Maps
 //           if (mapRef.current) {
 //             mapRef.current.setCenter(location);
-//             mapRef.current.setZoom(16); // Moderate zoom level
+//             mapRef.current.setZoom(15);
 //           }
 //         },
 //         (err) => console.error('Geolocation error:', err),
@@ -63,20 +82,24 @@
 //     }
 //   }, [mapLoaded]);
 
+//   // Filter points based on search, filters, and location (if map not interacted)
 //   const filteredPoints = points.filter((p) => {
 //     const macroMatch = !macro || p.macro === macro;
-//     const tagMatch = tags.length === 0 || tags.some(tag => p.tags.includes(tag));
+//     const tagMatch = tags.length === 0 || tags.some((tag) => p.tags.includes(tag));
 //     const searchMatch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
-//     const proximityMatch = userLocation
-//       ? getDistanceFromLatLonInKm(userLocation.lat, userLocation.lng, p.lat, p.lng) <= 5
-//       : true;
+
+//     const proximityMatch =
+//       !userLocation || mapInteracted
+//         ? true
+//         : getDistanceFromLatLonInKm(userLocation.lat, userLocation.lng, p.lat, p.lng) <= 1;
 
 //     return macroMatch && tagMatch && searchMatch && proximityMatch;
 //   });
 
+//   // Fit bounds on initial load
 //   useEffect(() => {
 //     if (mapLoaded && mapRef.current && window.google?.maps?.LatLngBounds) {
-//       if (filteredPoints.length > 0) {
+//       if (filteredPoints.length > 0 && !mapInteracted) {
 //         const bounds = new window.google.maps.LatLngBounds();
 //         filteredPoints.forEach((p) => bounds.extend({ lat: p.lat, lng: p.lng }));
 //         mapRef.current.fitBounds(bounds, {
@@ -84,7 +107,7 @@
 //         });
 //       }
 //     }
-//   }, [filteredPoints, mapLoaded]);
+//   }, [filteredPoints, mapLoaded, mapInteracted]);
 
 //   return (
 //     <div className="nearme-container">
@@ -127,14 +150,16 @@
 //             mapRef.current = map;
 //             setMapLoaded(true);
 //           }}
+//           onZoomChanged={() => setMapInteracted(true)}
+//           onDragEnd={() => setMapInteracted(true)}
 //           options={{
 //             mapTypeControl: false,
 //             zoomControl: false,
 //             streetViewControl: false,
 //             fullscreenControl: false,
 //           }}
-//           zoom={16} // Set default zoom level
-//           center={userLocation || { lat: 0, lng: 0 }} // Temporary center before GPS loads
+//           zoom={17}
+//           center={userLocation || { lat: 0, lng: 0 }}
 //         >
 //           {userLocation && (
 //             <Marker
@@ -188,7 +213,20 @@ import FilterBottomSheet from '../components/PointsBottomSheet';
 import CardSlider from '../components/CardSlider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSliders } from '@fortawesome/free-solid-svg-icons';
-import customMarkerIcon from '../assets/pointer.png';
+
+import foodIcon from '../assets/restaurant.png';
+import fashionIcon from '../assets/fashionIcon.png';
+import nightlifeIcon from '../assets/bar-pin.png';
+import educationIcon from '../assets/restaurant.png';
+import defaultIcon from '../assets/defaultIcon.png';
+
+const macroIcons = {
+  Food: foodIcon,
+  Tours: defaultIcon,
+  Fashion: fashionIcon,
+  Nightlife: nightlifeIcon,
+  Education: educationIcon,
+};
 
 const containerStyle = {
   width: '100%',
@@ -224,7 +262,6 @@ export default function NearMe() {
   const mapRef = useRef(null);
   const [mapLoaded, setMapLoaded] = useState(false);
 
-  // Get user location
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -246,7 +283,6 @@ export default function NearMe() {
     }
   }, [mapLoaded]);
 
-  // Filter points based on search, filters, and location (if map not interacted)
   const filteredPoints = points.filter((p) => {
     const macroMatch = !macro || p.macro === macro;
     const tagMatch = tags.length === 0 || tags.some((tag) => p.tags.includes(tag));
@@ -260,7 +296,6 @@ export default function NearMe() {
     return macroMatch && tagMatch && searchMatch && proximityMatch;
   });
 
-  // Fit bounds on initial load
   useEffect(() => {
     if (mapLoaded && mapRef.current && window.google?.maps?.LatLngBounds) {
       if (filteredPoints.length > 0 && !mapInteracted) {
@@ -354,7 +389,7 @@ export default function NearMe() {
               icon={
                 mapLoaded && window.google
                   ? {
-                      url: customMarkerIcon,
+                      url: macroIcons[point.macro] || defaultIcon,
                       scaledSize: new window.google.maps.Size(40, 40),
                     }
                   : undefined
@@ -366,4 +401,3 @@ export default function NearMe() {
     </div>
   );
 }
-

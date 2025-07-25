@@ -104,7 +104,7 @@ const mockPoints = [
     type: "Cafe",
     macro: "Food",
     tags: ["Organic", "Vegan"],
-    lat: 43.7696, // Updated
+    lat: 40.7128, // Updated
     lng: 11.2558, // Updated
     description: "Cozy cafe serving organic coffee and snacks.",
     openingHours: "8:00 AM – 10:00 PM",
@@ -122,7 +122,7 @@ const mockPoints = [
     macro: "Tours",
     tags: ["Modern", "Local Artists"],
     lat: 43.7696, // Updated
-    lng: 11.2558, // Updated
+    lng: 74.0060, // Updated
     description: "Modern art exhibits from local and international artists.",
     openingHours: "11:00 AM – 6:00 PM",
     distance: "450m",
