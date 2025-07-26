@@ -26,6 +26,34 @@
 //   height: 'calc(100vh - 100px)',
 // };
 
+
+// function getNearestPoint(userLocation, points) {
+//   if (!userLocation || !points || points.length === 0) return null;
+
+//   let nearest = points[0];
+//   let minDistance = getDistanceFromLatLonInKm(
+//     userLocation.lat,
+//     userLocation.lng,
+//     nearest.lat,
+//     nearest.lng
+//   );
+
+//   for (let i = 1; i < points.length; i++) {
+//     const dist = getDistanceFromLatLonInKm(
+//       userLocation.lat,
+//       userLocation.lng,
+//       points[i].lat,
+//       points[i].lng
+//     );
+//     if (dist < minDistance) {
+//       minDistance = dist;
+//       nearest = points[i];
+//     }
+//   }
+
+//   return nearest;
+// }
+
 // function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
 //   const R = 6371;
 //   const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -67,8 +95,14 @@
 
 //           if (mapRef.current) {
 //             mapRef.current.setCenter(location);
-//             mapRef.current.setZoom(15);
+//             mapRef.current.setZoom(5);
 //           }
+//           const nearest = getNearestPoint(location, mockPoints);
+//           if (nearest) {
+//             setActiveMarker(nearest.id);
+//             setShowCardSheet(true);
+//           }
+
 //         },
 //         (err) => {
 //           console.error('Geolocation error:', err);
@@ -99,19 +133,26 @@
 
 //     return macroMatch && tagMatch && searchMatch && proximityMatch;
 //   });
-
 //   useEffect(() => {
-//     if (showCardSheet) {
-//       document.body.style.overflow = 'auto'; // Show scroll when sheet is open
-//     } else {
-//       document.body.style.overflow = 'hidden'; // Hide scroll when sheet is closed
+//     const scrollTarget = document.querySelector('.main-wrapper'); // change this to your actual class/id
+
+//     if (showCardSheet && scrollTarget) {
+//       scrollTarget.style.overflow = 'hidden';
+//       scrollTarget.style.height = '100vh'; // prevent scroll
+//     } else if (scrollTarget) {
+//       scrollTarget.style.overflow = 'auto';
+//       scrollTarget.style.height = 'auto';
 //     }
 
-//     // Optional cleanup
 //     return () => {
-//       document.body.style.overflow = '';
+//       if (scrollTarget) {
+//         scrollTarget.style.overflow = 'auto';
+//         scrollTarget.style.height = 'auto';
+//       }
 //     };
 //   }, [showCardSheet]);
+
+
 
 //   useEffect(() => {
 //     if (mapLoaded && mapRef.current && window.google?.maps?.LatLngBounds) {
@@ -126,98 +167,103 @@
 //   }, [filteredPoints, mapLoaded, mapInteracted]);
 
 //   return (
-//     <div className="nearme-container">
-//       <div className="nearme-header">
-//         <input
-//           type="text"
-//           placeholder="Search places..."
-//           className="search-input"
-//           onChange={(e) => setSearchTerm(e.target.value)}
-//         />
-//         <div className="filter-btn-wrapper" onClick={() => setShowFilterSheet(true)}>
-//           <button className="filter-btn">
-//             <FontAwesomeIcon icon={faSliders} />
-//           </button>
-//           {activeFiltersCount > 0 && (
-//             <span className="filter-badge">{activeFiltersCount}</span>
-//           )}
+//     <div id="near-me-container">
+//       <div className="nearme-container">
+//         <div className="nearme-header">
+//           <input
+//             type="text"
+//             placeholder="Search places..."
+//             className="search-input"
+//             onChange={(e) => setSearchTerm(e.target.value)}
+//           />
+//           <div className="filter-btn-wrapper" onClick={() => setShowFilterSheet(true)}>
+//             <button className="filter-btn">
+//               <FontAwesomeIcon icon={faSliders} />
+//             </button>
+//             {activeFiltersCount > 0 && (
+//               <span className="filter-badge">{activeFiltersCount}</span>
+//             )}
+//           </div>
 //         </div>
+
+//         <CardSlider
+//           show={showCardSheet}
+//           points={filteredPoints}
+//           activeMarker={activeMarker}
+//           setShowCardSheet={setShowCardSheet}
+//         />
+
+//         <FilterBottomSheet
+//           show={showFilterSheet}
+//           onClose={() => setShowFilterSheet(false)}
+//           setMacro={setMacro}
+//           setTags={setTags}
+//           setActiveFiltersCount={setActiveFiltersCount}
+//         />
+
+//         <LoadScript googleMapsApiKey={'AIzaSyAvJVIP2hU3dlLigoB7dmhWoutpwJ12wDM'}>
+//           <GoogleMap
+//             mapContainerStyle={containerStyle}
+//             onLoad={(map) => {
+//               mapRef.current = map;
+//               setMapLoaded(true);
+//             }}
+//             onZoomChanged={() => setMapInteracted(true)}
+//             onDragEnd={() => setMapInteracted(true)}
+//             options={{
+//               mapTypeControl: false,
+//               zoomControl: false,
+//               streetViewControl: false,
+//               fullscreenControl: false,
+//             }}
+//             zoom={17}
+//             center={userLocation || { lat: 59.9139, lng: 10.7522 }} // Default center
+//           >
+//             {userLocation && window.google && window.google.maps && (
+//               <Marker
+//                 position={userLocation}
+//                 icon={{
+//                   path: window.google.maps.SymbolPath.CIRCLE,
+//                   scale: 8,
+//                   fillColor: '#4285F4',
+//                   fillOpacity: 1,
+//                   strokeWeight: 2,
+//                   strokeColor: 'white',
+//                 }}
+//               />
+//             )}
+//             {filteredPoints.map((point) => (
+//               <Marker
+//                 key={point.id}
+//                 position={{ lat: point.lat, lng: point.lng }}
+//                 onClick={() => {
+//                   setActiveMarker(null);
+//                   setShowCardSheet(false);
+
+//                   setTimeout(() => {
+//                     setActiveMarker(point.id);
+//                     setShowCardSheet(true);
+//                   }, 100);
+//                 }}
+
+//                 icon={
+//                   mapLoaded && window.google
+//                     ? {
+//                       url: macroIcons[point.macro] || defaultIcon,
+//                       scaledSize: new window.google.maps.Size(40, 40),
+//                     }
+//                     : undefined
+//                 }
+//               />
+//             ))}
+
+//           </GoogleMap>
+//         </LoadScript>
 //       </div>
-
-//       <CardSlider
-//         show={showCardSheet}
-//         points={filteredPoints}
-//         activeMarker={activeMarker}
-//         setShowCardSheet={setShowCardSheet}
-//       />
-
-//       <FilterBottomSheet
-//         show={showFilterSheet}
-//         onClose={() => setShowFilterSheet(false)}
-//         setMacro={setMacro}
-//         setTags={setTags}
-//         setActiveFiltersCount={setActiveFiltersCount}
-//       />
-
-//       <LoadScript googleMapsApiKey={'AIzaSyAvJVIP2hU3dlLigoB7dmhWoutpwJ12wDM'}>
-//         <GoogleMap
-//           mapContainerStyle={containerStyle}
-//           onLoad={(map) => {
-//             mapRef.current = map;
-//             setMapLoaded(true);
-//           }}
-//           onZoomChanged={() => setMapInteracted(true)}
-//           onDragEnd={() => setMapInteracted(true)}
-//           options={{
-//             mapTypeControl: false,
-//             zoomControl: false,
-//             streetViewControl: false,
-//             fullscreenControl: false,
-//           }}
-//           zoom={17}
-//           center={userLocation || { lat: 59.9139, lng: 10.7522 }} // Default center
-//         >
-//           {userLocation && window.google && window.google.maps && (
-//             <Marker
-//               position={userLocation}
-//               icon={{
-//                 path: window.google.maps.SymbolPath.CIRCLE,
-//                 scale: 8,
-//                 fillColor: '#4285F4',
-//                 fillOpacity: 1,
-//                 strokeWeight: 2,
-//                 strokeColor: 'white',
-//               }}
-//             />
-//           )}
-
-//           {filteredPoints.map((point) => (
-//             <Marker
-//               key={point.id}
-//               position={{ lat: point.lat, lng: point.lng }}
-//               onClick={() => {
-//                 setActiveMarker(null);
-//                 setShowCardSheet(false);
-//                 setTimeout(() => {
-//                   setActiveMarker(point.id);
-//                   setShowCardSheet(true);
-//                 }, 50);
-//               }}
-//               icon={
-//                 mapLoaded && window.google
-//                   ? {
-//                     url: macroIcons[point.macro] || defaultIcon,
-//                     scaledSize: new window.google.maps.Size(40, 40),
-//                   }
-//                   : undefined
-//               }
-//             />
-//           ))}
-//         </GoogleMap>
-//       </LoadScript>
 //     </div>
 //   );
-// }
+// } 
+
 
 
 
@@ -225,7 +271,7 @@
 
 
 import React, { useState, useRef, useEffect } from 'react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import './NearMe.css';
 import mockPoints from '../data/mockPoints';
 import FilterBottomSheet from '../components/PointsBottomSheet';
@@ -252,6 +298,33 @@ const containerStyle = {
   height: 'calc(100vh - 100px)',
 };
 
+function getNearestPoint(userLocation, points) {
+  if (!userLocation || !points || points.length === 0) return null;
+
+  let nearest = points[0];
+  let minDistance = getDistanceFromLatLonInKm(
+    userLocation.lat,
+    userLocation.lng,
+    nearest.lat,
+    nearest.lng
+  );
+
+  for (let i = 1; i < points.length; i++) {
+    const dist = getDistanceFromLatLonInKm(
+      userLocation.lat,
+      userLocation.lng,
+      points[i].lat,
+      points[i].lng
+    );
+    if (dist < minDistance) {
+      minDistance = dist;
+      nearest = points[i];
+    }
+  }
+
+  return nearest;
+}
+
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -259,9 +332,9 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos((lat1 * Math.PI) / 180) *
-    Math.cos((lat2 * Math.PI) / 180) *
-    Math.sin(dLon / 2) *
-    Math.sin(dLon / 2);
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
@@ -281,7 +354,13 @@ export default function NearMe() {
   const mapRef = useRef(null);
   const [mapLoaded, setMapLoaded] = useState(false);
 
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: 'AIzaSyAvJVIP2hU3dlLigoB7dmhWoutpwJ12wDM',
+  });
+
   useEffect(() => {
+    if (!isLoaded) return;
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
@@ -293,25 +372,28 @@ export default function NearMe() {
 
           if (mapRef.current) {
             mapRef.current.setCenter(location);
-            mapRef.current.setZoom(15);
+            mapRef.current.setZoom(5);
+          }
+
+          const nearest = getNearestPoint(location, mockPoints);
+          if (nearest) {
+            setActiveMarker(nearest.id);
+            setShowCardSheet(true);
           }
         },
         (err) => {
           console.error('Geolocation error:', err);
-
-          // Fallback location: Oslo, Norway
-          const norwayFallback = { lat: 59.9139, lng: 10.7522 };
-          setUserLocation(norwayFallback);
-
+          const fallback = { lat: 59.9139, lng: 10.7522 };
+          setUserLocation(fallback);
           if (mapRef.current) {
-            mapRef.current.setCenter(norwayFallback);
+            mapRef.current.setCenter(fallback);
             mapRef.current.setZoom(12);
           }
         },
         { enableHighAccuracy: true }
       );
     }
-  }, [mapLoaded]);
+  }, [isLoaded]);
 
   const filteredPoints = points.filter((p) => {
     const macroMatch = !macro || p.macro === macro;
@@ -325,12 +407,12 @@ export default function NearMe() {
 
     return macroMatch && tagMatch && searchMatch && proximityMatch;
   });
-  useEffect(() => {
-    const scrollTarget = document.querySelector('.main-wrapper'); // change this to your actual class/id
 
+  useEffect(() => {
+    const scrollTarget = document.querySelector('.main-wrapper');
     if (showCardSheet && scrollTarget) {
       scrollTarget.style.overflow = 'hidden';
-      scrollTarget.style.height = '100vh'; // prevent scroll
+      scrollTarget.style.height = '100vh';
     } else if (scrollTarget) {
       scrollTarget.style.overflow = 'auto';
       scrollTarget.style.height = 'auto';
@@ -344,19 +426,23 @@ export default function NearMe() {
     };
   }, [showCardSheet]);
 
-
-
   useEffect(() => {
-    if (mapLoaded && mapRef.current && window.google?.maps?.LatLngBounds) {
-      if (filteredPoints.length > 0 && !mapInteracted) {
-        const bounds = new window.google.maps.LatLngBounds();
-        filteredPoints.forEach((p) => bounds.extend({ lat: p.lat, lng: p.lng }));
-        mapRef.current.fitBounds(bounds, {
-          padding: { top: 250, bottom: 50, left: 100, right: 100 },
-        });
-      }
+    if (
+      mapLoaded &&
+      mapRef.current &&
+      window.google?.maps?.LatLngBounds &&
+      filteredPoints.length > 0 &&
+      !mapInteracted
+    ) {
+      const bounds = new window.google.maps.LatLngBounds();
+      filteredPoints.forEach((p) => bounds.extend({ lat: p.lat, lng: p.lng }));
+      mapRef.current.fitBounds(bounds, {
+        padding: { top: 250, bottom: 50, left: 100, right: 100 },
+      });
     }
   }, [filteredPoints, mapLoaded, mapInteracted]);
+
+  if (!isLoaded || !window.google?.maps) return <div>Loading map...</div>;
 
   return (
     <div id="near-me-container">
@@ -393,39 +479,38 @@ export default function NearMe() {
           setActiveFiltersCount={setActiveFiltersCount}
         />
 
-        <LoadScript googleMapsApiKey={'AIzaSyAvJVIP2hU3dlLigoB7dmhWoutpwJ12wDM'}>
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            onLoad={(map) => {
-              mapRef.current = map;
-              setMapLoaded(true);
-            }}
-            onZoomChanged={() => setMapInteracted(true)}
-            onDragEnd={() => setMapInteracted(true)}
-            options={{
-              mapTypeControl: false,
-              zoomControl: false,
-              streetViewControl: false,
-              fullscreenControl: false,
-            }}
-            zoom={17}
-            center={userLocation || { lat: 59.9139, lng: 10.7522 }} // Default center
-          >
-            {userLocation && window.google && window.google.maps && (
-              <Marker
-                position={userLocation}
-                icon={{
-                  path: window.google.maps.SymbolPath.CIRCLE,
-                  scale: 8,
-                  fillColor: '#4285F4',
-                  fillOpacity: 1,
-                  strokeWeight: 2,
-                  strokeColor: 'white',
-                }}
-              />
-            )}
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          onLoad={(map) => {
+            mapRef.current = map;
+            setMapLoaded(true);
+          }}
+          onZoomChanged={() => setMapInteracted(true)}
+          onDragEnd={() => setMapInteracted(true)}
+          options={{
+            mapTypeControl: false,
+            zoomControl: false,
+            streetViewControl: false,
+            fullscreenControl: false,
+          }}
+          zoom={17}
+          center={userLocation || { lat: 59.9139, lng: 10.7522 }}
+        >
+          {userLocation && window.google?.maps?.SymbolPath?.CIRCLE && (
+            <Marker
+              position={userLocation}
+              icon={{
+                path: window.google.maps.SymbolPath.CIRCLE,
+                scale: 8,
+                fillColor: '#4285F4',
+                fillOpacity: 1,
+                strokeWeight: 2,
+                strokeColor: 'white',
+              }}
+            />
+          )}
 
-            {/* {filteredPoints.map((point) => (
+          {filteredPoints.map((point) => (
             <Marker
               key={point.id}
               position={{ lat: point.lat, lng: point.lng }}
@@ -435,41 +520,20 @@ export default function NearMe() {
                 setTimeout(() => {
                   setActiveMarker(point.id);
                   setShowCardSheet(true);
-                }, 50);
-              }} */}
-            {filteredPoints.map((point) => (
-              <Marker
-                key={point.id}
-                position={{ lat: point.lat, lng: point.lng }}
-                // onClick={() => {
-                //   setActiveMarker(point.id);
-                //   setShowCardSheet(true);
-                // }}
-                onClick={() => {
-                  // Reset both states first to force update
-                  setActiveMarker(null);
-                  setShowCardSheet(false);
-                
-                  setTimeout(() => {
-                    setActiveMarker(point.id);     // set again (even same ID)
-                    setShowCardSheet(true);        // re-open sheet
-                  }, 100); // small delay ensures state resets first
-                }}
-                
-                icon={
-                  mapLoaded && window.google
-                    ? {
+                }, 100);
+              }}
+              icon={
+                window.google?.maps?.Size
+                  ? {
                       url: macroIcons[point.macro] || defaultIcon,
                       scaledSize: new window.google.maps.Size(40, 40),
                     }
-                    : undefined
-                }
-              />
-            ))}
-
-          </GoogleMap>
-        </LoadScript>
+                  : undefined
+              }
+            />
+          ))}
+        </GoogleMap>
       </div>
     </div>
   );
-} 
+}

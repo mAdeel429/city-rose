@@ -1,12 +1,9 @@
-/* Card layout - based on AttractionCard */
-
-.attractionCard {
+/* .attractionCardADF {
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
     border-radius: 12px;
     background: white;
-    overflow: hidden;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   }
   
@@ -61,8 +58,6 @@
     color: #666;
   }
   
-  
-  /* Bottom Sheet & Filters */
   
   .offers-bottom-sheet-backdrop {
     position: fixed;
@@ -160,4 +155,207 @@
     cursor: pointer;
     font-weight: bold;
     color: #222;
+} */
+
+
+
+:root {
+  --card-bg: #ffffff;
+  --card-text-color: #000000;
+  --card-subtext-color: #666666;
+  --card-heart-bg: rgba(0, 0, 0, 0.4);
+  --sheet-bg: #ffffff;
+  --radio-border: #000000;
+  --radio-fill: #000000;
+  --close-btn-bg: #000000;
+  --close-btn-color: #ffffff;
+  --handle-bar-bg: #cccccc;
+  --show-btn-bg: #ffffff;
+  --show-btn-border: #eeeeee;
+  --show-btn-text: #222222;
+}
+
+[data-theme='dark'] {
+  --card-bg: #1f1f1f;
+  --card-text-color: #ffffff;
+  --card-subtext-color: #bbbbbb;
+  --card-heart-bg: rgba(255, 255, 255, 0.2);
+  --sheet-bg: #2a2a2a;
+  --radio-border: #ffffff;
+  --radio-fill: #ffffff;
+  --close-btn-bg: #ffffff;
+  --close-btn-color: #000000;
+  --handle-bar-bg: #666666;
+  --show-btn-bg: #2a2a2a;
+  --show-btn-border: #444444;
+  --show-btn-text: #ffffff;
+}
+
+/* Card layout - AttractionCard */
+.attractionCardADF {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  border-radius: 12px;
+  background: var(--card-bg);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition: background-color 0.3s ease;
+}
+
+.attractionCardImageContainer {
+  position: relative;
+  height: 200px;
+}
+
+.attractionCardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.attractionCardHeartIcon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+  font-size: 22px;
+  background: var(--card-heart-bg);
+  padding: 6px;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.attractionCardCategoryADF {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--card-category-bg);
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 20px;
+  z-index: 1;
+}
+
+.attractionCardDetails {
+  padding: 12px 16px;
+  color: var(--card-text-color);
+}
+
+.attractionCardDetails h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--card-text-color);
+}
+
+.attractionCardDetails p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--card-subtext-color);
+}
+
+/* Bottom Sheet & Filters */
+.offers-bottom-sheet-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+
+.offers-bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--sheet-bg);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  padding-top: 12px;
+  z-index: 1001;
+  transition: background-color 0.3s ease;
+}
+
+.offers-handle-bar {
+  width: 40px;
+  height: 5px;
+  background: var(--handle-bar-bg);
+  border-radius: 2.5px;
+  margin: 0 auto 16px;
+}
+
+.offers-filter-options {
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 80px;
+}
+
+.offers-radio-option {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--card-text-color);
+}
+
+.offers-radio-circle {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--radio-border);
+  border-radius: 50%;
+  margin-right: 16px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.offers-radio-circle::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: var(--radio-fill);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.offers-radio-option.offers-active .offers-radio-circle::after {
+  opacity: 1;
+}
+
+.offers-bottom-sheet-close-btn {
+  background: var(--close-btn-bg);
+  color: var(--close-btn-color);
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  width: 90%;
+  margin: 24px auto 25px;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Show Offers Button */
+.showOfferButton {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--show-btn-bg);
+  border: none;
+  border-top: 1px solid var(--show-btn-border);
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--show-btn-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

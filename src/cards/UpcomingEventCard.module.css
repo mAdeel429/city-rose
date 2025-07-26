@@ -1,3 +1,16 @@
+:root {
+  --card-bg: #ffffff;
+  --card-title: #333333;
+  --card-subtitle: #666666;
+}
+
+[data-theme='dark'] {
+  --card-bg: #1e1e1e;
+  --card-title: #ffffff;
+  --card-subtitle: #bbbbbb;
+}
+
+
 .eventCard {
     display: flex;
     width: 100%;
@@ -5,9 +18,10 @@
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    background-color: #fff;
+    background-color: var(--card-bg);
     margin: 10px 0;
     font-family: sans-serif;
+    transition: background-color 0.3s ease;
   }
   
   .eventHeading {
@@ -15,6 +29,7 @@
     margin-top: 20px;
     margin-bottom: 20px;
     font-size: 16px;
+    color: var(--card-title); 
   }
   .eventImage {
     width: 100px;
@@ -35,7 +50,7 @@
     font-size: 16px;
     font-weight: bold;
     margin: 0;
-    color: #333;
+    color: var(--card-title);
     margin-top: 20px;
   }
   
@@ -43,6 +58,6 @@
     font-size: 13px;
     margin: 0;
     align-self: flex-end;
-    color: #666;
+    color: #777;
   }
   

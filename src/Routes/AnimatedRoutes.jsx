@@ -127,12 +127,11 @@ export default function AnimatedRoutes() {
             position: 'absolute',
             width: '100%',
             height: '100%',
-            backgroundColor: '#fff',
+            backgroundColor: 'var(--background-color)',
           }}
         >
-          <Suspense fallback={<div style={{ backgroundColor: '#fff', height: '100vh' }} />}>
+          <Suspense fallback={<div style={{ backgroundColor: 'var(--background-color)', height: '100vh' }} />}>
             <Routes location={loc}>
-              {/* Redirect root to /near-me */}
               <Route path="/" element={<Navigate to="/near-me" replace />} />
               <Route path="/home" element={<HomePage />} />
               <Route path="/editProfile" element={<EditProfile />} />

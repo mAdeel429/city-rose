@@ -1,11 +1,30 @@
+:root {
+  --card-bg: #ffffff;
+  --card-text: #000000;
+  --card-category-bg: rgba(255, 255, 255, 0.8);
+  --heart-bg: rgba(0, 0, 0, 0.4);
+  --heart-bg: rgba(0, 0, 0, 0.4);
+}
+
+[data-theme='dark'] {
+  --card-bg: #1e1e1e;
+  --card-text: #ffffff;
+  --heart-bg: rgba(255, 255, 255, 0.3);
+  --card-category-bg: #444;
+  --heart-bg: #444;
+}
+
+
 .attractionCard {
   width: 300px;
   min-width: 300px;
   flex-shrink: 0;
   border-radius: 12px;
-  background: white;
-  overflow: hidden;
   scroll-snap-align: start;
+  background: var(--card-bg);
+  color: var(--card-text);
+  transition: background-color 0.3s ease;
+
 }
 
 .attractionCardImageContainer {
@@ -19,22 +38,30 @@
   object-fit: cover;
 }
 
+
 .attractionCardHeartIcon {
   position: absolute;
   top: 10px;
   right: 10px;
-  color: white;
-  font-size: 22px;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 5px;
+  background: var(--heart-bg);
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+  cursor: pointer;
+  z-index: 10;
+  font-size: 22px;
 }
+
 
 .attractionCardCategory {
   position: absolute;
   top: 10px;
   left: 10px;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--card-category-bg);
   padding: 3px 10px;
   font-size: 14px;
   border-radius: 10px;
@@ -53,10 +80,12 @@
 .attractionCardDetails p {
   margin: 5px 0 0;
   font-size: 14px;
-  color: #666;
+  color: #777;
 }
 
-
+.attractionsWrapper h2 {
+  color: var(--text-color);
+}
 
 .button-group {
   display: flex;
@@ -113,3 +142,48 @@
 }
 
 
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.heartAnimate {
+  animation: pop 0.3s ease;
+}
+
+.bubblesContainer {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.bubble {
+  position: absolute;
+  font-size: 10px;
+  color: red;
+  animation: floatUp 1s ease-out forwards;
+}
+.bubble::before {
+  content: '❤️';
+}
+
+
+@keyframes floatUp {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-10px, -40px) scale(0.5);
+    opacity: 0;
+  }
+}

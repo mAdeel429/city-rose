@@ -153,19 +153,17 @@ export default function AddToFavorite() {
   const [selectedFilter, setSelectedFilter] = useState('All');
   const { favorites, removeFromFavorites, addToFavorites } = useFavorites();
 
-  // List of categories that should be treated as "Points"
   const categoryMappedToPoints = [
     'Food & Drink',
     'Culture',
     'Culture & Sights',
     'Vegan Friendly',
-    'Vegan & Vegetarian'
+    'Vegan & Vegetarian',
+    'Activity & Wellness'
   ];
 
-  // Only show these in bottom sheet (All is excluded)
   const filters = ['Offers', 'Points', 'Events'];
 
-  // Filtering logic
   const filteredItems =
     selectedFilter === 'All'
       ? favorites
@@ -192,15 +190,16 @@ export default function AddToFavorite() {
 
   const handleHeartClick = (e, item) => {
     e.stopPropagation();
-    if (favorites.some(fav => fav.title === item.title)) {
-      removeFromFavorites(item.title);
+    if (favorites.some(fav => fav.id === item.id)) {
+      removeFromFavorites(item.id);
     } else {
       addToFavorites(item);
     }
   };
 
   return (
-    <div style={{ marginLeft: '10px', marginRight: '10px', paddingBottom: '100px' }}>
+    <div style={{ marginLeft: '10px', marginRight: '10px', paddingBottom: '100px', height: 'calc(100vh - 70px)', // Adjust based on your header/footer
+      overflowY: 'auto', }}>
       {/* Header */}
       <div style={{
         display: 'flex',
@@ -221,7 +220,7 @@ export default function AddToFavorite() {
         </p>
       ) : (
         filteredItems.map((item, index) => (
-          <div key={index} className="attractionCard" style={{ marginBottom: '20px' }}>
+          <div key={index} className="attractionCardADF" style={{ marginBottom: '20px' }}>
             <div className="attractionCardImageContainer">
               <img
                 src={item.image}
@@ -232,12 +231,11 @@ export default function AddToFavorite() {
               <AiFillHeart
                 className="attractionCardHeartIcon"
                 onClick={(e) => handleHeartClick(e, item)}
-                style={{ color: 'red',backgroundColor: 'white' }}
+                style={{ color: 'red'}}
               />
 
-              {/* Hide category pill if category is 'Offers' */}
               {item.category && item.category !== 'Offers' && (
-                <div className="attractionCardCategory">{item.category}</div>
+                <div className="attractionCardCategoryADF">{item.category}</div>
               )}
             </div>
 

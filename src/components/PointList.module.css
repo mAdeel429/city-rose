@@ -1,48 +1,82 @@
+:root {
+  --sheet-bg: #ffffff;
+  --handle-bar-bg: #cccccc;
+  --profile-icon-bg: #219f8a;
+  --profile-name-color: #000000;
+  --option-text-color: #333333;
+  --option-icon-color: #555555;
+  --bg-color: #ffffff;
+  --border-color: #e0e0e0;
+  --text-color: #9a98a3;
+  --icon-color: black;
+  --icon-filter: none;
+}
+
+[data-theme='dark'] {
+  --sheet-bg: #2a2a2a;
+  --handle-bar-bg: #666666;
+  --profile-icon-bg: #1e7f6f;
+  --profile-name-color: #ffffff;
+  --option-text-color: #dddddd;
+  --option-icon-color: #aaaaaa;
+  --bg-color: #1e1e1e;
+  --border-color: #333333;
+  --text-color: #888888;
+  --icon-color: #ddd;
+  --icon-filter: invert(1) brightness(1.2);
+}
+
+
 .bottomTabs {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   width: 100%;
-  background: white;
+  background: var(--bg-color);
   display: flex;
   justify-content: space-around;
   padding: 10px 0;
-  border-top: 1px solid #e0e0e0;
-  box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-}
-.tabItem {
-  text-align: center;
-  text-decoration: none;
-  color: #9a98a3;
-  font-size: 22px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-
-.tabItem.active {
-  color: #1DA1F2;
+  border-top: 1px solid var(--border-color);
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .divider {
   border: none;
   height: 1px;
-  background-color: #ccc;
+  background: var(--border-color);
   margin: 4px 0;
 }
 
+.tabItem {
+  text-align: center;
+  text-decoration: none;
+  color: var(--text-color);
+  font-size: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+}
 
-.open-btn {
-  padding: 12px 20px;
-  font-size: 16px;
-  background-color: #0dcaf0;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+.tabItem.active {
+  color: #1DA1F2;
+}
+
+
+.centerIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 20px;
+  filter: var(--icon-filter);
+  transition: filter 0.3s ease;
+}
+
+/* Optional: Hide bottom bar */
+.hidden {
+  display: none;
 }
 
 .bottomSheetBackdrop {
@@ -58,17 +92,18 @@
 .bottomSheet {
   width: 100%;
   max-width: 480px;
-  background: white;
+  background-color: var(--sheet-bg);
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   padding: 20px 20px 30px;
   box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
 }
 
 .handleBar {
   width: 40px;
   height: 4px;
-  background: #ccc;
+  background: var(--handle-bar-bg);
   border-radius: 2px;
   margin: 0 auto 20px;
 }
@@ -76,7 +111,6 @@
 .profileSection {
   display: flex;
   align-items: center;
-
   gap: 12px;
   margin-bottom: 24px;
 }
@@ -84,7 +118,7 @@
 .profileIcon {
   width: 60px;
   height: 60px;
-  background-color: #219f8a;
+  background-color: var(--profile-icon-bg);
   color: white;
   display: flex;
   align-items: center;
@@ -96,6 +130,7 @@
 .profileName {
   font-size: 18px;
   font-weight: 500;
+  color: var(--profile-name-color);
 }
 
 .sheetOptions {
@@ -109,13 +144,15 @@
   align-items: center;
   font-size: 16px;
   gap: 14px;
-  color: #333;
+  color: var(--option-text-color);
   cursor: pointer;
+  transition: color 0.3s ease;
 }
 
 .optionIcon {
   font-size: 18px;
-  color: #555;
+  color: var(--option-icon-color);
+  transition: color 0.3s ease;
 }
 
 .option.logout {
@@ -123,8 +160,6 @@
   display: flex;
   align-items: center;
 }
-
-
 
 .centerIcon {
   width: 34px;
@@ -136,11 +171,4 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-
-
-
-.hidden {
-  display: none !important;
 }
