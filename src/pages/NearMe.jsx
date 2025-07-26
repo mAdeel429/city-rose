@@ -1,11 +1,3 @@
-// import foodIcon from '../assets/foodIcon.png';
-// import toursIcon from '../assets/foodIcon.png';
-// import fashionIcon from '../assets/fashionIcon.png';
-// import nightlifeIcon from '../assets/foodIcon.png';
-// import educationIcon from '../assets/foodIcon.png';
-// import defaultIcon from '../assets/pointer.png';
-
-
 // import React, { useState, useRef, useEffect } from 'react';
 // import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 // import './NearMe.css';
@@ -14,16 +6,19 @@
 // import CardSlider from '../components/CardSlider';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faSliders } from '@fortawesome/free-solid-svg-icons';
-// import customMarkerIcon from '../assets/pointer.png';
 
+// import foodIcon from '../assets/restaurant.png';
+// import fashionIcon from '../assets/fashionIcon.png';
+// import nightlifeIcon from '../assets/bar-pin.png';
+// import educationIcon from '../assets/restaurant.png';
+// import defaultIcon from '../assets/defaultIcon.png';
 
 // const macroIcons = {
 //   Food: foodIcon,
-//   Tours: toursIcon,
+//   Tours: defaultIcon,
 //   Fashion: fashionIcon,
 //   Nightlife: nightlifeIcon,
 //   Education: educationIcon,
-//   // Add other categories if needed
 // };
 
 // const containerStyle = {
@@ -38,9 +33,9 @@
 //   const a =
 //     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
 //     Math.cos((lat1 * Math.PI) / 180) *
-//       Math.cos((lat2 * Math.PI) / 180) *
-//       Math.sin(dLon / 2) *
-//       Math.sin(dLon / 2);
+//     Math.cos((lat2 * Math.PI) / 180) *
+//     Math.sin(dLon / 2) *
+//     Math.sin(dLon / 2);
 //   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 //   return R * c;
 // }
@@ -60,7 +55,6 @@
 //   const mapRef = useRef(null);
 //   const [mapLoaded, setMapLoaded] = useState(false);
 
-//   // Get user location
 //   useEffect(() => {
 //     if (navigator.geolocation) {
 //       navigator.geolocation.getCurrentPosition(
@@ -76,13 +70,23 @@
 //             mapRef.current.setZoom(15);
 //           }
 //         },
-//         (err) => console.error('Geolocation error:', err),
+//         (err) => {
+//           console.error('Geolocation error:', err);
+
+//           // Fallback location: Oslo, Norway
+//           const norwayFallback = { lat: 59.9139, lng: 10.7522 };
+//           setUserLocation(norwayFallback);
+
+//           if (mapRef.current) {
+//             mapRef.current.setCenter(norwayFallback);
+//             mapRef.current.setZoom(12);
+//           }
+//         },
 //         { enableHighAccuracy: true }
 //       );
 //     }
 //   }, [mapLoaded]);
 
-//   // Filter points based on search, filters, and location (if map not interacted)
 //   const filteredPoints = points.filter((p) => {
 //     const macroMatch = !macro || p.macro === macro;
 //     const tagMatch = tags.length === 0 || tags.some((tag) => p.tags.includes(tag));
@@ -96,7 +100,19 @@
 //     return macroMatch && tagMatch && searchMatch && proximityMatch;
 //   });
 
-//   // Fit bounds on initial load
+//   useEffect(() => {
+//     if (showCardSheet) {
+//       document.body.style.overflow = 'auto'; // Show scroll when sheet is open
+//     } else {
+//       document.body.style.overflow = 'hidden'; // Hide scroll when sheet is closed
+//     }
+
+//     // Optional cleanup
+//     return () => {
+//       document.body.style.overflow = '';
+//     };
+//   }, [showCardSheet]);
+
 //   useEffect(() => {
 //     if (mapLoaded && mapRef.current && window.google?.maps?.LatLngBounds) {
 //       if (filteredPoints.length > 0 && !mapInteracted) {
@@ -159,9 +175,9 @@
 //             fullscreenControl: false,
 //           }}
 //           zoom={17}
-//           center={userLocation || { lat: 0, lng: 0 }}
+//           center={userLocation || { lat: 59.9139, lng: 10.7522 }} // Default center
 //         >
-//           {userLocation && (
+//           {userLocation && window.google && window.google.maps && (
 //             <Marker
 //               position={userLocation}
 //               icon={{
@@ -190,9 +206,9 @@
 //               icon={
 //                 mapLoaded && window.google
 //                   ? {
-//                       url: customMarkerIcon,
-//                       scaledSize: new window.google.maps.Size(40, 40),
-//                     }
+//                     url: macroIcons[point.macro] || defaultIcon,
+//                     scaledSize: new window.google.maps.Size(40, 40),
+//                   }
 //                   : undefined
 //               }
 //             />
@@ -202,6 +218,9 @@
 //     </div>
 //   );
 // }
+
+
+
 
 
 
@@ -240,9 +259,9 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+    Math.cos((lat2 * Math.PI) / 180) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
@@ -277,7 +296,18 @@ export default function NearMe() {
             mapRef.current.setZoom(15);
           }
         },
-        (err) => console.error('Geolocation error:', err),
+        (err) => {
+          console.error('Geolocation error:', err);
+
+          // Fallback location: Oslo, Norway
+          const norwayFallback = { lat: 59.9139, lng: 10.7522 };
+          setUserLocation(norwayFallback);
+
+          if (mapRef.current) {
+            mapRef.current.setCenter(norwayFallback);
+            mapRef.current.setZoom(12);
+          }
+        },
         { enableHighAccuracy: true }
       );
     }
@@ -295,6 +325,26 @@ export default function NearMe() {
 
     return macroMatch && tagMatch && searchMatch && proximityMatch;
   });
+  useEffect(() => {
+    const scrollTarget = document.querySelector('.main-wrapper'); // change this to your actual class/id
+
+    if (showCardSheet && scrollTarget) {
+      scrollTarget.style.overflow = 'hidden';
+      scrollTarget.style.height = '100vh'; // prevent scroll
+    } else if (scrollTarget) {
+      scrollTarget.style.overflow = 'auto';
+      scrollTarget.style.height = 'auto';
+    }
+
+    return () => {
+      if (scrollTarget) {
+        scrollTarget.style.overflow = 'auto';
+        scrollTarget.style.height = 'auto';
+      }
+    };
+  }, [showCardSheet]);
+
+
 
   useEffect(() => {
     if (mapLoaded && mapRef.current && window.google?.maps?.LatLngBounds) {
@@ -309,72 +359,73 @@ export default function NearMe() {
   }, [filteredPoints, mapLoaded, mapInteracted]);
 
   return (
-    <div className="nearme-container">
-      <div className="nearme-header">
-        <input
-          type="text"
-          placeholder="Search places..."
-          className="search-input"
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <div className="filter-btn-wrapper" onClick={() => setShowFilterSheet(true)}>
-          <button className="filter-btn">
-            <FontAwesomeIcon icon={faSliders} />
-          </button>
-          {activeFiltersCount > 0 && (
-            <span className="filter-badge">{activeFiltersCount}</span>
-          )}
+    <div id="near-me-container">
+      <div className="nearme-container">
+        <div className="nearme-header">
+          <input
+            type="text"
+            placeholder="Search places..."
+            className="search-input"
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <div className="filter-btn-wrapper" onClick={() => setShowFilterSheet(true)}>
+            <button className="filter-btn">
+              <FontAwesomeIcon icon={faSliders} />
+            </button>
+            {activeFiltersCount > 0 && (
+              <span className="filter-badge">{activeFiltersCount}</span>
+            )}
+          </div>
         </div>
-      </div>
 
-      <CardSlider
-        show={showCardSheet}
-        points={filteredPoints}
-        activeMarker={activeMarker}
-        setShowCardSheet={setShowCardSheet}
-      />
+        <CardSlider
+          show={showCardSheet}
+          points={filteredPoints}
+          activeMarker={activeMarker}
+          setShowCardSheet={setShowCardSheet}
+        />
 
-      <FilterBottomSheet
-        show={showFilterSheet}
-        onClose={() => setShowFilterSheet(false)}
-        setMacro={setMacro}
-        setTags={setTags}
-        setActiveFiltersCount={setActiveFiltersCount}
-      />
+        <FilterBottomSheet
+          show={showFilterSheet}
+          onClose={() => setShowFilterSheet(false)}
+          setMacro={setMacro}
+          setTags={setTags}
+          setActiveFiltersCount={setActiveFiltersCount}
+        />
 
-      <LoadScript googleMapsApiKey={'AIzaSyAvJVIP2hU3dlLigoB7dmhWoutpwJ12wDM'}>
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          onLoad={(map) => {
-            mapRef.current = map;
-            setMapLoaded(true);
-          }}
-          onZoomChanged={() => setMapInteracted(true)}
-          onDragEnd={() => setMapInteracted(true)}
-          options={{
-            mapTypeControl: false,
-            zoomControl: false,
-            streetViewControl: false,
-            fullscreenControl: false,
-          }}
-          zoom={17}
-          center={userLocation || { lat: 0, lng: 0 }}
-        >
-          {userLocation && (
-            <Marker
-              position={userLocation}
-              icon={{
-                path: window.google.maps.SymbolPath.CIRCLE,
-                scale: 8,
-                fillColor: '#4285F4',
-                fillOpacity: 1,
-                strokeWeight: 2,
-                strokeColor: 'white',
-              }}
-            />
-          )}
+        <LoadScript googleMapsApiKey={'AIzaSyAvJVIP2hU3dlLigoB7dmhWoutpwJ12wDM'}>
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            onLoad={(map) => {
+              mapRef.current = map;
+              setMapLoaded(true);
+            }}
+            onZoomChanged={() => setMapInteracted(true)}
+            onDragEnd={() => setMapInteracted(true)}
+            options={{
+              mapTypeControl: false,
+              zoomControl: false,
+              streetViewControl: false,
+              fullscreenControl: false,
+            }}
+            zoom={17}
+            center={userLocation || { lat: 59.9139, lng: 10.7522 }} // Default center
+          >
+            {userLocation && window.google && window.google.maps && (
+              <Marker
+                position={userLocation}
+                icon={{
+                  path: window.google.maps.SymbolPath.CIRCLE,
+                  scale: 8,
+                  fillColor: '#4285F4',
+                  fillOpacity: 1,
+                  strokeWeight: 2,
+                  strokeColor: 'white',
+                }}
+              />
+            )}
 
-          {filteredPoints.map((point) => (
+            {/* {filteredPoints.map((point) => (
             <Marker
               key={point.id}
               position={{ lat: point.lat, lng: point.lng }}
@@ -385,19 +436,40 @@ export default function NearMe() {
                   setActiveMarker(point.id);
                   setShowCardSheet(true);
                 }, 50);
-              }}
-              icon={
-                mapLoaded && window.google
-                  ? {
+              }} */}
+            {filteredPoints.map((point) => (
+              <Marker
+                key={point.id}
+                position={{ lat: point.lat, lng: point.lng }}
+                // onClick={() => {
+                //   setActiveMarker(point.id);
+                //   setShowCardSheet(true);
+                // }}
+                onClick={() => {
+                  // Reset both states first to force update
+                  setActiveMarker(null);
+                  setShowCardSheet(false);
+                
+                  setTimeout(() => {
+                    setActiveMarker(point.id);     // set again (even same ID)
+                    setShowCardSheet(true);        // re-open sheet
+                  }, 100); // small delay ensures state resets first
+                }}
+                
+                icon={
+                  mapLoaded && window.google
+                    ? {
                       url: macroIcons[point.macro] || defaultIcon,
                       scaledSize: new window.google.maps.Size(40, 40),
                     }
-                  : undefined
-              }
-            />
-          ))}
-        </GoogleMap>
-      </LoadScript>
+                    : undefined
+                }
+              />
+            ))}
+
+          </GoogleMap>
+        </LoadScript>
+      </div>
     </div>
   );
-}
+} 

@@ -118,7 +118,7 @@ export default function AnimatedRoutes() {
   });
 
   return (
-    <div style={{ position: 'relative', overflowX: 'hidden', height: '100vh' }}>
+    <div style={{ position: 'relative', height: '100vh' }}>
       {transitions((style, loc) => (
         <animated.div
           key={loc.key}
