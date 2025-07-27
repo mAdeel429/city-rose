@@ -231,7 +231,7 @@ export default function AddToFavorite() {
               <AiFillHeart
                 className="attractionCardHeartIcon"
                 onClick={(e) => handleHeartClick(e, item)}
-                style={{ color: 'red'}}
+                style={{ color: 'red', width: '25px',height: '25px', padding: '4px'}}
               />
 
               {item.category && item.category !== 'Offers' && (

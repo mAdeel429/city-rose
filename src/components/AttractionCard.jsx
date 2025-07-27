@@ -144,7 +144,7 @@ export default function AttractionCard({ id, image, title, category, distance, o
   };
 
   return (
-    <div className={styles.attractionCard} onClick={onClick}>
+    <div className={styles.attractionCard} onClick={onClick} style={{borderRadius: '12px',overflow: 'hidden'}}>
       <div className={styles.attractionCardImageContainer}>
         <img src={image} alt={title} className={styles.attractionCardImage} />
 
