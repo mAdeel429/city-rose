@@ -290,7 +290,7 @@ const macroIcons = {
 
 const containerStyle = {
   width: '100%',
-  height: 'calc(100vh - 20px)',
+  height: 'calc(100vh - 30px)',
 };
 
 function getNearestPoint(userLocation, points) {
