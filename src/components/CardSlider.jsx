@@ -238,16 +238,20 @@ import 'swiper/css/pagination';
 import './CardSlider.css';
 
 const HALF_HEIGHT = window.innerHeight * 0.6;
-const PEEK_HEIGHT = 150;
+const PEEK_HEIGHT = 120;
 const MAX_HEIGHT = window.innerHeight;
 
-export default function CardSlider({ show, points, activeMarker, setShowCardSheet, setBottomBarVisible }) {
+export default function CardSlider({ show, points, activeMarker, setShowCardSheet, setBottomBarVisible, onHeightChange }) {
   const y = useMotionValue(window.innerHeight - PEEK_HEIGHT);
   const [heightState, setHeightState] = useState('half');
   const containerRef = useRef(null);
   const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
   const [heartBubbles, setHeartBubbles] = useState({});
   const [activeSlideIndexes, setActiveSlideIndexes] = useState({});
+
+  useEffect(() => {
+    if (onHeightChange) onHeightChange(heightState);
+  }, [heightState, onHeightChange]);
 
   useEffect(() => {
     if (!points || !points.length) return;

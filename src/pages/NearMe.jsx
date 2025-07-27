@@ -265,11 +265,6 @@
 // } 
 
 
-
-
-
-
-
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import './NearMe.css';
@@ -295,7 +290,7 @@ const macroIcons = {
 
 const containerStyle = {
   width: '100%',
-  height: 'calc(100vh - 100px)',
+  height: 'calc(100vh - 104px)',
 };
 
 function getNearestPoint(userLocation, points) {
@@ -350,7 +345,6 @@ export default function NearMe({ setBottomBarVisible }) {
   const [activeFiltersCount, setActiveFiltersCount] = useState(0);
   const [userLocation, setUserLocation] = useState(null);
   const [mapInteracted, setMapInteracted] = useState(false);
-  // const [bottomBarVisible, setBottomBarVisible] = useState(true);
 
   const mapRef = useRef(null);
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -360,7 +354,7 @@ export default function NearMe({ setBottomBarVisible }) {
   });
 
   useEffect(() => {
-    setBottomBarVisible(false); // 👈 HIDE when NearMe loads (or conditionally)
+    setBottomBarVisible(false);
   }, []);
 
   useEffect(() => {
@@ -446,6 +440,7 @@ export default function NearMe({ setBottomBarVisible }) {
       });
     }
   }, [filteredPoints, mapLoaded, mapInteracted]);
+  
 
   if (!isLoaded || !window.google?.maps) return <div>Loading map...</div>;
 
