@@ -80,7 +80,11 @@ const BottomBar = ({ visible = true }) => {
   const getOpacity = (path) => (location.pathname === path ? 1 : 0.4);
 
   return (
-    <div className={`${styles.bottomTabs} ${!visible ? styles.hidden : ''}`}>
+    // <div className={`${styles.bottomTabs} ${!visible ? styles.hidden : ''}`}>
+    <div
+      className={styles.bottomTabs}
+      style={{ display: visible ? 'flex' : 'none' }}
+    >
       <Link to="/near-me" className={styles.tabItem}>
         <img
           src={NearMeIcon}

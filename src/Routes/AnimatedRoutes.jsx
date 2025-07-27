@@ -96,7 +96,7 @@ const Offers = lazy(() => import('../pages/Offers'));
 const CategoryDetails = lazy(() => import('../pages/CategoryDetails'));
 const AddToFavorite = lazy(() => import('../pages/AddToFavorite'));
 
-export default function AnimatedRoutes() {
+export default function AnimatedRoutes({setBottomBarVisible}) {
   const location = useLocation();
   const navigationType = useNavigationType();
   const isBack = navigationType === 'POP';
@@ -138,7 +138,12 @@ export default function AnimatedRoutes() {
               <Route path="/insights" element={<Insights />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/offers" element={<Offers />} />
-              <Route path="/near-me" element={<NearMe />} />
+              {/* <Route path="/near-me" element={<NearMe />} /> */}
+              <Route
+                path="/near-me"
+                element={<NearMe setBottomBarVisible={setBottomBarVisible} />}
+              />
+
               <Route
                 path="/details"
                 element={<CardDetailScreen key={location.key} />}

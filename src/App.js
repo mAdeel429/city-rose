@@ -25,6 +25,7 @@ import './App.css';
 
 export default function App() {
   const [bottomSheetState, setBottomSheetState] = useState('collapsed');
+  const [bottomBarVisible, setBottomBarVisible] = useState(true);
 
   useEffect(() => {
     const matchDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -47,8 +48,9 @@ export default function App() {
       <AnimatedLayout
         bottomSheetState={bottomSheetState}
         setBottomSheetState={setBottomSheetState}
+        setBottomBarVisible={setBottomBarVisible}
       />
-      <BottomBar visible={bottomSheetState !== 'peek'} />
+      <BottomBar visible={bottomBarVisible} />
     </FavoritesProvider>
   );
 }

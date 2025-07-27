@@ -332,14 +332,14 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+    Math.cos((lat2 * Math.PI) / 180) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
 
-export default function NearMe() {
+export default function NearMe({ setBottomBarVisible }) {
   const [points] = useState(mockPoints);
   const [macro, setMacro] = useState(null);
   const [tags, setTags] = useState([]);
@@ -350,6 +350,7 @@ export default function NearMe() {
   const [activeFiltersCount, setActiveFiltersCount] = useState(0);
   const [userLocation, setUserLocation] = useState(null);
   const [mapInteracted, setMapInteracted] = useState(false);
+  // const [bottomBarVisible, setBottomBarVisible] = useState(true);
 
   const mapRef = useRef(null);
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -357,6 +358,10 @@ export default function NearMe() {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: 'AIzaSyAvJVIP2hU3dlLigoB7dmhWoutpwJ12wDM',
   });
+
+  useEffect(() => {
+    setBottomBarVisible(false); // 👈 HIDE when NearMe loads (or conditionally)
+  }, []);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -469,7 +474,9 @@ export default function NearMe() {
           points={filteredPoints}
           activeMarker={activeMarker}
           setShowCardSheet={setShowCardSheet}
+          setBottomBarVisible={setBottomBarVisible}
         />
+        {/* <BottomBar visible={bottomBarVisible} /> */}
 
         <FilterBottomSheet
           show={showFilterSheet}
@@ -525,9 +532,9 @@ export default function NearMe() {
               icon={
                 window.google?.maps?.Size
                   ? {
-                      url: macroIcons[point.macro] || defaultIcon,
-                      scaledSize: new window.google.maps.Size(40, 40),
-                    }
+                    url: macroIcons[point.macro] || defaultIcon,
+                    scaledSize: new window.google.maps.Size(40, 40),
+                  }
                   : undefined
               }
             />

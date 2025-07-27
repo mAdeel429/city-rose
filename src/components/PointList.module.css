@@ -34,19 +34,12 @@
   right: 0;
   width: 100%;
   background: var(--bg-color);
-  display: flex;
+  /* display: flex; */
   justify-content: space-around;
   padding: 10px 0;
   border-top: 1px solid var(--border-color);
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.divider {
-  border: none;
-  height: 1px;
-  background: var(--border-color);
-  margin: 4px 0;
 }
 
 .tabItem {
@@ -74,9 +67,19 @@
   transition: filter 0.3s ease;
 }
 
-/* Optional: Hide bottom bar */
-.hidden {
-  display: none;
+
+
+
+
+
+
+
+
+.divider {
+  border: none;
+  height: 1px;
+  background: var(--border-color);
+  margin: 4px 0;
 }
 
 .bottomSheetBackdrop {

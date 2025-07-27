@@ -224,6 +224,7 @@
 
 
 
+
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, animate, useMotionValue } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -236,16 +237,13 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import './CardSlider.css';
 
-// const PEEK_HEIGHT = 150;
-// const HALF_HEIGHT = window.innerHeight / 2;
-// const MAX_HEIGHT = window.innerHeight;
 const HALF_HEIGHT = window.innerHeight * 0.6;
 const PEEK_HEIGHT = 150;
 const MAX_HEIGHT = window.innerHeight;
 
-export default function CardSlider({ show, points, activeMarker, setShowCardSheet }) {
+export default function CardSlider({ show, points, activeMarker, setShowCardSheet, setBottomBarVisible }) {
   const y = useMotionValue(window.innerHeight - PEEK_HEIGHT);
-  const [heightState, setHeightState] = useState('half'); // 'peek' | 'half' | 'full'
+  const [heightState, setHeightState] = useState('half');
   const containerRef = useRef(null);
   const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
   const [heartBubbles, setHeartBubbles] = useState({});
@@ -264,13 +262,24 @@ export default function CardSlider({ show, points, activeMarker, setShowCardShee
     setHeightState('half');
     snapTo(HALF_HEIGHT);
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = y.on("change", (latestY) => {
+      const currentHeight = window.innerHeight - latestY;
   
-  // useEffect(() => {
-  //   if (show) {
-  //     setHeightState('half');
-  //     snapTo(HALF_HEIGHT);
-  //   }
-  // }, [show]);
+      console.log("BottomSheet Height:", currentHeight);
+  
+      if (Math.abs(currentHeight - PEEK_HEIGHT) < 5) {
+        console.log("Hiding BottomBar");
+        setBottomBarVisible(false);
+      } else {
+        console.log("Showing BottomBar");
+        setBottomBarVisible(true);
+      }
+    });
+    return () => unsubscribe();
+  }, [y, setBottomBarVisible]);
+  
 
   useEffect(() => {
     if (!activeMarker || !containerRef.current) return;
@@ -381,7 +390,7 @@ export default function CardSlider({ show, points, activeMarker, setShowCardShee
               e.stopPropagation();
               setHeightState('peek');
               snapTo(PEEK_HEIGHT);
-              setShowCardSheet(false); // Optional: close the sheet if needed
+              setShowCardSheet(false);
             }}
           >
             <IoMdClose size={24} />
