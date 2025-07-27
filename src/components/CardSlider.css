@@ -257,7 +257,7 @@
     --bg-color: white;
     --text-color: #000;
     --subtext-color: #555;
-    --handle-bg: #ccc;
+    --handle-bg: #999;
     --border-color: #eee;
     --swiper-pagination-bullet-bg: #fff;
     --swiper-pagination-bullet-active-bg: #000;
@@ -287,6 +287,18 @@
     --heart-bg: rgba(255, 255, 255, 0.3);
   }
   
+  .close-sheet-btn {
+    /* position: absolute;
+    right: 1px;
+    top: 4px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color);
+    z-index: 10; */
+    display: none;
+  }
+  
   .bottom-sheet-card {
     position: fixed;
     bottom: 0;
@@ -302,11 +314,13 @@
     overflow: hidden;
     will-change: transform;
     touch-action: none;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
   }
   
   .handle-bar {
-    width: 80px;
-    height: 5px;
+    width: 100px;
+    height: 6px;
     background: var(--handle-bg);
     border-radius: 4px;
     margin: 8px auto;
