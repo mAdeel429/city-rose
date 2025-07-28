@@ -98,23 +98,23 @@
 //     setActiveFiltersCount(0);
 //     onClose();
 //   };
-  
+
 //   const handleApply = () => {
 //     const macroToUse = localMacro || macro; // fallback to existing macro
 //     const selectedTags = activeTags[macroToUse] || {};
 //     const allSelected = Object.values(selectedTags).flat();
-  
+
 //     setMacro(macroToUse);
 //     setTags(allSelected);
 //     setActiveFiltersCount(allSelected.length + (macroToUse ? 1 : 0));
-  
+
 //     if (onApplyFilters) {
 //       onApplyFilters(macroToUse, allSelected);
 //     }
-  
+
 //     onClose();
 //   };
-  
+
 //   const selectedMacroFilters = localMacro ? filterOptions[localMacro] : null;
 //   const hasFiltersSelected = selectedMacroFilters && Object.values(activeTags[localMacro] || {}).flat().length > 0;
 
@@ -344,7 +344,7 @@ export default function PointsBottomSheet({
             </button>
 
             <div className="points-scrollable-content">
-              {selectedMacroFilters &&
+              {/* {selectedMacroFilters &&
                 Object.entries(selectedMacroFilters).map(([sectionName, tags]) => (
                   <div key={sectionName} className="filter-section">
                     <h4 className="section-title">{sectionName}</h4>
@@ -363,10 +363,33 @@ export default function PointsBottomSheet({
                       ))}
                     </div>
                   </div>
-                ))}
+                ))} */}
+              {selectedMacroFilters?.Category && (
+                <>
+                  <h3 className="macro-title">{localMacro}</h3> {/* Macro title on top */}
+
+                  <div className="filter-section">
+                    <div className="checkbox-list">
+                      {selectedMacroFilters.Category.map((tag) => (
+                        <label key={tag} className="checkbox-option">
+                          <input
+                            type="checkbox"
+                            checked={
+                              activeTags[localMacro]?.['Category']?.includes(tag) || false
+                            }
+                            onChange={() => handleTagToggle('Category', tag)}
+                          />
+                          {tag}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+
             </div>
 
-            <div className="bottom-actions sticky-actions" style={{ marginBottom: '80px' }}>
+            <div className="bottom-actions sticky-actions" style={{ marginBottom: '100px' }}>
               {(localMacro || hasFiltersSelected) && (
                 <button className="reset-btn" onClick={handleResetFilters}>
                   Clear all

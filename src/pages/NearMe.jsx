@@ -642,7 +642,7 @@ export default function NearMe({ setBottomBarVisible }) {
         <FilterBottomSheet
           show={showFilterSheet}
           onClose={() => setShowFilterSheet(false)}
-          onClearFilters={handleClearFilters} // 🔥 make sure this gets passed in
+          onClearFilters={handleClearFilters}
           setMacro={setMacro}
           setTags={setTags}
           setActiveFiltersCount={setActiveFiltersCount}
