@@ -289,7 +289,7 @@ export default function PointsBottomSheet({
     setActiveFiltersCount(0);
 
     if (onClearFilters) {
-      onClearFilters(); // ✅ Call parent’s clear logic (resets map view too)
+      onClearFilters();
     }
 
     onClose();
@@ -344,29 +344,9 @@ export default function PointsBottomSheet({
             </button>
 
             <div className="points-scrollable-content">
-              {/* {selectedMacroFilters &&
-                Object.entries(selectedMacroFilters).map(([sectionName, tags]) => (
-                  <div key={sectionName} className="filter-section">
-                    <h4 className="section-title">{sectionName}</h4>
-                    <div className="checkbox-list">
-                      {tags.map((tag) => (
-                        <label key={tag} className="checkbox-option">
-                          <input
-                            type="checkbox"
-                            checked={
-                              activeTags[localMacro]?.[sectionName]?.includes(tag) || false
-                            }
-                            onChange={() => handleTagToggle(sectionName, tag)}
-                          />
-                          {tag}
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                ))} */}
               {selectedMacroFilters?.Category && (
                 <>
-                  <h3 className="macro-title">{localMacro}</h3> {/* Macro title on top */}
+                  <h3 className="macro-title">{localMacro}</h3>
 
                   <div className="filter-section">
                     <div className="checkbox-list">
@@ -386,9 +366,7 @@ export default function PointsBottomSheet({
                   </div>
                 </>
               )}
-
             </div>
-
             <div className="bottom-actions sticky-actions" style={{ marginBottom: '100px' }}>
               {(localMacro || hasFiltersSelected) && (
                 <button className="reset-btn" onClick={handleResetFilters}>

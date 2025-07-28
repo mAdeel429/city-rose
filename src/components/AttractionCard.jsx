@@ -106,10 +106,8 @@
 //         >
 //           <AiFillHeart />
 //         </motion.span>
-
 //         <div className={styles.attractionCardCategory}>{category}</div>
 //       </div>
-
 //       <div className={styles.attractionCardDetails}>
 //         <h3>{title}</h3>
 //         <p>{distance} KM</p>

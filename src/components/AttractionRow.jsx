@@ -19,21 +19,29 @@
 //             dragConstraints={constraintsRef}
 //             dragElastic={0.2}
 //           >
-//             {data.map((item, index) => (
-//               <AttractionCard
-//                 key={`${item.title}-${index}`}
-//                 id={`${item.title}-${index}`} // pass as prop
-//                 {...item}
-//                 onClick={() => navigate('/details', { state: item })}
-//               />
-//             ))}
-
+//             {data.map((item, index) => {
+//               const id = `${title}-${item.title}-${index}`; // Unique id
+//               return (
+//                 <AttractionCard
+//                   key={id}
+//                   id={id}
+//                   image={item.image}
+//                   title={item.title}
+//                   category={item.category}
+//                   distance={item.distance}
+//                   onClick={() => {
+//                     navigate('/details', { state: item });
+//                   }}
+//                 />
+//               );
+//             })}
 //           </motion.div>
 //         </div>
 //       </div>
 //     </div>
 //   );
 // }
+
 
 
 import React, { useRef } from 'react';
@@ -59,6 +67,8 @@ export default function AttractionRow({ title, data }) {
           >
             {data.map((item, index) => {
               const id = `${title}-${item.title}-${index}`; // Unique id
+              const itemWithId = { ...item, id }; // ✅ Add id to item before navigation
+
               return (
                 <AttractionCard
                   key={id}
@@ -68,7 +78,7 @@ export default function AttractionRow({ title, data }) {
                   category={item.category}
                   distance={item.distance}
                   onClick={() => {
-                    navigate('/details', { state: item });
+                    navigate('/details', { state: itemWithId }); // ✅ Pass full item with id
                   }}
                 />
               );
@@ -79,4 +89,3 @@ export default function AttractionRow({ title, data }) {
     </div>
   );
 }
-
