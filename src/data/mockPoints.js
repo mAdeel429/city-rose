@@ -183,25 +183,25 @@
 
 
 const mockPoints = [
-  {
-    id: 1,
-    name: "Rose Fashion",
-    type: "Clothing",
-    macro: "Shopping",
-    category: "Boutique",
-    tags: ["Local", "Trendy"],
-    price: "$$",
-    lat: 31.4260,
-    lng: 73.0916,
-    description: "Trendy boutique offering eco-friendly fashion items.",
-    openingHours: "10:00 AM – 8:00 PM",
-    distance: "500m",
-    images: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPI8sJXdMfEbDdn3Ql-v3gJ_ygGJn9WSXjQA&s",
-      "https://thumbs.dreamstime.com/b/illustration-sustainable-fashion-boutique-eco-friendly-clothing-collection-display-modern-retail-environmentally-conscious-385625561.jpg",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIhYDsZCOJPYaXIaVnMqJGqRaU3clMUL0PWND4eAJmcHV9eurwopGhaClDvjJKweIYO6Y&usqp=CAU"
-    ]
-  },
+  // {
+  //   id: 1,
+  //   name: "Rose Fashion",
+  //   type: "Clothing",
+  //   macro: "Shopping",
+  //   category: "Boutique",
+  //   tags: ["Local", "Trendy"],
+  //   price: "$$",
+  //   lat: 31.4260,
+  //   lng: 73.0916,
+  //   description: "Trendy boutique offering eco-friendly fashion items.",
+  //   openingHours: "10:00 AM – 8:00 PM",
+  //   distance: "500m",
+  //   images: [
+  //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPI8sJXdMfEbDdn3Ql-v3gJ_ygGJn9WSXjQA&s",
+  //     "https://thumbs.dreamstime.com/b/illustration-sustainable-fashion-boutique-eco-friendly-clothing-collection-display-modern-retail-environmentally-conscious-385625561.jpg",
+  //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIhYDsZCOJPYaXIaVnMqJGqRaU3clMUL0PWND4eAJmcHV9eurwopGhaClDvjJKweIYO6Y&usqp=CAU"
+  //   ]
+  // },
   {
     id: 2,
     name: "City Café",
