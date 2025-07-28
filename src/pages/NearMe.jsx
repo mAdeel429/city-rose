@@ -648,6 +648,7 @@ export default function NearMe({ setBottomBarVisible }) {
           setActiveFiltersCount={setActiveFiltersCount}
           macro={macro}
           onApplyFilters={handleFilterApply}
+          allPoints={points}
         />
 
         <GoogleMap
