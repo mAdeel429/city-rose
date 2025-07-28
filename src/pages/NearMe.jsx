@@ -455,20 +455,6 @@ export default function NearMe({ setBottomBarVisible }) {
     googleMapsApiKey: 'AIzaSyAvJVIP2hU3dlLigoB7dmhWoutpwJ12wDM',
   });
 
-  useEffect(() => {
-    if (showCardSheet) {
-      // Delay to allow layout to mount fully
-      setTimeout(() => {
-        const header = document.querySelector('.nearme-header');
-        const chipBar = document.querySelector('.macro-chip-bar-floating');
-  
-        if (header) header.style.display = 'flex';
-        if (chipBar) chipBar.style.display = 'flex';
-      }, 100); // or try 200ms if needed
-    }
-  }, [showCardSheet]);
-  
-
   const handleFilterApply = (macroKey, selectedTags) => {
     const matches = points.filter((p) => {
       const macroMatch =
@@ -656,7 +642,7 @@ export default function NearMe({ setBottomBarVisible }) {
         <FilterBottomSheet
           show={showFilterSheet}
           onClose={() => setShowFilterSheet(false)}
-          onClearFilters={handleClearFilters} 
+          onClearFilters={handleClearFilters} // 🔥 make sure this gets passed in
           setMacro={setMacro}
           setTags={setTags}
           setActiveFiltersCount={setActiveFiltersCount}

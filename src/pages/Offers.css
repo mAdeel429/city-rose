@@ -24,7 +24,6 @@
      --offers-handle-bar: #666666;
    }
 
-   /* Offers Card */
    /* .offers-card {
      position: relative;
      text-align: center;
@@ -205,7 +204,121 @@
 
 
 
+   .offers-bottom-sheet-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+  }
 
+  .offers-bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--offers-sheet-bg);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    padding-top: 12px;
+    z-index: 1001;
+    transition: background-color 0.3s ease;
+  }
+
+  .offers-handle-bar {
+    width: 40px;
+    height: 5px;
+    background-color: var(--offers-handle-bar);
+    border-radius: 2.5px;
+    margin: 0 auto 16px;
+  }
+
+  .offers-filter-options {
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 80px;
+  }
+
+  .offers-radio-option {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--offers-text-color);
+  }
+
+  .offers-radio-circle {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--offers-radio-border);
+    border-radius: 50%;
+    margin-right: 16px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .offers-radio-circle::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: var(--offers-radio-fill);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  .offers-radio-option.offers-active .offers-radio-circle::after {
+    opacity: 1;
+  }
+
+  .offers-bottom-sheet-close-btn {
+    margin-top: auto;
+    background-color: var(--offers-close-btn-bg);
+    color: var(--offers-close-btn-color);
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    width: 90%;
+    margin: 24px auto 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .offers-bubbles-container {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .offers-bubble {
+    position: absolute;
+    font-size: 10px;
+    color: red;
+    animation: floatUp 1s ease-out forwards;
+  }
+
+  @keyframes floatUp {
+    0% {
+      transform: translate(0, 0) scale(1);
+      opacity: 1;
+    }
+
+    100% {
+      transform: translate(-10px, -40px) scale(0.5);
+      opacity: 0;
+    }
+  } 
    .offers-card {
     width: 330px;
     min-width: 300px;
