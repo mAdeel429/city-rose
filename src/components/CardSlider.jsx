@@ -236,7 +236,6 @@
 
 
 import React, { useEffect, useRef, useState } from 'react';
-// import { motion, animate, useMotionValue } from 'framer-motion';
 import { motion, animate, useMotionValue, useDragControls } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
@@ -403,6 +402,7 @@ export default function CardSlider({
     <motion.div
       className="bottom-sheet-card"
       style={{ y }}
+      initial={false}
       drag="y"
       dragElastic={0.1}
       dragMomentum={false}
