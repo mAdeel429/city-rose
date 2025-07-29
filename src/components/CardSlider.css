@@ -358,6 +358,11 @@
 .sheet-drag-header {
   cursor: grab;
   touch-action: none;
+  margin-bottom: 0;
+}
+
+.card-vertical:first-child {
+  margin-top: 0 !important; /* Remove top margin for the first card */
 }
 
 /* 

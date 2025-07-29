@@ -14,12 +14,14 @@
   --card-category-bg: rgba(255, 255, 255, 0.8);
   --heart-bg: rgba(0, 0, 0, 0.4);
   --show-btn-text: #222222;
+  --offers-sheet-bg: #ffffff;
 }
 
 [data-theme='dark'] {
   --card-bg: #1f1f1f;
   --heart-bg: #444;
   --card-category-bg: #444;
+  --offers-sheet-bg: #2a2a2a;
   --card-text-color: #ffffff;
   --card-subtext-color: #bbbbbb;
   --card-heart-bg: rgba(255, 255, 255, 0.2);
@@ -33,7 +35,7 @@
   --show-btn-border: #444444;
   --show-btn-text: #ffffff;
 }
-
+/* 
 .attractionCardADF {
   width: 100%;
   max-width: 100%;
@@ -43,12 +45,35 @@
   overflow: hidden;
   scroll-snap-align: start;
   transition: background-color 0.3s ease;
+  margin: 10px 10px;
+} */
+
+.attractionCardADF {
+  width: calc(100% - 32px);
+  max-width: 500px;
+  margin: 16px auto;
+  border-radius: 12px;
+  background: var(--card-bg);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  scroll-snap-align: start;
+  transition: background-color 0.3s ease;
 }
+
 
 .attractionCardImageContainer {
   position: relative;
-  height: 180px; 
+  height: 180px;
   overflow: hidden;
+}
+
+.offers-text {
+  width: 100%;
+  padding: 16px 20px 8px 20px;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--card-subtext-color);
+  letter-spacing: 0.5px;
 }
 
 .attractionCardImage {
@@ -206,7 +231,6 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Show Offers Button */
 .showOfferButton {
   width: 100%;
   padding: 14px;
@@ -217,4 +241,31 @@
   font-weight: bold;
   color: var(--show-btn-text);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+
+
+.offers-tab-bar {
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: var(--offers-sheet-bg, #fff);
+  /* margin-bottom: 10px; */
+}
+
+.offers-tab {
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 10px 16px;
+  border-radius: 20px;
+  color: #666;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.offers-tab.active {
+  background-color: #000;
+  color: #fff;
 }

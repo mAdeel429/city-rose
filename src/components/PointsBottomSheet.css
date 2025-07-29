@@ -42,7 +42,7 @@
   --sticky-actions-shadow: rgba(0, 0, 0, 0.5);
 }
 
-.points-sheet-backdrop {
+/* .points-sheet-backdrop {
   position: fixed;
   top: 0;
   left: 0;
@@ -53,7 +53,6 @@
   justify-content: center;
   align-items: flex-end;
   z-index: 10000;
-  /* margin-bottom: 25px; */
 }
 
 .points-sheet-container {
@@ -133,11 +132,6 @@
   align-self: center;
   margin-bottom: 40px;
 }
-
-/* .macro-title {
-  font-weight: bold;
-  font-size: 16px;
-} */
 
 .macro-title {
   font-weight: bold;
@@ -239,15 +233,6 @@
   border-top: 1px solid var(--points-sheet-border);
   margin-top: 16px;
 }
-
-
-/* .bottom-actions {
-  display: flex;
-  justify-content: space-between;
-  padding: 16px 20px 24px;
-  border-top: 1px solid var(--points-sheet-border);
-  gap: 12px;
-} */
 
 .macro-btn {
   display: flex;
@@ -368,4 +353,353 @@
 
 .points-scrollable-content::-webkit-scrollbar {
   display: none;
+} */
+
+
+
+
+
+.points-sheet-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 10000;
+}
+
+.points-sheet-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  padding: 16px 16px 0;
+  background: var(--points-sheet-bg);
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  width: 100%;
+  max-width: 500px;
+  overflow: hidden;
+  color: var(--points-sheet-text);
+  position: relative;
+}
+
+.points-sheet-handle {
+  width: 40px;
+  height: 5px;
+  background: var(--points-sheet-handle-bg);
+  border-radius: 999px;
+  margin: 0 auto 12px;
+}
+
+.sheet-close-icon {
+  color: var(--points-sheet-text);
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.points-scrollable-content {
+  overflow-y: auto;
+  padding-bottom: 16px;
+  flex-grow: 1;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.points-scrollable-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* Airbnb-style macro category grid */
+
+.macro-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 16px 8px;
+}
+
+/* .macro-tile {
+  background: #f1f1f1;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--points-sheet-text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.macro-tile:hover {
+  background: #eaeaea;
+} */
+
+.macro-tile {
+  background: #fff;
+  padding: 16px;
+  border-radius: 16px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  color: #333;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.macro-tile:hover {
+  background-color: #f9f9f9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+
+
+.macro-tile.selected {
+  border-color: #000;
+  background-color: #f0f0f0;
+}
+
+.macro-icon {
+  font-size: 24px;
+  color: #555;
+}
+
+.macro-label {
+  margin-top: 4px;
+  font-size: 14px;
+  color: inherit;
+}
+
+
+.macro-title {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 16px;
+  padding-left: 8px;
+}
+
+.filter-section {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 8px;
+  padding-left: 8px;
+}
+
+.checkbox-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-left: 8px;
+}
+
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  gap: 6px;
+  color: var(--points-sheet-text);
+  background: #f8f8f8;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.checkbox-option:hover {
+  background: #ececec;
+}
+
+.checkbox-option input[type="checkbox"] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--checkbox-border);
+  border-radius: 4px;
+  position: relative;
+  background: white;
+  cursor: pointer;
+}
+
+.checkbox-option input[type="checkbox"]:checked {
+  background-color: var(--checkbox-checked-bg);
+}
+
+.checkbox-option input[type="checkbox"]::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 8px;
+  border: solid var(--checkbox-checkmark-color);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  top: 2px;
+  left: 5px;
+  display: none;
+}
+
+.checkbox-option input[type="checkbox"]:checked::after {
+  display: block;
+}
+
+.sticky-actions {
+  position: sticky;
+  bottom: 0;
+  padding: 16px;
+  background: var(--points-sheet-bg);
+  display: flex;
+  justify-content: space-between;
+  z-index: 20;
+  border-top: 1px solid var(--points-sheet-border);
+}
+
+.reset-btn {
+  background: transparent;
+  border: none;
+  color: var(--points-sheet-text);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 8px 12px;
+}
+
+.reset-btn:hover {
+  text-decoration: underline;
+}
+
+.apply-btn {
+  background: var(--points-sheet-close-btn-bg);
+  color: var(--points-sheet-close-btn-color);
+  border: none;
+  padding: 10px 16px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.apply-btn:hover {
+  background: #222;
+}
+
+/* Optional: Responsive */
+
+@media (max-width: 480px) {
+  /* .macro-grid {
+    grid-template-columns: repeat(1, 1fr);
+  } */
+
+  .macro-grid-wrapper {
+    overflow-x: auto;
+    padding: 0 8px;
+    scroll-snap-type: x mandatory;
+    white-space: nowrap;
+  }
+  
+  .macro-grid {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .macro-tile {
+    flex: 0 0 calc(50% - 6px); /* two cards per row with 12px gap */
+    scroll-snap-align: start;
+    background: #fff;
+    padding: 20px;
+    border-radius: 16px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  
+
+  .macro-tile {
+    min-width: 120px;
+    scroll-snap-align: start;
+  }
+
+  .points-sheet-container {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+  }
+
+  .apply-btn {
+    flex-grow: 1;
+  }
+
+  .reset-btn {
+    flex-grow: 1;
+  }
+
+  .sticky-actions {
+    gap: 12px;
+    align-items: stretch;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* === Airbnb-like toggle pills === */
+.checkbox-option.pill-only {
+  appearance: none;
+  border: none;
+  outline: none;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #f1f1f1;
+  color: #333;
+  border-radius: 999px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-option.pill-only:hover {
+  background-color: #e6e6e6;
+}
+
+.checkbox-option.pill-only.selected {
+  background-color: #000;
+  color: #fff;
 }

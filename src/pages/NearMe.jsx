@@ -614,23 +614,6 @@ export default function NearMe({ setBottomBarVisible }) {
             )}
           </div>
         </div>
-
-        <div className="macro-chip-bar-floating">
-          {Object.keys(macroButton).map((m) => (
-            <div
-              key={m}
-              className={`macro-chip ${macro === m ? 'active' : ''}`}
-              onClick={() => {
-                setMacro(m);
-                setShowFilterSheet(true);
-              }}
-            >
-              {macroButton[m]}
-              <span>{m}</span>
-            </div>
-          ))}
-        </div>
-
         <CardSlider
           show={showCardSheet}
           points={filteredPoints}

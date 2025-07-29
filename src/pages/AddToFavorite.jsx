@@ -180,8 +180,8 @@ export default function AddToFavorite() {
     selectedFilter === 'Offers'
       ? favorites.filter(item => item.category === 'Offers')
       : selectedFilter === 'Events'
-      ? favorites.filter(item => item.category === 'Events')
-      : favorites.filter(item => categoryMappedToPoints.includes(item.category));
+        ? favorites.filter(item => item.category === 'Events')
+        : favorites.filter(item => categoryMappedToPoints.includes(item.category));
 
   const handleHeartClick = (e, item) => {
     e.stopPropagation();
@@ -195,15 +195,14 @@ export default function AddToFavorite() {
   return (
     <div
       style={{
-        marginLeft: '10px',
-        marginRight: '10px',
+        // marginLeft: '10px',
+        // marginRight: '10px',
         paddingBottom: '100px',
         height: 'calc(100vh - 70px)',
         overflowY: 'auto',
         fontFamily: 'sans-serif',
       }}
     >
-      {/* Top Tab Bar (Airbnb-style) */}
       <div className="offers-tab-bar">
         {filters.map((filter) => (
           <div
@@ -215,15 +214,15 @@ export default function AddToFavorite() {
           </div>
         ))}
       </div>
+      <div className='offers-text'>Saved {selectedFilter} </div>
 
-      {/* Cards */}
       {filteredItems.length === 0 ? (
         <p style={{ textAlign: 'center', marginTop: '20px' }}>
           No saved {selectedFilter.toLowerCase()} yet!
         </p>
       ) : (
         filteredItems.map((item, index) => (
-          <div key={index} className="attractionCardADF" style={{ marginBottom: '20px' }}>
+          <div key={index} className="attractionCardADF" style={{ marginBottom: '20px'}}>
             <div className="attractionCardImageContainer">
               <img
                 src={item.image}

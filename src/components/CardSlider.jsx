@@ -236,7 +236,6 @@
 
 
 import React, { useEffect, useRef, useState } from 'react';
-// import { motion, animate, useMotionValue } from 'framer-motion';
 import { motion, animate, useMotionValue, useDragControls } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
@@ -249,7 +248,7 @@ import './CardSlider.css';
 
 const HALF_HEIGHT = window.innerHeight * 0.6;
 const PEEK_HEIGHT = 120;
-const MAX_HEIGHT = window.innerHeight;
+const MAX_HEIGHT = window.innerHeight * 1.0;
 
 export default function CardSlider({
   show,
@@ -305,8 +304,6 @@ export default function CardSlider({
       cardElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, [activeMarker]);
-
-  // ✅ Detect scrollTop === 0 to allow dragging
   useEffect(() => {
     const scrollContainer = containerRef.current;
     if (!scrollContainer) return;
