@@ -5,10 +5,10 @@ import './AuthLanding.css';
 export default function AuthLanding() {
   const navigate = useNavigate();
 
-  const handleGoogleLogin = () => {
-    localStorage.setItem('token', 'dummy_token');
-    navigate('/near-me');
-  };
+  // const handleGoogleLogin = () => {
+  //   localStorage.setItem('token', 'dummy_token');
+  //   navigate('/near-me');
+  // };
 
   
   const handleRegister = () => {
