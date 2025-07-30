@@ -527,7 +527,7 @@ export default function NearMe({ setBottomBarVisible }) {
 
           if (mapRef.current) {
             mapRef.current.setCenter(location);
-            mapRef.current.setZoom(14); // Default zoom
+            mapRef.current.setZoom(14);
           }
 
           const nearest = getNearestPoint(location, mockPoints);
@@ -538,8 +538,6 @@ export default function NearMe({ setBottomBarVisible }) {
           if (nearest) {
             setActiveMarker(nearest.id);
             setShowCardSheet(true);
-          
-            // Optional: trigger scroll to full sheet with timeout to ensure rendering
             setTimeout(() => {
               const card = document.getElementById(`card-${nearest.id}`);
               if (card) {
