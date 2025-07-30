@@ -64,7 +64,7 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const response = await fetch('https://cityrose.musicgang.org:443/api/v1', {
+      const response = await fetch('https://interstellar.cityrose.app:443/api/v1/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
