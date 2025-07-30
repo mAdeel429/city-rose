@@ -18,6 +18,7 @@
   --checkbox-checkmark-color: #fff;
   --sticky-actions-bg: #fff;
   --sticky-actions-shadow: rgba(0, 0, 0, 0.08);
+  --points-sheet-close-btn-bg-hover: #444;
 }
 
 [data-theme='dark'] {
@@ -40,6 +41,7 @@
   --checkbox-checkmark-color: #1e1e1e;
   --sticky-actions-bg: #2a2a2a;
   --sticky-actions-shadow: rgba(0, 0, 0, 0.5);
+  --points-sheet-close-btn-bg-hover: #aaa;
 }
 
 .points-sheet-backdrop {
@@ -222,7 +224,7 @@
 }
 
 .apply-btn:hover {
-  background: #222;
+  background: var(--points-sheet-close-btn-bg-hover);
 }
 
 
