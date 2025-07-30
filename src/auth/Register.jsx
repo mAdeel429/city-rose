@@ -64,7 +64,7 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const response = await fetch('https://api.cityrose.io/auth/signup', {
+      const response = await fetch('https://cityrose.musicgang.org:443/api/v1', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
