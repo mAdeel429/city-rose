@@ -531,10 +531,23 @@ export default function NearMe({ setBottomBarVisible }) {
           }
 
           const nearest = getNearestPoint(location, mockPoints);
+          // if (nearest) {
+          //   setActiveMarker(nearest.id);
+          //   setShowCardSheet(true);
+          // }
           if (nearest) {
             setActiveMarker(nearest.id);
             setShowCardSheet(true);
+          
+            // Optional: trigger scroll to full sheet with timeout to ensure rendering
+            setTimeout(() => {
+              const card = document.getElementById(`card-${nearest.id}`);
+              if (card) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }
+            }, 500);
           }
+          
         },
         (err) => {
           console.error('Geolocation error:', err);

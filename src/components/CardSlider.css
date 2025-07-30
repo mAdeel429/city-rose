@@ -362,17 +362,11 @@
 }
 
 .card-vertical:first-child {
-  margin-top: 0 !important; /* Remove top margin for the first card */
+  margin-top: 0 !important;
 }
 
-/* 
-.sheet-drag-header {
-  cursor: grab;
-  touch-action: none;
-}
 
-.card-drag-top-zone {
-  cursor: grab;
-  touch-action: none;
-  background: transparent;
-} */
+.no-scroll {
+  overflow: hidden !important;
+  -webkit-overflow-scrolling: auto !important;
+}

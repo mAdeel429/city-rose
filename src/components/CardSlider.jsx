@@ -160,7 +160,7 @@
 //       <div className="sheet-drag-header" onClick={handleToggleHeight}>
 //         <div className="handle-bar" />
 //         <p className="sheet-heading">{points.length} places</p>
-  
+
 //       </div>
 
 //       <div className="card-vertical-scroll" ref={containerRef}>
@@ -266,6 +266,8 @@ export default function CardSlider({
   const [heartBubbles, setHeartBubbles] = useState({});
   const [activeSlideIndexes, setActiveSlideIndexes] = useState({});
   const dragControls = useDragControls();
+  const [openedViaMarker, setOpenedViaMarker] = useState(false);
+
 
   useEffect(() => {
     if (onHeightChange) onHeightChange(heightState);
@@ -299,11 +301,22 @@ export default function CardSlider({
 
   useEffect(() => {
     if (!activeMarker || !containerRef.current) return;
-    const cardElement = document.getElementById(`card-${activeMarker}`);
-    if (cardElement) {
-      cardElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  
+    if (heightState !== 'full') {
+      setHeightState('full');
+      snapTo(MAX_HEIGHT);
+      
     }
+  
+    setTimeout(() => {
+      const cardElement = document.getElementById(`card-${activeMarker}`);
+      if (cardElement) {
+        cardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 350);
   }, [activeMarker]);
+  
+
   useEffect(() => {
     const scrollContainer = containerRef.current;
     if (!scrollContainer) return;
@@ -413,7 +426,11 @@ export default function CardSlider({
         <p className="sheet-heading">{points.length} places</p>
       </div>
 
-      <div className="card-vertical-scroll" ref={containerRef}>
+      <div
+        // className="card-vertical-scroll" ref={containerRef}
+        className={`card-vertical-scroll ${heightState === 'peek' ? 'no-scroll' : ''}`}
+        ref={containerRef}
+      >
         {points.map((point, index) => {
           const isFavorite = favorites.some(fav => fav.id === point.id);
           const showBubbles = heartBubbles[point.id];
