@@ -105,7 +105,10 @@ const NearMe = lazy(() => import('../pages/NearMe'));
 const Offers = lazy(() => import('../pages/Offers'));
 const CategoryDetails = lazy(() => import('../pages/CategoryDetails'));
 const AddToFavorite = lazy(() => import('../pages/AddToFavorite'));
-const AuthLanding = lazy(() => import('../auth/AuthLanding')); // Your login screen
+const AuthLanding = lazy(() => import('../auth/AuthLanding'));
+const Login = lazy(() => import('../auth/Login'));
+const Register = lazy(() => import('../auth/Register'));
+
 
 export default function AnimatedRoutes({ setBottomBarVisible }) {
   const location = useLocation();
@@ -160,6 +163,8 @@ export default function AnimatedRoutes({ setBottomBarVisible }) {
 
               {/* Auth route */}
               <Route path="/auth" element={<AuthLanding />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
 
               {/* Protected routes */}
               {isLoggedIn && (

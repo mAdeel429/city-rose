@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import authImage from '../assets/auth page image.jpeg';
 import './AuthLanding.css';
 
 export default function AuthLanding() {
@@ -11,6 +10,15 @@ export default function AuthLanding() {
     navigate('/near-me');
   };
 
+  
+  const handleRegister = () => {
+    navigate('/register');
+  };
+
+  const handleLogin = () => {
+    navigate('/login');
+  };
+
   return (
     <div className="auth-wrapper">
       <div className="image-container">
@@ -18,14 +26,14 @@ export default function AuthLanding() {
       </div>
 
       <div className="auth-content">
-        <button className="auth-button" onClick={handleGoogleLogin}>
+        <button className="auth-button" onClick={handleRegister}>
           Create an account
         </button>
 
         <div className="Authdivider">Or</div>
 
         <div className="social-buttons">
-          <button className="google-btn" onClick={handleGoogleLogin}>
+          <button className="google-btn">
             <img
               src="https://www.gstatic.com/marketing-cms/assets/images/d5/dc/cfe9ce8b4425b410b49b7f2dd3f3/g.webp=s48-fcrop64=1,00000000ffffffff-rw"
               alt="Google"
@@ -34,7 +42,7 @@ export default function AuthLanding() {
         </div>
 
         <p className="login-text">
-          Already have an account? <span className="login-link">Login</span>
+          Already have an account? <span className="login-link" onClick={handleLogin}>Login</span>
         </p>
       </div>
 

@@ -75,7 +75,6 @@
   .login-text {
     font-size: 15px;
     color: #777;
-    /* margin-bottom: 10px; */
   }
   
   .login-link {
@@ -89,7 +88,7 @@
     color: #888;
     padding: 10px 30px;
     line-height: 1.5;
-    /* flex-shrink: 0; */
+    flex-shrink: 0;
   }
   
   .auth-footer a {
