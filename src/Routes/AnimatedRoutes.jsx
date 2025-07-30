@@ -1,7 +1,14 @@
 // import React, { lazy, Suspense } from 'react';
-// import { useLocation, useNavigationType, Routes, Route } from 'react-router-dom';
+// import {
+//   useLocation,
+//   useNavigationType,
+//   Routes,
+//   Route,
+//   Navigate,
+// } from 'react-router-dom';
 // import { useTransition, animated } from '@react-spring/web';
 
+// // Lazy-loaded pages
 // const HomePage = lazy(() => import('../pages/HomePage'));
 // const EditProfile = lazy(() => import('../pages/EditProfile'));
 // const Insights = lazy(() => import('../pages/Insights'));
@@ -9,15 +16,12 @@
 // const CardDetailScreen = lazy(() => import('../components/CardDetailScreen'));
 // const NearMe = lazy(() => import('../pages/NearMe'));
 // const Offers = lazy(() => import('../pages/Offers'));
-// const AroundYou = lazy(() => import('../pages/AroundYou'));
 // const CategoryDetails = lazy(() => import('../pages/CategoryDetails'));
 // const AddToFavorite = lazy(() => import('../pages/AddToFavorite'));
 
-
-// export default function AnimatedRoutes() {
+// export default function AnimatedRoutes({setBottomBarVisible}) {
 //   const location = useLocation();
 //   const navigationType = useNavigationType();
-
 //   const isBack = navigationType === 'POP';
 
 //   const transitions = useTransition(location, {
@@ -37,7 +41,7 @@
 //   });
 
 //   return (
-//     <div style={{ position: 'relative', overflowX: 'hidden', height: '100vh' }}>
+//     <div style={{ position: 'relative', height: '100vh' }}>
 //       {transitions((style, loc) => (
 //         <animated.div
 //           key={loc.key}
@@ -46,23 +50,27 @@
 //             position: 'absolute',
 //             width: '100%',
 //             height: '100%',
-//             backgroundColor: '#fff',
+//             backgroundColor: 'var(--background-color)',
 //           }}
 //         >
-//           <Suspense fallback={<div style={{ backgroundColor: '#fff', height: '100vh' }} />}>
+//           <Suspense fallback={<div style={{ backgroundColor: 'var(--background-color)', height: '100vh' }} />}>
 //             <Routes location={loc}>
-//               <Route path="/" element={<HomePage />} />
+//               <Route path="/" element={<Navigate to="/near-me" replace />} />
 //               <Route path="/home" element={<HomePage />} />
 //               <Route path="/editProfile" element={<EditProfile />} />
 //               <Route path="/insights" element={<Insights />} />
 //               <Route path="/settings" element={<Settings />} />
 //               <Route path="/offers" element={<Offers />} />
-//               <Route path="/around-you" element={<AroundYou />} />
+//               {/* <Route path="/near-me" element={<NearMe />} /> */}
+//               <Route
+//                 path="/near-me"
+//                 element={<NearMe setBottomBarVisible={setBottomBarVisible} />}
+//               />
+
 //               <Route
 //                 path="/details"
-//                 element={<CardDetailScreen key={location.key}/>}
+//                 element={<CardDetailScreen key={location.key} />}
 //               />
-//               <Route path="/near-me" element={<NearMe />} />
 //               <Route path="/category/:category" element={<CategoryDetails />} />
 //               <Route path="/add-to-favorite" element={<AddToFavorite />} />
 //             </Routes>
@@ -75,13 +83,15 @@
 
 
 
-import React, { lazy, Suspense } from 'react';
+
+import React, { lazy, Suspense, useEffect } from 'react';
 import {
   useLocation,
   useNavigationType,
   Routes,
   Route,
   Navigate,
+  useNavigate,
 } from 'react-router-dom';
 import { useTransition, animated } from '@react-spring/web';
 
@@ -95,11 +105,24 @@ const NearMe = lazy(() => import('../pages/NearMe'));
 const Offers = lazy(() => import('../pages/Offers'));
 const CategoryDetails = lazy(() => import('../pages/CategoryDetails'));
 const AddToFavorite = lazy(() => import('../pages/AddToFavorite'));
+const AuthLanding = lazy(() => import('../auth/AuthLanding')); // Your login screen
 
-export default function AnimatedRoutes({setBottomBarVisible}) {
+export default function AnimatedRoutes({ setBottomBarVisible }) {
   const location = useLocation();
   const navigationType = useNavigationType();
   const isBack = navigationType === 'POP';
+  const navigate = useNavigate();
+
+  const isLoggedIn = !!localStorage.getItem('token'); // Assume token in localStorage
+
+  useEffect(() => {
+    const authRoutes = ['/auth', '/login', '/register'];
+    if (authRoutes.includes(location.pathname)) {
+      setBottomBarVisible(false);
+    } else {
+      setBottomBarVisible(true);
+    }
+  }, [location.pathname, setBottomBarVisible]);
 
   const transitions = useTransition(location, {
     from: {
@@ -132,24 +155,29 @@ export default function AnimatedRoutes({setBottomBarVisible}) {
         >
           <Suspense fallback={<div style={{ backgroundColor: 'var(--background-color)', height: '100vh' }} />}>
             <Routes location={loc}>
-              <Route path="/" element={<Navigate to="/near-me" replace />} />
-              <Route path="/home" element={<HomePage />} />
-              <Route path="/editProfile" element={<EditProfile />} />
-              <Route path="/insights" element={<Insights />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/offers" element={<Offers />} />
-              {/* <Route path="/near-me" element={<NearMe />} /> */}
-              <Route
-                path="/near-me"
-                element={<NearMe setBottomBarVisible={setBottomBarVisible} />}
-              />
+              {/* Root redirect */}
+              <Route path="/" element={<Navigate to={isLoggedIn ? '/near-me' : '/auth'} replace />} />
 
-              <Route
-                path="/details"
-                element={<CardDetailScreen key={location.key} />}
-              />
-              <Route path="/category/:category" element={<CategoryDetails />} />
-              <Route path="/add-to-favorite" element={<AddToFavorite />} />
+              {/* Auth route */}
+              <Route path="/auth" element={<AuthLanding />} />
+
+              {/* Protected routes */}
+              {isLoggedIn && (
+                <>
+                  <Route path="/home" element={<HomePage />} />
+                  <Route path="/editProfile" element={<EditProfile />} />
+                  <Route path="/insights" element={<Insights />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/offers" element={<Offers />} />
+                  <Route path="/near-me" element={<NearMe setBottomBarVisible={setBottomBarVisible} />} />
+                  <Route path="/details" element={<CardDetailScreen key={location.key} />} />
+                  <Route path="/category/:category" element={<CategoryDetails />} />
+                  <Route path="/add-to-favorite" element={<AddToFavorite />} />
+                </>
+              )}
+
+              {/* Catch all redirect */}
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>
         </animated.div>

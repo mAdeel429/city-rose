@@ -57,8 +57,9 @@
 import React, { useEffect, useState } from 'react';
 import { FiMenu } from 'react-icons/fi'; // Removed FiMapPin and FiSearch
 import './Header.css';
-import searchIcon from '../assets/new.png';
-import locationIcon from '../assets/icon__2_-removebg-preview.png'; // 👈 New import
+// import searchIcon from '../assets/new.png';
+import searchIcon from '../assets/CityRose Logo Condiviso (2).png';
+import locationIcon from '../assets/icon__2_-removebg-preview.png';
 
 export default function Header({ setIsMenuOpen, pullHeight, isPulling }) {
   const fullText = "What tourist attractions are nearby?";

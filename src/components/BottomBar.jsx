@@ -70,17 +70,15 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FaTag, FaHeart, FaUser } from 'react-icons/fa';
 import styles from './PointList.module.css';
-import CenterIcon from '../assets/new.png';
+import CenterIcon from '../assets/CityRose Logo Condiviso (2).png';
 import NearMeIcon from '../assets/icon 1.png';
 
 const BottomBar = ({ visible = true }) => {
   const location = useLocation();
 
-  // helper for opacity based on current path
   const getOpacity = (path) => (location.pathname === path ? 1 : 0.4);
 
   return (
-    // <div className={`${styles.bottomTabs} ${!visible ? styles.hidden : ''}`}>
     <div
       className={styles.bottomTabs}
       style={{ display: visible ? 'flex' : 'none' }}
@@ -94,7 +92,7 @@ const BottomBar = ({ visible = true }) => {
             height: '30px',
             width: '22px',
             opacity: getOpacity('/near-me'),
-            filter: 'var(--icon-filter)', // uses CSS var to control color
+            filter: 'var(--icon-filter)',
           }}
         />
       </Link>
@@ -102,7 +100,7 @@ const BottomBar = ({ visible = true }) => {
         <FaTag
           style={{
             transform: 'rotate(90deg)',
-            color: 'var(--icon-color)', // use CSS var for icon color
+            color: 'var(--icon-color)',
             opacity: getOpacity('/offers'),
           }}
         />
@@ -115,6 +113,7 @@ const BottomBar = ({ visible = true }) => {
           style={{
             opacity: getOpacity('/home'),
             filter: 'var(--icon-filter)',
+            // height: '40px'
           }}
         />
       </Link>
