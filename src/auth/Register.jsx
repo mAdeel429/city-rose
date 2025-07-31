@@ -129,36 +129,110 @@ export default function Register() {
 
   const handleBackClick = () => navigate(-1);
 
+  // const handleRegister = async () => {
+  //   setError('');
+  //   setLoading(true);
+
+  //   try {
+  //     const response = await fetch('https://interstellar.cityrose.app/api/v1/auth/register', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ name, email, password }),
+  //     });
+
+  //     const data = await response.json();
+  //     console.log('🔔 User Registration Response:', data);
+
+  //     if (!response.ok || !data.access_token) {
+  //       setError(data.message || data.error || 'Registration failed');
+  //       return;
+  //     }
+
+  //     const token = data.access_token;
+  //     const deviceId = uuidv4();
+
+  //     localStorage.setItem('token', token);
+  //     localStorage.setItem('refresh_token', data.refresh_token || '');
+  //     localStorage.setItem('token_type', data.token_type || '');
+  //     localStorage.setItem('expires_in', data.expires_in?.toString() || '');
+  //     localStorage.setItem('device_id', deviceId);
+
+  //     // Register device
+  //     const deviceResponse = await fetch('https://interstellar.cityrose.app/api/v1/device/register', {
+  //       method: 'PUT',
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         uuid: deviceId,
+  //         name: 'Web browser',
+  //         platform: 'web',
+  //         os: navigator.userAgent,
+  //         idiom: 'web',
+  //         app_version: '1.0.0',
+  //         fcm_token: '',
+  //       }),
+  //     });
+
+  //     const deviceData = await deviceResponse.json();
+  //     console.log('✅ Device Registered:', deviceData);
+
+  //     localStorage.setItem('user_info', JSON.stringify({
+  //       name: data.user?.name || name,
+  //       email: data.user?.email || email,
+  //     }));
+
+  //     alert('Registration successful!');
+  //     navigate('/near-me');
+
+  //   } catch (err) {
+  //     console.error('❌ Registration Error:', err);
+  //     setError('Something went wrong. Please try again.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleRegister = async () => {
     setError('');
+  
+    // Validation checks
+    if (!name.trim()) return alert('Name is required');
+    if (name.trim().length < 3) return alert('Name must be at least 3 characters');
+    if (!email.trim()) return alert('Email is required');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) return alert('Enter a valid email address');
+    if (!password) return alert('Password is required');
+    if (password.length < 8) return alert('Password must be at least 8 characters');
+  
     setLoading(true);
-
+  
     try {
       const response = await fetch('https://interstellar.cityrose.app/api/v1/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
       });
-
+  
       const data = await response.json();
       console.log('🔔 User Registration Response:', data);
-
+  
       if (!response.ok || !data.access_token) {
         setError(data.message || data.error || 'Registration failed');
         return;
       }
-
+  
       const token = data.access_token;
       const deviceId = uuidv4();
-
+  
       localStorage.setItem('token', token);
       localStorage.setItem('refresh_token', data.refresh_token || '');
       localStorage.setItem('token_type', data.token_type || '');
       localStorage.setItem('expires_in', data.expires_in?.toString() || '');
       localStorage.setItem('device_id', deviceId);
-
-      // Register device
-      const deviceResponse = await fetch('https://interstellar.cityrose.app/api/v1/device/register', {
+  
+      await fetch('https://interstellar.cityrose.app/api/v1/device/register', {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -174,18 +248,15 @@ export default function Register() {
           fcm_token: '',
         }),
       });
-
-      const deviceData = await deviceResponse.json();
-      console.log('✅ Device Registered:', deviceData);
-
+  
       localStorage.setItem('user_info', JSON.stringify({
         name: data.user?.name || name,
         email: data.user?.email || email,
       }));
-
+  
       alert('Registration successful!');
-      navigate('/near-me');
-
+      navigate('/home');
+  
     } catch (err) {
       console.error('❌ Registration Error:', err);
       setError('Something went wrong. Please try again.');
@@ -193,7 +264,7 @@ export default function Register() {
       setLoading(false);
     }
   };
-
+  
   return (
     <>
       <div className="login-header">
