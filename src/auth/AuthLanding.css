@@ -1,10 +1,24 @@
-  .auth-wrapper {
+:root {
+  --auth-bg: #ffffff;
+  --auth-text: #000000;
+  --auth-btn-bg: #000000;
+  --auth-btn-text: #fff;
+}
+
+[data-theme='dark'] {
+  --auth-bg: #1e1e1e;
+  --auth-text: #ffffff;
+  --auth-btn-bg: #fff;
+  --auth-btn-text: #000;
+}
+
+.auth-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     height: 100vh;
     text-align: center;
-    color: #333;
+    color: var(--auth-text);
   }
   
   .image-container {
@@ -30,8 +44,8 @@
   }
   
   .auth-button {
-    background-color: black;
-    color: white;
+    background-color: var(--auth-btn-bg);
+    color: var(--auth-btn-text);
     padding: 14px 28px;
     font-size: 16px;
     border: none;
@@ -45,7 +59,7 @@
   
   .Authdivider {
     font-size: 14px;
-    color: #777;
+    color: var(--auth-text);
     margin-bottom: 10px;
   }
   
@@ -78,8 +92,8 @@
   }
   
   .login-link {
-    font-weight: 600;
-    color: black;
+    font-weight: 500;
+    color: var(--auth-text);
     cursor: pointer;
   }
 
@@ -92,7 +106,7 @@
   }
   
   .auth-footer a {
-    color: black;
+    color: var(--auth-text);
     text-decoration: underline;
   }
   

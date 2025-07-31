@@ -1,96 +1,118 @@
+:root {
+  --login-bg: #ffffff;
+  --login-header-bg: #f9f9f9;
+  --login-text: #000000;
+  --login-subtext: #666666;
+  --login-input-bg: #ffffff;
+  --login-input-border: #dcdcdc;
+  --login-btn-bg: #000000;
+  --login-btn-text: #ffffff;
+  --login-link: #000000;
+}
 
-  .login-container {
-    padding: 0 24px;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-  }
-  
-  .login-header {
-    display: flex;
-    align-items: center;
-    height: 56px;
-    background-color: #f9f9f9;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 10px;
-    margin-top: 0;
-  }
-  
-  .back-icon {
-    font-size: 22px;
-    cursor: pointer;
-    margin-right: 6px;
-  }
-  
-  .login-title {
-    font-size: 24px;
-    font-weight: 700;
-    color: #000;
-    line-height: 1;
-  }
-  
-  .subheading {
-    font-size: 15px;
-    color: #666666;
-    margin-bottom: 32px;
-  }
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-  }
-  
-  .input-label {
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 6px;
-    color: #000;
-  }
-  
-  .input-field {
-    padding: 14px;
-    border-radius: 8px;
-    border: 1px solid #dcdcdc;
-    font-size: 15px;
-    outline: none;
-    transition: border 0.2s ease-in-out;
-  }
-  
-  .input-field:focus {
-    border-color: #aaa;
-  }
-  
-  /* Forgot Password */
-  .forgot-password {
-    text-align: right;
-    margin-bottom: 32px;
-  }
-  
-  .forgot-password a {
-    font-size: 14px;
-    font-weight: 500;
-    color: #000;
-    text-decoration: none;
-  }
-  
-  /* Login Button */
-  .login-button {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 28px;
-    background-color: #000;
-    color: #fff;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-  }
-  
-  .login-button:hover {
-    background-color: #111;
-  }
-  
+[data-theme="dark"] {
+  --login-bg: #1e1e1e;
+  --login-header-bg: #2a2a2a;
+  --login-text: #ffffff;
+  --login-subtext: #aaaaaa;
+  --login-input-bg: #2a2a2a;
+  --login-input-border: #444444;
+  --login-btn-bg: #ffffff;
+  --login-btn-text: #000000;
+  --login-link: #ffffff;
+}
+
+.login-container {
+  padding: 0 24px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--login-bg);
+  color: var(--login-text);
+}
+
+.login-header {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  background-color: var(--login-header-bg);
+  padding: 10px;
+  margin-top: 0;
+}
+
+.back-icon {
+  font-size: 22px;
+  cursor: pointer;
+  margin-right: 6px;
+  color: var(--login-text);
+}
+
+.login-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--login-text);
+  line-height: 1;
+}
+
+.subheading {
+  font-size: 15px;
+  color: var(--login-subtext);
+  margin-bottom: 32px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.input-label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: var(--login-text);
+}
+
+.input-field {
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid var(--login-input-border);
+  font-size: 15px;
+  background-color: var(--login-input-bg);
+  color: var(--login-text);
+  outline: none;
+  transition: border 0.2s ease-in-out;
+}
+
+.input-field:focus {
+  border-color: #aaa;
+}
+
+.forgot-password {
+  text-align: right;
+  margin-bottom: 32px;
+}
+
+.forgot-password a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--login-link);
+  text-decoration: none;
+}
+
+.login-button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 28px;
+  background-color: var(--login-btn-bg);
+  color: var(--login-btn-text);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.login-button:hover {
+  opacity: 0.9;
+}
