@@ -1,39 +1,259 @@
-import React from 'react';
+// import React, { useState } from 'react';
+// import './Login.css';
+// import { IoChevronBack } from 'react-icons/io5';
+// import { useNavigate } from 'react-router-dom';
+// import { v4 as uuidv4 } from 'uuid';
+
+// export default function Login() {
+//   const navigate = useNavigate();
+
+//   const [email, setEmail] = useState('');
+//   const [password, setPassword] = useState('');
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState('');
+
+//   const handleBackClick = () => {
+//     navigate(-1);
+//   };
+
+//   const handleLogin = async () => {
+//     setLoading(true);
+//     setError('');
+
+//     try {
+//       const response = await fetch('https://interstellar.cityrose.app/api/v1/auth/login', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'device-name': 'web',
+//         },
+//         body: JSON.stringify({ email, password }),
+//       });
+
+//       const data = await response.json();
+//       if (!response.ok || !data.access_token) {
+//         setError(data.message || 'Login failed');
+//         setLoading(false);
+//         return;
+//       }
+
+//       const token = data.access_token;
+//       localStorage.setItem('token', token);
+
+//       // ✅ Register device
+//       await fetch('https://interstellar.cityrose.app/api/v1/device/register', {
+//         method: 'PUT',
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({
+//           uuid: uuidv4(),
+//           name: 'Web browser',
+//           platform: 'web',
+//           os: navigator.userAgent,
+//           idiom: 'web',
+//           app_version: '1.0.0',
+//           fcm_token: '',
+//         }),
+//       });
+
+//       // ✅ Save user info
+//       if (data.user && data.user.name && data.user.email) {
+//         localStorage.setItem('user_info', JSON.stringify({ 
+//           name: data.user.name, 
+//           email: data.user.email 
+//         }));
+//       } else {
+//         localStorage.setItem('user_info', JSON.stringify({ 
+//           name: '',
+//           email 
+//         }));
+//       }
+
+//       localStorage.setItem('refresh_token', data.refresh_token || '');
+//       localStorage.setItem('token_type', data.token_type || '');
+//       localStorage.setItem('expires_in', data.expires_in?.toString() || '');
+
+//       alert('Login successful!');
+//       navigate('/home');
+
+//     } catch (err) {
+//       console.error(err);
+//       setError('Something went wrong. Please try again.');
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <>
+//       <div className="login-header">
+//         <IoChevronBack className="back-icon" onClick={handleBackClick} />
+//         <h1 className="login-title">Login</h1>
+//       </div>
+
+//       <div className="login-container">
+//         <p className="subheading">Welcome back! Please enter your details.</p>
+
+//         <div className="form-group">
+//           <label className="input-label">Email</label>
+//           <input
+//             type="email"
+//             placeholder="Email"
+//             className="input-field"
+//             value={email}
+//             onChange={(e) => setEmail(e.target.value)}
+//           />
+//         </div>
+
+//         <div className="form-group">
+//           <label className="input-label">Password</label>
+//           <input
+//             type="password"
+//             placeholder="Password"
+//             className="input-field"
+//             value={password}
+//             onChange={(e) => setPassword(e.target.value)}
+//           />
+//         </div>
+
+//         <div className="forgot-password">
+//           <a href="#">Forgot password?</a>
+//         </div>
+
+//         {error && <div className="error-text">{error}</div>}
+
+//         <button
+//           className="login-button"
+//           onClick={handleLogin}
+//           disabled={loading}
+//         >
+//           {loading ? 'Logging in...' : 'Login'}
+//         </button>
+//       </div>
+//     </>
+//   );
+// }
+
+
+
+import React, { useState } from 'react';
 import './Login.css';
 import { IoChevronBack } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Login() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const handleBackClick = () => {
-        navigate(-1);
-    };
-    return (
-        <>
-            <div className="login-header">
-                <IoChevronBack className="back-icon" onClick={handleBackClick} />
-                <h1 className="login-title">Login</h1>
-            </div>
-            <div className="login-container">
-                <p className="subheading">Welcome back! Please enter your details.</p>
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-                <div className="form-group">
-                    <label className="input-label">Email</label>
-                    <input type="email" placeholder="Email" className="input-field" />
-                </div>
+  const handleBackClick = () => navigate(-1);
 
-                <div className="form-group">
-                    <label className="input-label">Password</label>
-                    <input type="password" placeholder="Password" className="input-field" />
-                </div>
+  const handleLogin = async () => {
+    setLoading(true);
+    setError('');
 
-                <div className="forgot-password">
-                    <a href="#">Forgot password?</a>
-                </div>
+    try {
+      const response = await fetch('https://interstellar.cityrose.app/api/v1/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'device-name': 'web',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-                <button className="login-button">Login</button>
-            </div>
-        </>
-    );
+      const data = await response.json();
+      console.log('🔔 Login Response:', data);
+
+      if (!response.ok || !data.access_token) {
+        setError(data.message || 'Login failed');
+        return;
+      }
+
+      const token = data.access_token;
+      const deviceId = uuidv4();
+
+      localStorage.setItem('token', token);
+      localStorage.setItem('refresh_token', data.refresh_token || '');
+      localStorage.setItem('token_type', data.token_type || '');
+      localStorage.setItem('expires_in', data.expires_in?.toString() || '');
+      localStorage.setItem('device_id', deviceId);
+
+      // Register device
+      const deviceResponse = await fetch('https://interstellar.cityrose.app/api/v1/device/register', {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          uuid: deviceId,
+          name: 'Web browser',
+          platform: 'web',
+          os: navigator.userAgent,
+          idiom: 'web',
+          app_version: '1.0.0',
+          fcm_token: '',
+        }),
+      });
+
+      const deviceData = await deviceResponse.json();
+      console.log('✅ Device Registered:', deviceData);
+
+      localStorage.setItem('user_info', JSON.stringify({
+        name: data.user?.name || '',
+        email: data.user?.email || email,
+      }));
+
+      alert('Login successful!');
+      navigate('/home');
+
+    } catch (err) {
+      console.error('❌ Login Error:', err);
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <div className="login-header">
+        <IoChevronBack className="back-icon" onClick={handleBackClick} />
+        <h1 className="login-title">Login</h1>
+      </div>
+
+      <div className="login-container">
+        <p className="subheading">Welcome back! Please enter your details.</p>
+
+        <div className="form-group">
+          <label className="input-label">Email</label>
+          <input type="email" placeholder="Email" className="input-field"
+            value={email} onChange={(e) => setEmail(e.target.value)} />
+        </div>
+
+        <div className="form-group">
+          <label className="input-label">Password</label>
+          <input type="password" placeholder="Password" className="input-field"
+            value={password} onChange={(e) => setPassword(e.target.value)} />
+        </div>
+
+        <div className="forgot-password">
+          <a href="#">Forgot password?</a>
+        </div>
+
+        {error && <div className="error-text">{error}</div>}
+
+        <button className="login-button" onClick={handleLogin} disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
+      </div>
+    </>
+  );
 }
