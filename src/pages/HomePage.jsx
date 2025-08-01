@@ -318,6 +318,9 @@ export default function HomePage() {
     isLoading,
   } = usePoints();
 
+
+  console.log('pointsData', pointsData)
+
   // Elastic scroll logic can remain unchanged (if you had it)
 
   if (isLoading) {

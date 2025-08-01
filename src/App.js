@@ -3,10 +3,20 @@ import AnimatedLayout from './Routes/AnimatedRoutes';
 import BottomBar from './components/BottomBar';
 import { FavoritesProvider } from './data/FavoritesContext';
 import './App.css';
+import { fetchMacros } from './data/fetchMacros';
 
 export default function App() {
   const [bottomSheetState, setBottomSheetState] = useState('collapsed');
   const [bottomBarVisible, setBottomBarVisible] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await fetchMacros();
+      console.log('📦 Macros in React Component:', data);
+    };
+
+    loadData();
+  }, []);
 
   useEffect(() => {
     const matchDark = window.matchMedia('(prefers-color-scheme: dark)');

@@ -129,71 +129,6 @@ export default function Register() {
 
   const handleBackClick = () => navigate(-1);
 
-  // const handleRegister = async () => {
-  //   setError('');
-  //   setLoading(true);
-
-  //   try {
-  //     const response = await fetch('https://interstellar.cityrose.app/api/v1/auth/register', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ name, email, password }),
-  //     });
-
-  //     const data = await response.json();
-  //     console.log('🔔 User Registration Response:', data);
-
-  //     if (!response.ok || !data.access_token) {
-  //       setError(data.message || data.error || 'Registration failed');
-  //       return;
-  //     }
-
-  //     const token = data.access_token;
-  //     const deviceId = uuidv4();
-
-  //     localStorage.setItem('token', token);
-  //     localStorage.setItem('refresh_token', data.refresh_token || '');
-  //     localStorage.setItem('token_type', data.token_type || '');
-  //     localStorage.setItem('expires_in', data.expires_in?.toString() || '');
-  //     localStorage.setItem('device_id', deviceId);
-
-  //     // Register device
-  //     const deviceResponse = await fetch('https://interstellar.cityrose.app/api/v1/device/register', {
-  //       method: 'PUT',
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         uuid: deviceId,
-  //         name: 'Web browser',
-  //         platform: 'web',
-  //         os: navigator.userAgent,
-  //         idiom: 'web',
-  //         app_version: '1.0.0',
-  //         fcm_token: '',
-  //       }),
-  //     });
-
-  //     const deviceData = await deviceResponse.json();
-  //     console.log('✅ Device Registered:', deviceData);
-
-  //     localStorage.setItem('user_info', JSON.stringify({
-  //       name: data.user?.name || name,
-  //       email: data.user?.email || email,
-  //     }));
-
-  //     alert('Registration successful!');
-  //     navigate('/near-me');
-
-  //   } catch (err) {
-  //     console.error('❌ Registration Error:', err);
-  //     setError('Something went wrong. Please try again.');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleRegister = async () => {
     setError('');
   
@@ -253,8 +188,24 @@ export default function Register() {
         name: data.user?.name || name,
         email: data.user?.email || email,
       }));
-  
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            localStorage.setItem('user_lat', latitude.toString());
+            localStorage.setItem('user_lon', longitude.toString());
+          },
+          (error) => {
+            console.warn('Location access denied or error:', error);
+          }
+        );
+      } else {
+        console.warn('Geolocation is not supported by this browser.');
+      }
+      
       alert('Registration successful!');
+      window.location.reload();
       navigate('/home');
   
     } catch (err) {

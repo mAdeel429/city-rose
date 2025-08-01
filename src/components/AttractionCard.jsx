@@ -140,8 +140,6 @@ export default function AttractionCard({ id, image, title, category, distance, o
       removeFromFavorites(id);
     }
   };
-
-  // 🛡️ Get token from localStorage
   const token = localStorage.getItem('token');
 
   // 🖼️ Build image URL with token if image exists
