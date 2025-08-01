@@ -1,5 +1,5 @@
 :root {
-  --card-bg: #ffffff;
+  --Attraction-card-bg: #F5F5F5;
   --card-text: #000000;
   --card-category-bg: rgba(255, 255, 255, 0.8);
   --heart-bg: rgba(0, 0, 0, 0.4);
@@ -19,7 +19,7 @@
   flex-shrink: 0;
   border-radius: 12px;
   scroll-snap-align: start;
-  background: var(--card-bg);
+  background: var(--Attraction-card-bg);
   color: var(--card-text);
   transition: background-color 0.3s ease;
 
