@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaUser, FaChartBar, FaCog, FaSignOutAlt } from 'react-icons/fa';
 import styles from './PointList.module.css';
@@ -6,6 +6,21 @@ import { Link } from 'react-router-dom';
 
 export default function BottomSheet({ show, onClose }) {
   const [dragY, setDragY] = useState(0);
+  const [name, setName] = useState('');
+  const [initial, setInitial] = useState('U');
+
+  useEffect(() => {
+    const userData = localStorage.getItem('user_info');
+    if (userData) {
+      const user = JSON.parse(userData);
+      const userName = user.name || '';
+      setName(userName);
+
+      // First character of the first word in name
+      const firstChar = userName.trim().split(' ')[0]?.charAt(0)?.toUpperCase() || 'U';
+      setInitial(firstChar);
+    }
+  }, []);
 
   const handleDragEnd = (event, info) => {
     if (info.offset.y > 100) {
@@ -14,6 +29,12 @@ export default function BottomSheet({ show, onClose }) {
       setDragY(0);
     }
   };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = '/login';
+  };
+  
 
   return (
     <AnimatePresence>
@@ -39,8 +60,8 @@ export default function BottomSheet({ show, onClose }) {
           >
             <div className={styles.handleBar}/>
             <div className={styles.profileSection}>
-              <div className={styles.profileIcon}>P</div>
-              <div className={styles.profileName}>Paolo</div>
+              <div className={styles.profileIcon}>{initial}</div>
+              <div className={styles.profileName}>{name}</div>
             </div>
 
             <div className={styles.sheetOptions}>
@@ -63,7 +84,7 @@ export default function BottomSheet({ show, onClose }) {
               </div>
               </Link>
               <hr className={styles.divider}/>
-              <div className={`${styles.option} ${styles.logout}`}>
+              <div className={`${styles.option} ${styles.logout}`} onClick={handleLogout }>
                 <FaSignOutAlt className={styles.optionIcon}/>
                 <span>Logout</span>
               </div>

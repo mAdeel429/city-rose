@@ -155,15 +155,32 @@
 // }
 
 
-
 import React, { useState } from 'react';
 import './AddToFavorite.css';
 import { AiFillHeart } from 'react-icons/ai';
 import { useFavorites } from '../data/FavoritesContext';
 
+// ✅ Utility to build image URL with token
+const getImageUrlWithToken = (url, token) => {
+  if (!url) return 'https://via.placeholder.com/300x200';
+
+  try {
+    const baseUrl = window.location.origin;
+    const fullUrl = new URL(url, baseUrl);
+    if (token) {
+      fullUrl.searchParams.set('token', token);
+    }
+    return fullUrl.toString();
+  } catch (err) {
+    console.error('Invalid image URL:', err);
+    return 'https://via.placeholder.com/300x200';
+  }
+};
+
 export default function AddToFavorite() {
   const [selectedFilter, setSelectedFilter] = useState('Offers');
   const { favorites, removeFromFavorites, addToFavorites } = useFavorites();
+  const token = localStorage.getItem('token');
 
   const categoryMappedToPoints = [
     'Food & Drink',
@@ -171,7 +188,10 @@ export default function AddToFavorite() {
     'Culture & Sights',
     'Vegan Friendly',
     'Vegan & Vegetarian',
-    'Activity & Wellness'
+    'Activity & Wellness',
+    'Nature',
+    'Culture & Landmarks',
+    'Nightlife'
   ];
 
   const filters = ['Offers', 'Points', 'Events'];
@@ -195,14 +215,13 @@ export default function AddToFavorite() {
   return (
     <div
       style={{
-        // marginLeft: '10px',
-        // marginRight: '10px',
         paddingBottom: '100px',
         height: 'calc(100vh - 70px)',
         overflowY: 'auto',
         fontFamily: 'sans-serif',
       }}
     >
+      {/* Filter Tabs */}
       <div className="offers-tab-bar">
         {filters.map((filter) => (
           <div
@@ -214,41 +233,51 @@ export default function AddToFavorite() {
           </div>
         ))}
       </div>
-      <div className='offers-text'>Saved {selectedFilter} </div>
+
+      <div className="offers-text">Saved {selectedFilter}</div>
 
       {filteredItems.length === 0 ? (
         <p style={{ textAlign: 'center', marginTop: '20px' }}>
           No saved {selectedFilter.toLowerCase()} yet!
         </p>
       ) : (
-        filteredItems.map((item, index) => (
-          <div key={index} className="attractionCardADF" style={{ marginBottom: '20px'}}>
-            <div className="attractionCardImageContainer">
-              <img
-                src={item.image}
-                alt={item.title}
-                className="attractionCardImage"
-              />
-              <AiFillHeart
-                className="attractionCardHeartIcon"
-                onClick={(e) => handleHeartClick(e, item)}
-                style={{ color: 'red', width: '25px', height: '25px', padding: '4px' }}
-              />
-              {item.category && item.category !== 'Offers' && (
-                <div className="attractionCardCategoryADF">{item.category}</div>
-              )}
-            </div>
+        filteredItems.map((item, index) => {
+          // ✅ Correct image URL resolution
+          const rawUrl = item.image?.url || item.photo?.url || item.image || '';
+          const imageUrl = getImageUrlWithToken(rawUrl, token);
 
-            <div className="attractionCardDetails">
-              <h3 style={{ fontWeight: 500 }}>{item.title}</h3>
-              {item.description && <p>{item.description}</p>}
-              {item.distance && <p>{item.distance} KM</p>}
-              {item.buttonLabel && (
-                <button className="showOfferButton">{item.buttonLabel}</button>
-              )}
+          return (
+            <div key={index} className="attractionCardADF" style={{ marginBottom: '20px' }}>
+              <div className="attractionCardImageContainer">
+                <img
+                  src={imageUrl}
+                  alt={item.title}
+                  className="attractionCardImage"
+                  onError={(e) => {
+                    e.target.src = 'https://via.placeholder.com/300x200';
+                  }}
+                />
+                <AiFillHeart
+                  className="attractionCardHeartIcon"
+                  onClick={(e) => handleHeartClick(e, item)}
+                  style={{ color: 'red', width: '25px', height: '25px', padding: '4px' }}
+                />
+                {item.category && item.category !== 'Offers' && (
+                  <div className="attractionCardCategoryADF">{item.category}</div>
+                )}
+              </div>
+
+              <div className="attractionCardDetails">
+                <h3 style={{ fontWeight: 500 }}>{item.title}</h3>
+                {item.description && <p>{item.description}</p>}
+                {item.distance && <p>{item.distance} KM</p>}
+                {item.buttonLabel && (
+                  <button className="showOfferButton">{item.buttonLabel}</button>
+                )}
+              </div>
             </div>
-          </div>
-        ))
+          );
+        })
       )}
     </div>
   );

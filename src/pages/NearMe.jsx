@@ -531,10 +531,6 @@ export default function NearMe({ setBottomBarVisible }) {
           }
 
           const nearest = getNearestPoint(location, mockPoints);
-          // if (nearest) {
-          //   setActiveMarker(nearest.id);
-          //   setShowCardSheet(true);
-          // }
           if (nearest) {
             setActiveMarker(nearest.id);
             setShowCardSheet(true);
@@ -545,7 +541,6 @@ export default function NearMe({ setBottomBarVisible }) {
               }
             }, 500);
           }
-          
         },
         (err) => {
           console.error('Geolocation error:', err);

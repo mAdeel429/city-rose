@@ -266,7 +266,6 @@
 
 
 
-
 import React, { useRef, useLayoutEffect, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaHeart } from 'react-icons/fa';
@@ -400,6 +399,22 @@ export default function CardDetailScreen() {
   const { id, image, title, category, distance, fullItem } = cardData;
   const isFavorite = favorites.some(item => item.id === id);
 
+  // ✅ Token-based image logic added here
+  const token = localStorage.getItem('token');
+  let imageUrl = '/fallback.jpg';
+
+  if (image && image.startsWith('http')) {
+    try {
+      const url = new URL(image);
+      url.searchParams.append('token', token);
+      imageUrl = url.toString();
+    } catch (err) {
+      console.error('Invalid image URL:', err);
+    }
+  } else if (image) {
+    imageUrl = image;
+  }
+
   const handleHeartClick = () => {
     if (isFavorite) {
       removeFromFavorites(id);
@@ -432,7 +447,7 @@ export default function CardDetailScreen() {
             transition={{ type: 'spring', stiffness: 120 }}
           >
             <img
-              src={image || '/fallback.jpg'}
+              src={imageUrl}
               alt={title}
               className="headers-image"
               onLoad={() => window.dispatchEvent(new Event('resize'))}
@@ -482,40 +497,27 @@ export default function CardDetailScreen() {
           )}
         </motion.div>
 
-        {/* 🔘 Dynamic Buttons from fullItem.buttons */}
-        {/* {fullItem?.buttons && (
-          <div className="tabs-card"> */}
         {fullItem?.buttons &&
           (fullItem.buttons.start_label || fullItem.buttons.center_label || fullItem.buttons.end_label) && (
             <div className="tabs-card">
-              {[
-                {
-                  label: fullItem.buttons.start_label,
-                  icon: fullItem.buttons.start_icon,
-                  link: fullItem.buttons.start_link,
-                },
-                {
-                  label: fullItem.buttons.center_label,
-                  icon: fullItem.buttons.center_icon,
-                  link: fullItem.buttons.center_link,
-                },
-                {
-                  label: fullItem.buttons.end_label,
-                  icon: fullItem.buttons.end_icon,
-                  link: fullItem.buttons.end_link,
-                },
-              ]
-                .filter((btn) => btn.label)
-                .map((btn, idx) => (
-                  <button
-                    key={idx}
-                    className="pill-tab"
-                    onClick={() => btn.link && window.open(btn.link, '_blank')}
-                  >
-                    {btn.icon && <img src={btn.icon} alt="" style={{ height: 14, marginRight: 6 }} />}
-                    {btn.label}
-                  </button>
-                ))}
+              {[fullItem.buttons.start_label, fullItem.buttons.center_label, fullItem.buttons.end_label]
+                .map((label, idx) => {
+                  const btn = {
+                    label,
+                    icon: fullItem.buttons[`${['start', 'center', 'end'][idx]}_icon`],
+                    link: fullItem.buttons[`${['start', 'center', 'end'][idx]}_link`],
+                  };
+                  return label ? (
+                    <button
+                      key={idx}
+                      className="pill-tab"
+                      onClick={() => btn.link && window.open(btn.link, '_blank')}
+                    >
+                      {btn.icon && <img src={btn.icon} alt="" style={{ height: 14, marginRight: 6 }} />}
+                      {btn.label}
+                    </button>
+                  ) : null;
+                })}
             </div>
           )}
 
@@ -526,48 +528,33 @@ export default function CardDetailScreen() {
             <p className="distance">{distance}</p>
           </div>
 
-          {/* 🖼️ Dynamic image gallery */}
-          {/* <div className="gallery-grid-custom">
-            {(fullItem?.photos || []).slice(0, 4).map((photo, i) => (
-              <div
-                key={i}
-                className={`grid-item image-${i + 1}${i === 3 ? ' with-overlay' : ''}`}
-              >
-                <img src={photo.url} alt={`Image ${i + 1}`} />
-                {i === 3 && fullItem.photos.length > 4 && (
-                  <div className="overlay-text">+{fullItem.photos.length - 3}</div>
-                )}
-              </div>
-            ))}
-          </div> */}
-
-<div className="gallery-grid-custom">
-  {fullItem?.photos?.length > 0 ? (
-    fullItem.photos.slice(0, 4).map((photo, i) => (
-      <div
-        key={i}
-        className={`grid-item image-${i + 1}${i === 3 ? ' with-overlay' : ''}`}
-      >
-        <img src={photo.url} alt={`Image ${i + 1}`} />
-        {i === 3 && fullItem.photos.length > 4 && (
-          <div className="overlay-text">+{fullItem.photos.length - 3}</div>
-        )}
-      </div>
-    ))
-  ) : (
-    Array.from({ length: 4 }).map((_, i) => (
-      <div
-        key={i}
-        className={`grid-item image-${i + 1} image-placeholder`}
-      />
-    ))
-  )}
-</div>
-
+          <div className="gallery-grid-custom">
+            {fullItem?.photos?.length > 0 ? (
+              fullItem.photos.slice(0, 4).map((photo, i) => (
+                <div
+                  key={i}
+                  className={`grid-item image-${i + 1}${i === 3 ? ' with-overlay' : ''}`}
+                >
+                  <img src={imageUrl} alt={`Image ${i + 1}`} />
+                  {i === 3 && fullItem.photos.length > 4 && (
+                    <div className="overlay-text">+{fullItem.photos.length - 3}</div>
+                  )}
+                </div>
+              ))
+            ) : (
+              Array.from({ length: 4 }).map((_, i) => (
+                <div
+                  key={i}
+                  className={`grid-item image-${i + 1} image-placeholder`}
+                />
+              ))
+            )}
+          </div>
 
           <div style={{ margin: '20px 0px' }}>
             <OfferCard />
           </div>
+
           <div style={{ marginTop: '20px' }}>
             <MapCard
               lat={fullItem.lat || 0}
@@ -575,6 +562,7 @@ export default function CardDetailScreen() {
               placeName={fullItem.macros?.[0]?.name || title}
             />
           </div>
+
           <div style={{ marginBottom: '120px' }}>
             <UpcomingEventCard />
           </div>
