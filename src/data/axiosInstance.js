@@ -27,12 +27,10 @@ instance.interceptors.request.use(
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log('🛡️ Using token:', token);
     }
 
     if (deviceId) {
       config.headers['cityrose-device-uuid'] = deviceId;
-      console.log('📱 Using device ID:', deviceId);
     }
 
     return config;
@@ -41,3 +39,4 @@ instance.interceptors.request.use(
 );
 
 export default instance;
+

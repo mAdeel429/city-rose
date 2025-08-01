@@ -181,7 +181,6 @@ export default function AnimatedRoutes({ setBottomBarVisible }) {
                 </>
               )}
 
-              {/* Catch all redirect */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>

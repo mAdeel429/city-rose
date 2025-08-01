@@ -3,6 +3,7 @@
 // import { FaArrowLeft, FaHeart } from 'react-icons/fa';
 // import { motion } from 'framer-motion';
 // import './CardDetailScreen.css';
+
 // import OfferCard from '../cards/OfferCard';
 // import MapCard from '../cards/MapCard';
 // import UpcomingEventCard from '../cards/UpcomingEventCard';
@@ -17,7 +18,6 @@
 //   const [pullHeight, setPullHeight] = useState(0);
 //   const [isPulling, setIsPulling] = useState(false);
 //   const [headerHeight, setHeaderHeight] = useState(260);
-
 //   const [showBubbles, setShowBubbles] = useState(false);
 //   const [animateHeart, setAnimateHeart] = useState(false);
 
@@ -26,6 +26,7 @@
 
 //   const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
 
+//   // Load card data from navigation state
 //   useLayoutEffect(() => {
 //     if (location.state) {
 //       setCardData(location.state);
@@ -38,6 +39,7 @@
 //     return () => clearTimeout(timeout);
 //   }, [location.key]);
 
+//   // Handle scroll + pull effect
 //   useEffect(() => {
 //     const scrollArea = scrollRef.current;
 //     if (!scrollArea) return;
@@ -124,18 +126,19 @@
 //     };
 //   }, [pullHeight, isPulling]);
 
+//   // Handle case where no data is available
 //   if (!cardData) {
 //     return <div>No data found. Please go back and select a card.</div>;
 //   }
 
 //   const { id, image, title, category, distance } = cardData;
-//   const isFavorite = favorites.some(item => item.title === title);
+//   const isFavorite = favorites.some(item => item.id === id);
 
 //   const handleHeartClick = () => {
 //     if (isFavorite) {
 //       removeFromFavorites(id);
 //     } else {
-//       addToFavorites(cardData);
+//       addToFavorites({ id, image, title, category, distance });
 //       setShowBubbles(true);
 //       setAnimateHeart(true);
 //       setTimeout(() => {
@@ -148,6 +151,7 @@
 //   return (
 //     <div className="full-page">
 //       <div className="scroll-area" ref={scrollRef}>
+//         {/* Header with pull/stretch animation */}
 //         <motion.div
 //           className="header-container elastic-header"
 //           animate={{ height: headerHeight + pullHeight }}
@@ -186,7 +190,7 @@
 //               style={{
 //                 color: isFavorite ? 'red' : 'white',
 //                 cursor: 'pointer',
-//                 fontSize: '18px'
+//                 fontSize: '18px',
 //               }}
 //             />
 //           </motion.div>
@@ -213,6 +217,7 @@
 //           )}
 //         </motion.div>
 
+//         {/* Tabs UI */}
 //         <div className="tabs-card">
 //           {['Indicazioni', 'Orari', 'Sito'].map((tab) => (
 //             <button key={tab} className="pill-tab">
@@ -221,6 +226,7 @@
 //           ))}
 //         </div>
 
+//         {/* Main content */}
 //         <div className="cart-container">
 //           <div className="info">
 //             <h3>{title}</h3>
@@ -289,7 +295,6 @@ export default function CardDetailScreen() {
 
   const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
 
-  // Load card data from navigation state
   useLayoutEffect(() => {
     if (location.state) {
       setCardData(location.state);
@@ -302,7 +307,6 @@ export default function CardDetailScreen() {
     return () => clearTimeout(timeout);
   }, [location.key]);
 
-  // Handle scroll + pull effect
   useEffect(() => {
     const scrollArea = scrollRef.current;
     if (!scrollArea) return;
@@ -389,12 +393,11 @@ export default function CardDetailScreen() {
     };
   }, [pullHeight, isPulling]);
 
-  // Handle case where no data is available
   if (!cardData) {
     return <div>No data found. Please go back and select a card.</div>;
   }
 
-  const { id, image, title, category, distance } = cardData;
+  const { id, image, title, category, distance, fullItem } = cardData;
   const isFavorite = favorites.some(item => item.id === id);
 
   const handleHeartClick = () => {
@@ -414,7 +417,6 @@ export default function CardDetailScreen() {
   return (
     <div className="full-page">
       <div className="scroll-area" ref={scrollRef}>
-        {/* Header with pull/stretch animation */}
         <motion.div
           className="header-container elastic-header"
           animate={{ height: headerHeight + pullHeight }}
@@ -430,7 +432,7 @@ export default function CardDetailScreen() {
             transition={{ type: 'spring', stiffness: 120 }}
           >
             <img
-              src={image}
+              src={image || '/fallback.jpg'}
               alt={title}
               className="headers-image"
               onLoad={() => window.dispatchEvent(new Event('resize'))}
@@ -480,43 +482,98 @@ export default function CardDetailScreen() {
           )}
         </motion.div>
 
-        {/* Tabs UI */}
-        <div className="tabs-card">
-          {['Indicazioni', 'Orari', 'Sito'].map((tab) => (
-            <button key={tab} className="pill-tab">
-              {tab}
-            </button>
-          ))}
-        </div>
+        {/* 🔘 Dynamic Buttons from fullItem.buttons */}
+        {/* {fullItem?.buttons && (
+          <div className="tabs-card"> */}
+        {fullItem?.buttons &&
+          (fullItem.buttons.start_label || fullItem.buttons.center_label || fullItem.buttons.end_label) && (
+            <div className="tabs-card">
+              {[
+                {
+                  label: fullItem.buttons.start_label,
+                  icon: fullItem.buttons.start_icon,
+                  link: fullItem.buttons.start_link,
+                },
+                {
+                  label: fullItem.buttons.center_label,
+                  icon: fullItem.buttons.center_icon,
+                  link: fullItem.buttons.center_link,
+                },
+                {
+                  label: fullItem.buttons.end_label,
+                  icon: fullItem.buttons.end_icon,
+                  link: fullItem.buttons.end_link,
+                },
+              ]
+                .filter((btn) => btn.label)
+                .map((btn, idx) => (
+                  <button
+                    key={idx}
+                    className="pill-tab"
+                    onClick={() => btn.link && window.open(btn.link, '_blank')}
+                  >
+                    {btn.icon && <img src={btn.icon} alt="" style={{ height: 14, marginRight: 6 }} />}
+                    {btn.label}
+                  </button>
+                ))}
+            </div>
+          )}
 
-        {/* Main content */}
         <div className="cart-container">
           <div className="info">
             <h3>{title}</h3>
             <p className="category">{category}</p>
-            <p className="distance">{distance} KM</p>
+            <p className="distance">{distance}</p>
           </div>
 
-          <div className="gallery-grid-custom">
-            {[1, 2, 3, 4].map((_, i) => (
+          {/* 🖼️ Dynamic image gallery */}
+          {/* <div className="gallery-grid-custom">
+            {(fullItem?.photos || []).slice(0, 4).map((photo, i) => (
               <div
                 key={i}
                 className={`grid-item image-${i + 1}${i === 3 ? ' with-overlay' : ''}`}
               >
-                <img
-                  src="https://media.cnn.com/api/v1/images/stellar/prod/200416163203-03b-ice-cream-around-the-world-restricted.jpg?q=w_1110,c_fill"
-                  alt={`Image ${i + 1}`}
-                />
-                {i === 3 && <div className="overlay-text">+4</div>}
+                <img src={photo.url} alt={`Image ${i + 1}`} />
+                {i === 3 && fullItem.photos.length > 4 && (
+                  <div className="overlay-text">+{fullItem.photos.length - 3}</div>
+                )}
               </div>
             ))}
-          </div>
+          </div> */}
+
+<div className="gallery-grid-custom">
+  {fullItem?.photos?.length > 0 ? (
+    fullItem.photos.slice(0, 4).map((photo, i) => (
+      <div
+        key={i}
+        className={`grid-item image-${i + 1}${i === 3 ? ' with-overlay' : ''}`}
+      >
+        <img src={photo.url} alt={`Image ${i + 1}`} />
+        {i === 3 && fullItem.photos.length > 4 && (
+          <div className="overlay-text">+{fullItem.photos.length - 3}</div>
+        )}
+      </div>
+    ))
+  ) : (
+    Array.from({ length: 4 }).map((_, i) => (
+      <div
+        key={i}
+        className={`grid-item image-${i + 1} image-placeholder`}
+      />
+    ))
+  )}
+</div>
+
 
           <div style={{ margin: '20px 0px' }}>
             <OfferCard />
           </div>
           <div style={{ marginTop: '20px' }}>
-            <MapCard lat={43.7780} lng={11.2486} placeName="Gelato Shop" />
+            <MapCard
+              lat={fullItem.lat || 0}
+              lng={fullItem.lng || 0}
+              placeName={fullItem.macros?.[0]?.name || title}
+            />
           </div>
           <div style={{ marginBottom: '120px' }}>
             <UpcomingEventCard />

@@ -154,86 +154,16 @@ export default function Login() {
 
   const handleBackClick = () => navigate(-1);
 
-  // const handleLogin = async () => {
-  //   setLoading(true);
-  //   setError('');
-
-  //   try {
-  //     const response = await fetch('https://interstellar.cityrose.app/api/v1/auth/login', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'device-name': 'web',
-  //       },
-  //       body: JSON.stringify({ email, password }),
-  //     });
-
-  //     const data = await response.json();
-  //     console.log('🔔 Login Response:', data);
-
-  //     if (!response.ok || !data.access_token) {
-  //       setError(data.message || 'Login failed');
-  //       return;
-  //     }
-
-  //     const token = data.access_token;
-  //     const deviceId = uuidv4();
-
-  //     localStorage.setItem('token', token);
-  //     localStorage.setItem('refresh_token', data.refresh_token || '');
-  //     localStorage.setItem('token_type', data.token_type || '');
-  //     localStorage.setItem('expires_in', data.expires_in?.toString() || '');
-  //     localStorage.setItem('device_id', deviceId);
-
-  //     // Register device
-  //     const deviceResponse = await fetch('https://interstellar.cityrose.app/api/v1/device/register', {
-  //       method: 'PUT',
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         uuid: deviceId,
-  //         name: 'Web browser',
-  //         platform: 'web',
-  //         os: navigator.userAgent,
-  //         idiom: 'web',
-  //         app_version: '1.0.0',
-  //         fcm_token: '',
-  //       }),
-  //     });
-
-  //     const deviceData = await deviceResponse.json();
-  //     console.log('✅ Device Registered:', deviceData);
-
-  //     localStorage.setItem('user_info', JSON.stringify({
-  //       name: data.user?.name || '',
-  //       email: data.user?.email || email,
-  //     }));
-
-  //     alert('Login successful!');
-  //     navigate('/home');
-
-  //   } catch (err) {
-  //     console.error('❌ Login Error:', err);
-  //     setError('Something went wrong. Please try again.');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleLogin = async () => {
     setError('');
   
-    // Validation checks
     if (!email.trim()) return alert('Email is required');
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) return alert('Enter a valid email address');
     if (!password) return alert('Password is required');
     if (password.length < 6) return alert('Password must be at least 6 characters');
-  
     setLoading(true);
-  
+    
     try {
       const response = await fetch('https://interstellar.cityrose.app/api/v1/auth/login', {
         method: 'POST',
@@ -260,6 +190,7 @@ export default function Login() {
       localStorage.setItem('token_type', data.token_type || '');
       localStorage.setItem('expires_in', data.expires_in?.toString() || '');
       localStorage.setItem('device_id', deviceId);
+
   
       await fetch('https://interstellar.cityrose.app/api/v1/device/register', {
         method: 'PUT',
@@ -282,6 +213,21 @@ export default function Login() {
         name: data.user?.name || '',
         email: data.user?.email || email,
       }));
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            localStorage.setItem('user_lat', latitude.toString());
+            localStorage.setItem('user_lon', longitude.toString());
+          },
+          (error) => {
+            console.warn('Location access denied or error:', error);
+          }
+        );
+      } else {
+        console.warn('Geolocation is not supported by this browser.');
+      }
   
       alert('Login successful!');
       navigate('/home');
