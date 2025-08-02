@@ -110,7 +110,7 @@ const Login = lazy(() => import('../auth/Login'));
 const Register = lazy(() => import('../auth/Register'));
 
 
-export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen, isCitySheetOpen, setSelectedCity }) {
+export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen, isCitySheetOpen, setSelectedCity, selectedCity={selectedCity} }) {
   const location = useLocation();
   const navigationType = useNavigationType();
   const isBack = navigationType === 'POP';
@@ -176,7 +176,8 @@ export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen
                       <HomePage
                         setIsCitySheetOpen={setIsCitySheetOpen}
                         isCitySheetOpen={isCitySheetOpen}
-                        setSelectedCity={setSelectedCity} // ✅ pass it here
+                        setSelectedCity={setSelectedCity}
+                        selectedCity={selectedCity}
                       />
                     }
                   />

@@ -141,10 +141,7 @@ export default function CityBottomSheet({ show, onClose, setSelectedCity }) {
   const handleCitySelect = (city) => {
     setSelectedCity(city);
     localStorage.setItem('selected_city', JSON.stringify(city));
-    onClose(); // Close the sheet
-
-    // setTimeout(() => {
-    // }, 200);
+    onClose();
   };
 
   if (!show) return null;

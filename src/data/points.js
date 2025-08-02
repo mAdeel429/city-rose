@@ -5,49 +5,45 @@ export const fetchPoints = async () => {
     const deviceId = localStorage.getItem('device_id');
     const deviceType = 'web';
 
-    const [res1, res2, res3, res4, res5] = await Promise.all([
-      axiosInstance.post('/point/list', {
-        page: 1,
-        limit: 25,
-        device_id: deviceId,
-        device_type: deviceType,
-      }),
-      axiosInstance.post('/point/list', {
-        page: 2,
-        limit: 25,
-        device_id: deviceId,
-        device_type: deviceType,
-      }),
-      axiosInstance.post('/point/list', {
-        page: 3,
-        limit: 25,
-        device_id: deviceId,
-        device_type: deviceType,
-      }),
-      axiosInstance.post('/point/list', {
-        page: 4,
-        limit: 25,
-        device_id: deviceId,
-        device_type: deviceType,
-      }),
-      axiosInstance.post('/point/list', {
-        page: 5,
-        limit: 25,
-        device_id: deviceId,
-        device_type: deviceType,
-      }),
-    ]);
+    if (!deviceId) {
+      console.warn('⚠️ Device ID not found in localStorage');
+      return {
+        nearby: [],
+        mustSee: [],
+        michelin: [],
+        gelato: [],
+        vegan: [],
+      };
+    }
+
+    const pages = [1, 2, 3, 4, 5];
+
+    const responses = await Promise.all(
+      pages.map((page) =>
+        axiosInstance.post('/point/list', {
+          page,
+          limit: 25,
+          device_id: deviceId,
+          device_type: deviceType,
+        })
+      )
+    );
+
+    const [nearby, mustSee, michelin, gelato, vegan] = responses.map(
+      (res) => res.data.data || []
+    );
+
+    console.log('✅ Nearby Points:', nearby);
 
     return {
-      nearby: res1.data.data || [],
-      mustSee: res2.data.data || [],
-      michelin: res3.data.data || [],
-      gelato: res4.data.data || [],
-      vegan: res5.data.data || [],
+      nearby,
+      mustSee,
+      michelin,
+      gelato,
+      vegan,
     };
-    console.log('nearby', res1.data.data)
   } catch (error) {
-    console.error('❌ Error fetching points:', error?.response?.data || error.message);
+    console.error('❌ Error fetching points:', error?.response?.data || error.message || error);
     return {
       nearby: [],
       mustSee: [],

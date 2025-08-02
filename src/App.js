@@ -40,9 +40,10 @@ export default function App() {
         bottomSheetState={bottomSheetState}
         setBottomSheetState={setBottomSheetState}
         setBottomBarVisible={setBottomBarVisible}
-        setIsCitySheetOpen={setIsCitySheetOpen} // 👈 pass it down
+        setIsCitySheetOpen={setIsCitySheetOpen}
         isCitySheetOpen={isCitySheetOpen}
         setSelectedCity={setSelectedCity}
+        selectedCity={selectedCity}
       />
       <BottomBar visible={!isCitySheetOpen && bottomBarVisible} />
     </FavoritesProvider>

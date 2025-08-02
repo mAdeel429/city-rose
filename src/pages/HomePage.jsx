@@ -291,6 +291,8 @@
 // }
 
 
+
+
 import React, { useRef, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Header from '../components/Header';
@@ -301,16 +303,21 @@ import './HomePage.css';
 import SecondCard from '../components/SecondCard';
 import UpcomingEventCard from '../cards/UpcomingEventCard';
 import { usePoints } from '../context/PointsContext';
-import BottomBar from '../components/BottomBar'
+import BottomBar from '../components/BottomBar';
 
-export default function HomePage({ setIsCitySheetOpen, isCitySheetOpen, setSelectedCity }) {
+export default function HomePage({
+  setIsCitySheetOpen,
+  isCitySheetOpen,
+  setSelectedCity,
+  selectedCity = { selectedCity },
+}) {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const [isCitySheetOpen, setIsCitySheetOpen] = useState(true);
   const scrollRef = useRef(null);
   const [pullHeight, setPullHeight] = useState(0);
   const [isPulling, setIsPulling] = useState(false);
   const hasElasticTriggered = useRef(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const {
     pointsData,
@@ -321,7 +328,32 @@ export default function HomePage({ setIsCitySheetOpen, isCitySheetOpen, setSelec
     isLoading,
   } = usePoints();
 
-  // ✅ Show city bottom sheet if passed from Register
+  // Filter function attempts to get title from multiple possible fields
+  const filterAttractions = (data) => {
+    return data.filter((item) => {
+      // Try different paths to get title
+      const title =
+        item?.fullItem?.title ||
+        item?.title ||
+        item?.featured_pretty?.title ||
+        '';
+
+      // Only show if hide_home is true (when fullItem exists)
+      const hideHome = item?.fullItem?.hide_home ?? true; // fallback true if no fullItem
+
+      return (
+        hideHome &&
+        title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    });
+  };
+
+  const filteredNearby = filterAttractions(pointsData);
+  const filteredMustSee = filterAttractions(mustSeeData);
+  const filteredMichelin = filterAttractions(michelinData);
+  const filteredGelato = filterAttractions(gelatoData);
+  const filteredVegan = filterAttractions(veganData);
+
   useEffect(() => {
     if (location.state?.showBottomSheet) {
       setIsCitySheetOpen(true);
@@ -339,50 +371,60 @@ export default function HomePage({ setIsCitySheetOpen, isCitySheetOpen, setSelec
           className="header-wrapper elastic-header"
           style={{
             height: `${220 + pullHeight}px`,
-            transition: isPulling ? 'none' : 'height 0.4s cubic-bezier(0.25, 1.5, 0.5, 1)',
+            transition: isPulling
+              ? 'none'
+              : 'height 0.4s cubic-bezier(0.25, 1.5, 0.5, 1)',
           }}
         >
           <Header
             setIsMenuOpen={setIsMenuOpen}
             pullHeight={pullHeight}
             isPulling={isPulling}
+            onLocationClick={() => setIsCitySheetOpen(true)}
+            selectedCity={selectedCity}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
           />
         </div>
 
         <div className="card-container" style={{ paddingBottom: '110px' }}>
-          <AttractionRow
-            title="Nearby Attractions"
-            data={pointsData.filter(item => item.fullItem?.hide_home)}
-          />
-          <AttractionRow
-            title="Must-see"
-            data={mustSeeData.filter(item => item.fullItem?.hide_home)}
-          />
-          <AttractionRow
-            title="Michelin Starred Restaurants"
-            data={michelinData.filter(item => item.fullItem?.hide_home)}
-          />
-          <AttractionRow
-            title="Best Gelato in Town"
-            data={gelatoData.filter(item => item.fullItem?.hide_home)}
-          />
-          <AttractionRow
-            title="Vegan Spots"
-            data={veganData.filter(item => item.fullItem?.hide_home)}
-          />
+          {filteredNearby.length > 0 ? (
+            <AttractionRow title="Nearby Attractions" data={filteredNearby} />
+          ) : (
+            <div className="no-results">
+              No attractions found for "{searchQuery}"
+            </div>
+          )}
+
+          {filteredMustSee.length > 0 && (
+            <AttractionRow title="Must-see" data={filteredMustSee} />
+          )}
+
+          {filteredMichelin.length > 0 && (
+            <AttractionRow
+              title="Michelin Starred Restaurants"
+              data={filteredMichelin}
+            />
+          )}
+
+          {filteredGelato.length > 0 && (
+            <AttractionRow title="Best Gelato in Town" data={filteredGelato} />
+          )}
+
+          {filteredVegan.length > 0 && (
+            <AttractionRow title="Vegan Spots" data={filteredVegan} />
+          )}
+
           <SecondCard />
           <UpcomingEventCard />
         </div>
       </div>
 
-      {/* Existing Menu Bottom Sheet */}
       <BottomSheet show={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-
-      {/* ✅ New City Bottom Sheet */}
       <CityBottomSheet
         show={isCitySheetOpen}
         onClose={() => setIsCitySheetOpen(false)}
-        setSelectedCity={setSelectedCity} // ✅ passed here
+        setSelectedCity={setSelectedCity}
       />
       <BottomBar visible={!isCitySheetOpen} />
     </div>
