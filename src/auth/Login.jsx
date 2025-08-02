@@ -249,6 +249,7 @@ export default function Login() {
       setError('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
+      window.location.reload();
     }
   };
 

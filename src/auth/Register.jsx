@@ -156,7 +156,6 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // ✅ Ask for location permission on component mount
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -242,6 +241,7 @@ export default function Register() {
 
       alert('Registration successful!');
       navigate('/home', { state: { showBottomSheet: true } });
+      window.location.reload();
 
     } catch (err) {
       console.error('❌ Registration Error:', err);

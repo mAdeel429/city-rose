@@ -143,10 +143,8 @@ export default function CityBottomSheet({ show, onClose, setSelectedCity }) {
     localStorage.setItem('selected_city', JSON.stringify(city));
     onClose(); // Close the sheet
 
-    // ✅ Refresh home page after city selection
-    setTimeout(() => {
-      window.location.reload();
-    }, 200);
+    // setTimeout(() => {
+    // }, 200);
   };
 
   if (!show) return null;
