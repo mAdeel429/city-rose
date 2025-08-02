@@ -3,21 +3,21 @@ import AnimatedLayout from './Routes/AnimatedRoutes';
 import BottomBar from './components/BottomBar';
 import { FavoritesProvider } from './data/FavoritesContext';
 import './App.css';
-import { fetchMacros } from './data/fetchMacros';
 
 export default function App() {
   const [bottomSheetState, setBottomSheetState] = useState('collapsed');
   const [bottomBarVisible, setBottomBarVisible] = useState(true);
-
+  const [isCitySheetOpen, setIsCitySheetOpen] = useState(true);
+  const [selectedCity, setSelectedCity] = useState(null);
+  
   useEffect(() => {
-    const loadData = async () => {
-      const data = await fetchMacros();
-      console.log('📦 Macros in React Component:', data);
-    };
-
-    loadData();
+    const savedCity = localStorage.getItem('selected_city');
+    if (savedCity) {
+      setSelectedCity(JSON.parse(savedCity));
+      setIsCitySheetOpen(false);
+    }
   }, []);
-
+  
   useEffect(() => {
     const matchDark = window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -40,8 +40,11 @@ export default function App() {
         bottomSheetState={bottomSheetState}
         setBottomSheetState={setBottomSheetState}
         setBottomBarVisible={setBottomBarVisible}
+        setIsCitySheetOpen={setIsCitySheetOpen} // 👈 pass it down
+        isCitySheetOpen={isCitySheetOpen}
+        setSelectedCity={setSelectedCity}
       />
-      <BottomBar visible={bottomBarVisible} />
+      <BottomBar visible={!isCitySheetOpen && bottomBarVisible} />
     </FavoritesProvider>
   );
 }

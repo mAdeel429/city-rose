@@ -19,15 +19,15 @@
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     background-color: var(--card-bg);
-    margin: 10px 0;
+    margin: 20px 0;
     font-family: sans-serif;
     transition: background-color 0.3s ease;
   }
   
   .eventHeading {
     font-weight: bold;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    /* margin-top: 20px; */
+    /* margin-bottom: 20px; */
     font-size: 16px;
     color: var(--card-title); 
   }
@@ -39,7 +39,7 @@
   }
   
   .eventContent {
-    padding: 10px 14px;
+    padding: 0px 14px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -51,7 +51,7 @@
     font-weight: bold;
     margin: 0;
     color: var(--card-title);
-    margin-top: 20px;
+    /* margin-top: 20px; */
   }
   
   .eventDate {
@@ -61,3 +61,8 @@
     color: #777;
   }
   
+
+  .eventLocation{
+    color: var(--card-subtitle);
+    font-size: 13;
+  }

@@ -237,10 +237,12 @@ export default function Login() {
         name: data.user?.name || '',
         email: data.user?.email || email,
       }));
-
-      alert('Login successful!');
-      navigate('/home');
-      window.location.reload();
+      const city = localStorage.getItem('selected_city');
+      if (city) {
+        navigate('/home');
+      } else {
+        navigate('/home');
+      }
 
     } catch (err) {
       console.error('❌ Login Error:', err);

@@ -1,35 +1,3 @@
-// import axiosInstance from './axiosInstance';
-
-// export const fetchPoints = async () => {
-//   try {
-//     const deviceId = localStorage.getItem('device_id');
-//     const deviceType = 'web';
-
-//     const response = await axiosInstance.post('/point/list', {
-//       page: 1,
-//       limit: 25,
-//       device_id: deviceId,
-//       device_type: deviceType,
-//     });
-
-//     const response2 = await axiosInstance.post('/point/list', {
-//       page: 2,
-//       limit: 25,
-//       device_id: deviceId,
-//       device_type: deviceType,
-//     });
-
-//     console.log('Points API Response Page 2:', response2.data);
-//     console.log('✅ Points API Response:', response.data);
-//     return response.data.data || [];
-//   } catch (error) {
-//     console.error('❌ Error fetching points:', error?.response?.data || error.message);
-//     return [];
-//   }
-// };
-
-
-
 import axiosInstance from './axiosInstance';
 
 export const fetchPoints = async () => {
@@ -89,3 +57,55 @@ export const fetchPoints = async () => {
     };
   }
 };
+
+
+
+
+// import axiosInstance from './axiosInstance';
+
+// export const fetchPoints = async () => {
+//   try {
+//     const deviceId = localStorage.getItem('device_id');
+//     const deviceType = 'web';
+//     const limit = 25;
+//     const totalResults = 351;
+//     const totalPages = Math.ceil(totalResults / limit);
+
+//     const requests = Array.from({ length: totalPages }, (_, i) =>
+//       axiosInstance.post('/point/list', {
+//         page: i + 1,
+//         limit,
+//         device_id: deviceId,
+//         device_type: deviceType,
+//       })
+//     );
+
+//     const responses = await Promise.all(requests);
+
+//     const allItems = responses.flatMap(res => res.data?.data || []);
+
+//     const filteredItems = allItems.filter(item => item.hide_home);
+
+//     console.log(`📦 Total fetched items: ${allItems.length}`);
+//     console.log(`✅ Filtered items (hide_home == false): ${filteredItems.length}`);
+//     console.log('📝 Filtered Items:', filteredItems);
+
+//     return {
+//       nearby: filteredItems,
+//       mustSee: [],
+//       michelin: [],
+//       gelato: [],
+//       vegan: [],
+//     };
+
+//   } catch (error) {
+//     console.error('❌ Error fetching points:', error?.response?.data || error.message);
+//     return {
+//       nearby: [],
+//       mustSee: [],
+//       michelin: [],
+//       gelato: [],
+//       vegan: [],
+//     };
+//   }
+// };

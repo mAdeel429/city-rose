@@ -291,24 +291,27 @@
 // }
 
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import AttractionRow from '../components/AttractionRow';
 import BottomSheet from '../components/BottomSheet';
+import CityBottomSheet from '../components/CityBottomSheet';
 import './HomePage.css';
 import SecondCard from '../components/SecondCard';
 import UpcomingEventCard from '../cards/UpcomingEventCard';
-import { usePoints } from '../context/PointsContext'; // ✅ Using context
+import { usePoints } from '../context/PointsContext';
+import BottomBar from '../components/BottomBar'
 
-export default function HomePage() {
+export default function HomePage({ setIsCitySheetOpen, isCitySheetOpen, setSelectedCity }) {
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // const [isCitySheetOpen, setIsCitySheetOpen] = useState(true);
   const scrollRef = useRef(null);
   const [pullHeight, setPullHeight] = useState(0);
   const [isPulling, setIsPulling] = useState(false);
-  const maxElasticHeight = 100;
   const hasElasticTriggered = useRef(false);
 
-  // ✅ Get all data from context
   const {
     pointsData,
     mustSeeData,
@@ -318,10 +321,12 @@ export default function HomePage() {
     isLoading,
   } = usePoints();
 
-
-  console.log('pointsData', pointsData)
-
-  // Elastic scroll logic can remain unchanged (if you had it)
+  // ✅ Show city bottom sheet if passed from Register
+  useEffect(() => {
+    if (location.state?.showBottomSheet) {
+      setIsCitySheetOpen(true);
+    }
+  }, [location.state]);
 
   if (isLoading) {
     return <div className="loading">Loading attractions...</div>;
@@ -345,17 +350,41 @@ export default function HomePage() {
         </div>
 
         <div className="card-container" style={{ paddingBottom: '110px' }}>
-          <AttractionRow title="Nearby Attractions" data={pointsData} />
+          <AttractionRow
+            title="Nearby Attractions"
+            data={pointsData.filter(item => item.fullItem?.hide_home)}
+          />
+          <AttractionRow
+            title="Must-see"
+            data={mustSeeData.filter(item => item.fullItem?.hide_home)}
+          />
+          <AttractionRow
+            title="Michelin Starred Restaurants"
+            data={michelinData.filter(item => item.fullItem?.hide_home)}
+          />
+          <AttractionRow
+            title="Best Gelato in Town"
+            data={gelatoData.filter(item => item.fullItem?.hide_home)}
+          />
+          <AttractionRow
+            title="Vegan Spots"
+            data={veganData.filter(item => item.fullItem?.hide_home)}
+          />
           <SecondCard />
-          <AttractionRow title="Must-see" data={mustSeeData} />
-          <AttractionRow title="Michelin Starred Restaurants" data={michelinData} />
-          <AttractionRow title="Best Gelato in Town" data={gelatoData} />
-          <AttractionRow title="Vegan Spots" data={veganData} />
           <UpcomingEventCard />
         </div>
       </div>
 
+      {/* Existing Menu Bottom Sheet */}
       <BottomSheet show={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+
+      {/* ✅ New City Bottom Sheet */}
+      <CityBottomSheet
+        show={isCitySheetOpen}
+        onClose={() => setIsCitySheetOpen(false)}
+        setSelectedCity={setSelectedCity} // ✅ passed here
+      />
+      <BottomBar visible={!isCitySheetOpen} />
     </div>
   );
 }

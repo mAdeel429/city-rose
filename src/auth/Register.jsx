@@ -17,7 +17,7 @@
 
 //   const handleRegister = async () => {
 //     setError('');
-  
+
 //     // Validation checks
 //     if (!name.trim()) return alert('Name is required');
 //     if (name.trim().length < 3) return alert('Name must be at least 3 characters');
@@ -26,33 +26,33 @@
 //     if (!emailRegex.test(email)) return alert('Enter a valid email address');
 //     if (!password) return alert('Password is required');
 //     if (password.length < 8) return alert('Password must be at least 8 characters');
-  
+
 //     setLoading(true);
-  
+
 //     try {
 //       const response = await fetch('https://interstellar.cityrose.app/api/v1/auth/register', {
 //         method: 'POST',
 //         headers: { 'Content-Type': 'application/json' },
 //         body: JSON.stringify({ name, email, password }),
 //       });
-  
+
 //       const data = await response.json();
 //       console.log('🔔 User Registration Response:', data);
-  
+
 //       if (!response.ok || !data.access_token) {
 //         setError(data.message || data.error || 'Registration failed');
 //         return;
 //       }
-  
+
 //       const token = data.access_token;
 //       const deviceId = uuidv4();
-  
+
 //       localStorage.setItem('token', token);
 //       localStorage.setItem('refresh_token', data.refresh_token || '');
 //       localStorage.setItem('token_type', data.token_type || '');
 //       localStorage.setItem('expires_in', data.expires_in?.toString() || '');
 //       localStorage.setItem('device_id', deviceId);
-  
+
 //       await fetch('https://interstellar.cityrose.app/api/v1/device/register', {
 //         method: 'PUT',
 //         headers: {
@@ -69,7 +69,7 @@
 //           fcm_token: '',
 //         }),
 //       });
-  
+
 //       localStorage.setItem('user_info', JSON.stringify({
 //         name: data.user?.name || name,
 //         email: data.user?.email || email,
@@ -93,7 +93,7 @@
 //       alert('Registration successful!');
 //       window.location.reload();
 //       navigate('/home');
-  
+
 //     } catch (err) {
 //       console.error('❌ Registration Error:', err);
 //       setError('Something went wrong. Please try again.');
@@ -101,7 +101,7 @@
 //       setLoading(false);
 //     }
 //   };
-  
+
 //   return (
 //     <>
 //       <div className="login-header">
@@ -179,8 +179,6 @@ export default function Register() {
 
   const handleRegister = async () => {
     setError('');
-
-    // Validation checks
     if (!name.trim()) return alert('Name is required');
     if (name.trim().length < 3) return alert('Name must be at least 3 characters');
     if (!email.trim()) return alert('Email is required');
@@ -188,6 +186,11 @@ export default function Register() {
     if (!emailRegex.test(email)) return alert('Enter a valid email address');
     if (!password) return alert('Password is required');
     if (password.length < 8) return alert('Password must be at least 8 characters');
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return alert('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character');
+    }
+
 
     setLoading(true);
 
@@ -238,8 +241,7 @@ export default function Register() {
       }));
 
       alert('Registration successful!');
-      navigate('/home');
-      window.location.reload();
+      navigate('/home', { state: { showBottomSheet: true } });
 
     } catch (err) {
       console.error('❌ Registration Error:', err);

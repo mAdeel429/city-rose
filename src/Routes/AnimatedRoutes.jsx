@@ -110,7 +110,7 @@ const Login = lazy(() => import('../auth/Login'));
 const Register = lazy(() => import('../auth/Register'));
 
 
-export default function AnimatedRoutes({ setBottomBarVisible }) {
+export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen, isCitySheetOpen, setSelectedCity }) {
   const location = useLocation();
   const navigationType = useNavigationType();
   const isBack = navigationType === 'POP';
@@ -169,7 +169,17 @@ export default function AnimatedRoutes({ setBottomBarVisible }) {
               {/* Protected routes */}
               {isLoggedIn && (
                 <>
-                  <Route path="/home" element={<HomePage />} />
+                  {/* <Route path="/home" element={<HomePage setIsCitySheetOpen={setIsCitySheetOpen} isCitySheetOpen={isCitySheetOpen}/>} setSelectedCity={setSelectedCity}/> */}
+                  <Route
+                    path="/home"
+                    element={
+                      <HomePage
+                        setIsCitySheetOpen={setIsCitySheetOpen}
+                        isCitySheetOpen={isCitySheetOpen}
+                        setSelectedCity={setSelectedCity} // ✅ pass it here
+                      />
+                    }
+                  />
                   <Route path="/editProfile" element={<EditProfile />} />
                   <Route path="/insights" element={<Insights />} />
                   <Route path="/settings" element={<Settings />} />

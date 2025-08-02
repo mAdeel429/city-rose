@@ -55,7 +55,7 @@ export default function AttractionRow({ title, data }) {
   const navigate = useNavigate();
 
   return (
-    <div className={styles.pageContainer} style={{ margin: '20px 0' }}>
+    <div className={styles.pageContainer} style={{ margin: '10px 0' }}>
       <div className={styles.attractionsWrapper}>
         <h2>{title}</h2>
         <div className={styles.scrollContainer} ref={constraintsRef}>

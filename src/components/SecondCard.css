@@ -12,13 +12,14 @@
   position: relative;
   width: 100%;
   max-width: 500px;
-  height: 170px;
-  border-radius: 16px;
+  height: 200px;
+  border-radius: 8px;
   overflow: hidden;
   background-image: url('https://img.pretty-online.jp/wp-content/uploads/2023/06/12222857/news_badiani_1.jpg.webp');
   background-size: cover;
   background-position: center;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  /* margin-top: -10px; */
 }
 
 .overlay {

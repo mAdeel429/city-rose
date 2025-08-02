@@ -67,6 +67,19 @@
   transition: filter 0.3s ease;
 }
 
+.centerIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 20px;
+}
+
+.centerTab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
 
 
 
@@ -162,16 +175,4 @@
   margin-bottom: 90px;
   display: flex;
   align-items: center;
-}
-
-.centerIcon {
-  width: 34px;
-  height: 34px;
-  border-radius: 20px;
-}
-
-.centerTab {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
