@@ -551,9 +551,18 @@ export default function CardDetailScreen() {
             )}
           </div>
 
-          <div style={{ margin: '20px 0px' }}>
+          {/* <div style={{ margin: '20px 0px' }}>
             <OfferCard />
-          </div>
+          </div> */}
+          {category === 'Food & Drink' ? (
+            <div style={{ margin: '20px 0px' }}>
+              <OfferCard />
+            </div>
+          ) : (
+            <div style={{ padding: '16px', textAlign: 'center', color: '#888' }}>
+              No relevant offers found for this category.
+            </div>
+          )}
 
           <div style={{ marginTop: '20px' }}>
             <MapCard
