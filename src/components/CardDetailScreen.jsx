@@ -281,7 +281,7 @@ export default function CardDetailScreen() {
   const location = useLocation();
   const navigate = useNavigate();
   const scrollRef = useRef(null);
-
+  const [imageLoaded, setImageLoaded] = useState(false);
   const [cardData, setCardData] = useState(null);
   const [pullHeight, setPullHeight] = useState(0);
   const [isPulling, setIsPulling] = useState(false);
@@ -446,12 +446,29 @@ export default function CardDetailScreen() {
             animate={{ scale: 1 + pullHeight / 500 }}
             transition={{ type: 'spring', stiffness: 120 }}
           >
-            <img
+            {/* <img
               src={imageUrl}
               alt={title}
               className="headers-image"
               onLoad={() => window.dispatchEvent(new Event('resize'))}
+            /> */}
+            <img
+              src={imageUrl}
+              alt={title}
+              className="headers-image"
+              onLoad={() => setImageLoaded(true)}
+              style={{
+                opacity: imageLoaded ? 1 : 0,
+                transition: 'opacity 0.4s ease-in-out',
+              }}
             />
+            {!imageLoaded && (
+              <div className="image-placeholder">
+                <p>Loading image...</p>
+                {/* Add shimmer/skeleton if you want */}
+              </div>
+            )}
+
           </motion.div>
 
           <div className="cds-back-icon" onClick={() => navigate(-1)}>
@@ -550,10 +567,6 @@ export default function CardDetailScreen() {
               ))
             )}
           </div>
-
-          {/* <div style={{ margin: '20px 0px' }}>
-            <OfferCard />
-          </div> */}
           {category === 'Food & Drink' ? (
             <div style={{ margin: '20px 0px' }}>
               <OfferCard />
