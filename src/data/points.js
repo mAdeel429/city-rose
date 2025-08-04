@@ -84,7 +84,6 @@ export const fetchPoints = async () => {
 
       allPoints = [...allPoints, ...data];
 
-      // Break if fewer items than limit → last page
       if (data.length < limit) {
         keepFetching = false;
       } else {
@@ -92,7 +91,7 @@ export const fetchPoints = async () => {
       }
     }
 
-    return allPoints; // return full 351+ items
+    return allPoints;
   } catch (error) {
     console.error('❌ Error fetching points:', error?.response?.data || error.message || error);
     return [];

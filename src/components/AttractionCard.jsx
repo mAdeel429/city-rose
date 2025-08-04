@@ -142,7 +142,6 @@ export default function AttractionCard({ id, image, title, category, distance, o
   };
   const token = localStorage.getItem('token');
 
-  // 🖼️ Build image URL with token if image exists
   let imageUrl = '/fallback.jpg';
   if (image) {
     try {

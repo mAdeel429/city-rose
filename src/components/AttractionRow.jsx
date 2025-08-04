@@ -30,9 +30,6 @@ export default function AttractionRow({ title, data }) {
                   title={item.title}
                   category={item.category}
                   distance={item.distance}
-                  // onClick={() => {
-                  //   navigate('/details', { state: itemWithId });
-                  // }}
                   onClick={() => {
                     setTimeout(() => {
                       navigate('/details', { state: itemWithId });

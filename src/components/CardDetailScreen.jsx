@@ -288,6 +288,8 @@ export default function CardDetailScreen() {
   const [headerHeight, setHeaderHeight] = useState(260);
   const [showBubbles, setShowBubbles] = useState(false);
   const [animateHeart, setAnimateHeart] = useState(false);
+  const [imageUrls, setImageUrls] = useState([]);
+
 
   const hasElasticTriggered = useRef(false);
   const userInteracted = useRef(false);
@@ -305,6 +307,28 @@ export default function CardDetailScreen() {
 
     return () => clearTimeout(timeout);
   }, [location.key]);
+
+
+  useEffect(() => {
+    if (cardData?.fullItem?.photos?.length > 0) {
+      const token = localStorage.getItem('token');
+      const firstPhoto = cardData.fullItem.photos[0];
+
+      const urls = Array.from({ length: cardData.fullItem.photos_count }).map((_, i) => {
+        if (i === 0) {
+          const url = new URL(firstPhoto.url);
+          url.searchParams.append('token', token);
+          return url.toString();
+        } else {
+          return '/placeholder-image.jpg'; // Or a relevant stock image
+        }
+      });
+
+      console.log('🖼️ Simulated multiple images:', urls);
+      setImageUrls(urls); // Set in state to render
+    }
+  }, [cardData]);
+
 
   useEffect(() => {
     const scrollArea = scrollRef.current;
@@ -446,12 +470,6 @@ export default function CardDetailScreen() {
             animate={{ scale: 1 + pullHeight / 500 }}
             transition={{ type: 'spring', stiffness: 120 }}
           >
-            {/* <img
-              src={imageUrl}
-              alt={title}
-              className="headers-image"
-              onLoad={() => window.dispatchEvent(new Event('resize'))}
-            /> */}
             <img
               src={imageUrl}
               alt={title}
@@ -465,7 +483,6 @@ export default function CardDetailScreen() {
             {!imageLoaded && (
               <div className="image-placeholder">
                 <p>Loading image...</p>
-                {/* Add shimmer/skeleton if you want */}
               </div>
             )}
 
@@ -545,7 +562,7 @@ export default function CardDetailScreen() {
             <p className="distance">{distance}</p>
           </div>
 
-          <div className="gallery-grid-custom">
+          {/* <div className="gallery-grid-custom">
             {fullItem?.photos?.length > 0 ? (
               fullItem.photos.slice(0, 4).map((photo, i) => (
                 <div
@@ -566,7 +583,26 @@ export default function CardDetailScreen() {
                 />
               ))
             )}
+          </div> */}
+          <div className="gallery-grid-custom">
+            {imageUrls.length > 0 ? (
+              imageUrls.map((url, index) => (
+                <div
+                  key={index}
+                  className={`grid-item image-${index + 1}${index === 3 && imageUrls.length > 4 ? ' with-overlay' : ''}`}
+                >
+                  <img src={url} alt={`Image ${index + 1}`} />
+                  {index === 3 && imageUrls.length > 4 && (
+                    <div className="overlay-text">+{imageUrls.length - 4}</div>
+                  )}
+                </div>
+              ))
+            ) : (
+              <div>No images found</div>
+            )}
           </div>
+
+
           {category === 'Food & Drink' ? (
             <div style={{ margin: '20px 0px' }}>
               <OfferCard />

@@ -208,13 +208,7 @@ export function PointsProvider({ children }) {
         
           fineDining: pick((item) =>
             getCategory(item, ['ristorante elegante', 'alta cucina', 'fine dining', 'cena esclusiva'])
-          ),      
-          // popular: pick((item) =>
-          //   getCategory(item, [
-          //     'piazza', 'monumento', 'popolare', 'attrazione', 'turistica', 'famoso',
-          //     'visitare', 'meta'
-          //   ])
-          // ),
+          ),
         };
         
 

@@ -28,8 +28,6 @@
 // export default instance;
 
 
-
-// src/data/axiosInstance.js
 import axios from 'axios';
 import { refreshAccessToken } from '../auth/auth'
 
@@ -57,7 +55,6 @@ instance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ✅ RESPONSE INTERCEPTOR
 instance.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -68,10 +65,9 @@ instance.interceptors.response.use(
 
       const newAccessToken = await refreshAccessToken();
       if (newAccessToken) {
-        // ✅ Update token in original request
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
-        return instance(originalRequest); // 🔁 Retry with new token
+        return instance(originalRequest);
       } else {
         console.warn('🔐 Refresh failed. Logging out.');
         localStorage.clear();
