@@ -27,8 +27,8 @@ export default function App() {
       document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
     };
 
-    applyTheme(matchDark); // Initial load
-    matchDark.addEventListener('change', applyTheme); // Theme changes
+    applyTheme(matchDark);
+    matchDark.addEventListener('change', applyTheme);
 
     return () => {
       matchDark.removeEventListener('change', applyTheme);

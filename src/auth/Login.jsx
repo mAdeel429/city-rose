@@ -488,6 +488,7 @@ export default function Login() {
       toast.error('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
+      window.location.reload();
     }
   };
 

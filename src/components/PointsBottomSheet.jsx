@@ -2,7 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './PointsBottomSheet.css';
 import { IoClose } from 'react-icons/io5';
-import { FaUtensils, FaShoppingBag, FaLandmark, FaGlassCheers, FaSpa } from 'react-icons/fa';
+import {
+  Utensils,
+  ShoppingBag,
+  Landmark,
+  Martini,
+  Flower
+} from 'lucide-react';
+
 
 export const filterOptions = {
   'Food & Drink': {
@@ -38,13 +45,22 @@ export const filterOptions = {
   },
 };
 
+// const macroIcons = {
+//   'Food & Drink': <FaUtensils size={18} />,
+//   Shopping: <FaShoppingBag size={18} />,
+//   'Culture & Sights': <FaLandmark size={18} />,
+//   Nightlife: <FaGlassCheers size={18} />,
+//   'Activity & Wellness': <FaSpa size={18} />,
+// };
+
 const macroIcons = {
-  'Food & Drink': <FaUtensils size={18} />,
-  Shopping: <FaShoppingBag size={18} />,
-  'Culture & Sights': <FaLandmark size={18} />,
-  Nightlife: <FaGlassCheers size={18} />,
-  'Activity & Wellness': <FaSpa size={18} />,
+  'Food & Drink': <Utensils size={18} />,
+  Shopping: <ShoppingBag size={18} />,
+  'Culture & Sights': <Landmark size={18} />,
+  Nightlife: <Martini  size={18} />,
+  'Activity & Wellness': <Flower size={18} />,
 };
+
 
 export default function PointsBottomSheet({
   show,

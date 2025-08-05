@@ -160,13 +160,13 @@ export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen
           <Suspense fallback={<div style={{ backgroundColor: 'var(--background-color)', height: '100vh' }} />}>
             <Routes location={loc}>
               {/* Root redirect */}
-              <Route path="/" element={<Navigate to={isLoggedIn ? '/near-me' : '/auth'} replace />} />
+              <Route path="/" element={<Navigate to={isLoggedIn ? '/home' : '/auth'} replace />} />
 
               {/* Auth route */}
               <Route path="/auth" element={<AuthLanding />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
+              {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
 
               {/* Protected routes */}
               {isLoggedIn && (
