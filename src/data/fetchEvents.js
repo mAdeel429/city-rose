@@ -54,14 +54,7 @@ export const fetchEvents = async () => {
       page: 1,
       limit: 25,
     });
-
-    console.log('🔍 Raw response:', res.data);
-
-    // ✅ Correct structure based on actual response
     const events = Array.isArray(res.data?.data) ? res.data.data : [];
-
-    console.log('✅ Parsed events:', events);
-
     return {
       page1: events,
     };

@@ -108,6 +108,7 @@ const AddToFavorite = lazy(() => import('../pages/AddToFavorite'));
 const AuthLanding = lazy(() => import('../auth/AuthLanding'));
 const Login = lazy(() => import('../auth/Login'));
 const Register = lazy(() => import('../auth/Register'));
+const ForgotPassword = lazy(() => import('../auth/ForgotPassword'));
 
 
 export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen, isCitySheetOpen, setSelectedCity, selectedCity={selectedCity} }) {
@@ -119,7 +120,7 @@ export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen
   const isLoggedIn = !!localStorage.getItem('token'); // Assume token in localStorage
 
   useEffect(() => {
-    const authRoutes = ['/auth', '/login', '/register'];
+    const authRoutes = ['/auth', '/login', '/register', '/forgot-password'];
     if (authRoutes.includes(location.pathname)) {
       setBottomBarVisible(false);
     } else {
@@ -165,6 +166,7 @@ export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen
               <Route path="/auth" element={<AuthLanding />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
 
               {/* Protected routes */}
               {isLoggedIn && (

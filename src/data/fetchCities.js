@@ -2,7 +2,6 @@
 import axiosInstance from './axiosInstance';
 
 export const fetchCities = async () => {
-    console.log('📢 fetchCities called'); // ✅ yeh zarur likhein
   
     try {
       const deviceId = localStorage.getItem('device_id');
@@ -19,7 +18,6 @@ export const fetchCities = async () => {
   
       const cities = response.data.data || [];
   
-      console.log('📍 Fetched Cities:', cities);
   
       return cities;
     } catch (error) {
