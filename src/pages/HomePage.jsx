@@ -317,7 +317,7 @@ export default function HomePage({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const scrollRef = useRef(null);
   const [pullHeight, setPullHeight] = useState(0);
-  const [isPulling, setIsPulling] = useState(false);
+  const [isPulling, setIsPulling] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const hasElasticTriggered = useRef(false);
 
@@ -451,9 +451,18 @@ export default function HomePage({
     });
   };
 
+  // if (isLoading) {
+  //   return <div className="loading">Loading attractions...</div>;
+  // }
+
   if (isLoading) {
-    return <div className="loading">Loading attractions...</div>;
-  }
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Loading attractions...</p>
+      </div>
+    );
+  }  
 
   return (
     <div className="full-page scrolling-container">

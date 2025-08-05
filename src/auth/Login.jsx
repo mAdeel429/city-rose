@@ -481,6 +481,7 @@ export default function Login() {
 
       toast.success('Login successful');
       navigate('/home');
+      window.location.reload();
 
     } catch (err) {
       console.error('❌ Login Error:', err);
@@ -488,7 +489,6 @@ export default function Login() {
       toast.error('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
-      window.location.reload();
     }
   };
 
