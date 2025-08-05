@@ -429,63 +429,95 @@ function getNearestPoint(userLocation, points) {
 
 const snazzyMapStyle = [
   {
-    "featureType": "landscape.man_made",
-    "elementType": "all",
+    "elementType": "geometry",
     "stylers": [
-      { "color": "#faf5ed" },
-      { "lightness": "0" },
-      { "gamma": "1" }
+      {
+        "color": "#ebe3cd"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#523735"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#f5f1e6"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#c9b2a6"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.land_parcel",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#dcd2be"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#dfd2ae"
+      }
     ]
   },
   {
     "featureType": "poi.park",
     "elementType": "geometry.fill",
     "stylers": [
-      { "color": "#bae5a6" }
+      {
+        "color": "#a5b076"
+      }
     ]
   },
   {
     "featureType": "road",
-    "elementType": "all",
+    "elementType": "geometry",
     "stylers": [
-      { "weight": "1.00" },
-      { "gamma": "1.8" },
-      { "saturation": "0" }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "geometry.fill",
-    "stylers": [
-      { "hue": "#ffb200" }
+      {
+        "color": "#f5f1e6"
+      }
     ]
   },
   {
     "featureType": "road.arterial",
-    "elementType": "geometry.fill",
+    "elementType": "geometry",
     "stylers": [
-      { "lightness": "0" },
-      { "gamma": "1" }
-    ]
-  },
-  {
-    "featureType": "transit.station.airport",
-    "elementType": "all",
-    "stylers": [
-      { "hue": "#b000ff" },
-      { "saturation": "23" },
-      { "lightness": "-4" },
-      { "gamma": "0.80" }
+      {
+        "color": "#fdfcf8"
+      }
     ]
   },
   {
     "featureType": "water",
-    "elementType": "all",
+    "elementType": "geometry.fill",
     "stylers": [
-      { "color": "#a0daf2" }
+      {
+        "color": "#b9d3c2"
+      }
     ]
   }
-];
+]
+
+
 
 
 export default function NearMe({ setBottomBarVisible }) {
@@ -730,6 +762,7 @@ export default function NearMe({ setBottomBarVisible }) {
             streetViewControl: false,
             fullscreenControl: false,
             styles: snazzyMapStyle,
+            disableDefaultUI: true,
           }}
           zoom={17}
           center={userLocation || { lat: 59.9139, lng: 10.7522 }}
