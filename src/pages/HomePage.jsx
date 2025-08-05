@@ -317,7 +317,7 @@ export default function HomePage({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const scrollRef = useRef(null);
   const [pullHeight, setPullHeight] = useState(0);
-  const [isPulling, setIsPulling] = useState(true);
+  const [isPulling, setIsPulling] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const hasElasticTriggered = useRef(false);
 
