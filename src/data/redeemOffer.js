@@ -1,28 +1,45 @@
-// redeemOffer.js
-import axiosInstance from './axiosInstance';
+// import axiosInstance from './axiosInstance';
 
-/**
- * Redeems an offer and logs the full response (including potential QR code).
- * @param {string|number} offerId - The ID of the offer to redeem
- * @returns {object} Redeem API response data
- */
-export const redeemOffer = async (offerId) => {
-  try {
-    const deviceId = localStorage.getItem('device_id');
+// export const redeemOffer = async (offerId) => {
+//   try {
+//     const response = await axiosInstance.post(`/offer/redeem/${offerId}`);
+//     console.log('🎉 Offer Redeem Response:', response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.error('❌ Error redeeming offer:', error?.response?.data || error.message);
+//     return null;
+//   }
+// };
 
-    const response = await axiosInstance.post(`/offer/redeem/${offerId}`, null, {
-      params: {
-        no_device: deviceId || 1, // fallback to 1 if deviceId not found
-      },
-    });
+// export const getOfferById = async (offerId) => {
+//   try {
+//     const response = await axiosInstance.get(`/offer/${offerId}`, {
+//       params: { no_device: 1 },
+//     });
+//     console.log('📦 GET /offer/:id Response:', response.data);
+//     return response.data;
+//   } catch (err) {
+//     console.error('❌ Error fetching offer by ID:', err.response?.data || err.message);
+//   }
+// };
 
-    console.log('✅ 🎁 Offer Redeem Successful');
-    console.log('🔍 Full Response Data:', response.data);
 
-    return response.data;
+// export const bookmarkOffer = async (offerId, bookmarked = true) => {
+//   try {
+//     const response = await axiosInstance.post(
+//       `/bookmark/offer/${offerId}`,
+//       { bookmarked },
+//       {
+//         params: {
+//           no_device: 1,
+//         },
+//       }
+//     );
 
-  } catch (error) {
-    console.error('❌ Failed to redeem offer:', error?.response?.data || error.message);
-    throw error;
-  }
-};
+//     console.log('🔖 Bookmark API Response:', response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.error('❌ Error bookmarking offer:', error?.response?.data || error.message);
+//     return null;
+//   }
+// };

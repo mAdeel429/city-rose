@@ -185,7 +185,7 @@ export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen
                       />
                     }
                   />
-                  <Route path="/editProfile" element={<EditProfile pointId={21}/>} />
+                  <Route path="/editProfile" element={<EditProfile offerId={2}/>} />
                   <Route path="/insights" element={<Insights />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/offers" element={<Offers />} />
