@@ -105,10 +105,12 @@ const NearMe = lazy(() => import('../pages/NearMe'));
 const Offers = lazy(() => import('../pages/Offers'));
 const CategoryDetails = lazy(() => import('../pages/CategoryDetails'));
 const AddToFavorite = lazy(() => import('../pages/AddToFavorite'));
+const FullImageGalleryScreen = lazy(() => import('../components/FullImageGalleryScreen'));
 const AuthLanding = lazy(() => import('../auth/AuthLanding'));
 const Login = lazy(() => import('../auth/Login'));
 const Register = lazy(() => import('../auth/Register'));
 const ForgotPassword = lazy(() => import('../auth/ForgotPassword'));
+
 
 
 export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen, isCitySheetOpen, setSelectedCity, selectedCity={selectedCity} }) {
@@ -191,6 +193,7 @@ export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen
                   <Route path="/details" element={<CardDetailScreen key={location.key} />} />
                   <Route path="/category/:category" element={<CategoryDetails />} />
                   <Route path="/add-to-favorite" element={<AddToFavorite />} />
+                  <Route path="/gallery" element={<FullImageGalleryScreen />} />
                 </>
               )}
 

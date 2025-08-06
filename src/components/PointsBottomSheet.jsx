@@ -10,7 +10,6 @@ import {
   Flower
 } from 'lucide-react';
 
-
 export const filterOptions = {
   'Food & Drink': {
     Category: ['Cafe', 'Restaurant', 'Street Food', 'Lounge Bar'],

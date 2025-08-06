@@ -288,7 +288,6 @@ export default function CardSlider({
   points,
   activeMarker,
   setShowCardSheet,
-  // setBottomBarVisible,
   onHeightChange,
 }) {
   const y = useMotionValue(window.innerHeight - PEEK_HEIGHT);

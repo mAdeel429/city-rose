@@ -266,7 +266,6 @@
 
 
 
-// CardDetailScreen.js
 import React, { useRef, useLayoutEffect, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaHeart } from 'react-icons/fa';
@@ -297,6 +296,17 @@ export default function CardDetailScreen() {
 
   const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
 
+  // 🟢 Navigate to Full Gallery
+  const handleGalleryClick = () => {
+    navigate('/gallery', {
+      state: {
+        images: imageUrls,
+        title: cardData?.title || 'Gallery',
+      },
+    });
+  };
+
+  // 🟢 Set card data from location
   useLayoutEffect(() => {
     if (location.state) {
       setCardData(location.state);
@@ -309,38 +319,40 @@ export default function CardDetailScreen() {
     return () => clearTimeout(timeout);
   }, [location.key]);
 
+  // 🟢 Load Images
   useEffect(() => {
-  const loadImages = async () => {
-    if (!cardData?.fullItem?.id) return;
+    const loadImages = async () => {
+      if (!cardData?.fullItem?.id) return;
 
-    const pointId = cardData.fullItem.id;
-    console.log('📌 Fetching more images for pointId:', pointId);
+      const pointId = cardData.fullItem.id;
+      console.log('📌 Fetching more images for pointId:', pointId);
 
-    try {
-      const data = await fetchPointDetailsWithPhotos(pointId);
-      console.log('✅ Response from /point/{id}?expand=photos:', data);
+      try {
+        const data = await fetchPointDetailsWithPhotos(pointId);
+        console.log('✅ Response from /point/{id}?expand=photos:', data);
 
-      const photos = data?.point?.photos;
-      if (photos?.length) {
-        const token = localStorage.getItem('token');
-        const urls = photos.map(photo => {
-          const url = new URL(photo.url);
-          url.searchParams.append('token', token);
-          return url.toString();
-        });
+        const photos = data?.point?.photos;
+        if (photos?.length) {
+          const token = localStorage.getItem('token');
+          const urls = photos.map(photo => {
+            const url = new URL(photo.url);
+            url.searchParams.append('token', token);
+            return url.toString();
+          });
 
-        setImageUrls(urls);
-      } else {
-        console.warn('🚫 No photos found.');
+          setImageUrls(urls);
+        } else {
+          console.warn('🚫 No photos found.');
+        }
+      } catch (err) {
+        console.error('❌ Error while fetching images:', err);
       }
-    } catch (err) {
-      console.error('❌ Error while fetching images:', err);
-    }
-  };
+    };
 
-  loadImages();
-}, [cardData]);
+    loadImages();
+  }, [cardData]);
 
+  // 🟢 Pull & Scroll Effects
   useEffect(() => {
     const scrollArea = scrollRef.current;
     if (!scrollArea) return;
@@ -419,6 +431,7 @@ export default function CardDetailScreen() {
     };
   }, [pullHeight, isPulling]);
 
+  // 🟥 Stop render if no card
   if (!cardData) return <div>No data found. Please go back and select a card.</div>;
 
   const { id, image, title, category, distance, fullItem } = cardData;
@@ -551,6 +564,7 @@ export default function CardDetailScreen() {
             </div>
           )}
 
+        {/* Card Info & Grid */}
         <div className="cart-container">
           <div className="info">
             <h3>{title}</h3>
@@ -558,13 +572,14 @@ export default function CardDetailScreen() {
             <p className="distance">{distance}</p>
           </div>
 
-          {/* 🔥 Images Grid */}
+          {/* 🟡 Image Grid with click on 4th image */}
           <div className="gallery-grid-custom">
             {imageUrls.length > 0 ? (
               imageUrls.slice(0, 4).map((url, index) => (
                 <div
                   key={index}
                   className={`grid-item image-${index + 1}${index === 3 && imageUrls.length > 4 ? ' with-overlay' : ''}`}
+                  onClick={index === 3 && imageUrls.length > 4 ? handleGalleryClick : undefined}
                 >
                   <img src={url} alt={`Image ${index + 1}`} />
                   {index === 3 && imageUrls.length > 4 && (
@@ -577,7 +592,6 @@ export default function CardDetailScreen() {
             )}
           </div>
 
-          {/* OfferCard */}
           {category === 'Food & Drink' ? (
             <div style={{ margin: '20px 0px' }}>
               <OfferCard />
