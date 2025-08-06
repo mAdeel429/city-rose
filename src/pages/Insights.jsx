@@ -2,6 +2,7 @@ import React from 'react';
 import './Insights.css';
 import { FiArrowLeft } from 'react-icons/fi';
 import {Link} from 'react-router-dom'
+import image from '../assets/insights.gif'
 
 export default function Insights() {
   return (
@@ -14,7 +15,7 @@ export default function Insights() {
       </div>
       <div className="offer-card">
         <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRly1SlyJilx_6cUbIusa6ggJQa9ykMp_3sFgD42JGi9SENuHw0N3kaXIjh319zQ0KbIY8&usqp=CAU"
+          src={image}
           alt="Offer"
           className="offer-image"
         />
