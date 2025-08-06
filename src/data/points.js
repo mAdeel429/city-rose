@@ -98,3 +98,6 @@ export const fetchPoints = async () => {
     return [];
   }
 };
+
+
+

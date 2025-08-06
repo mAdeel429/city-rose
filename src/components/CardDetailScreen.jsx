@@ -266,11 +266,13 @@
 
 
 
+// CardDetailScreen.js
 import React, { useRef, useLayoutEffect, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaHeart } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import './CardDetailScreen.css';
+import { fetchPointDetailsWithPhotos } from '../data/mockData';
 
 import OfferCard from '../cards/OfferCard';
 import MapCard from '../cards/MapCard';
@@ -290,7 +292,6 @@ export default function CardDetailScreen() {
   const [animateHeart, setAnimateHeart] = useState(false);
   const [imageUrls, setImageUrls] = useState([]);
 
-
   const hasElasticTriggered = useRef(false);
   const userInteracted = useRef(false);
 
@@ -308,27 +309,38 @@ export default function CardDetailScreen() {
     return () => clearTimeout(timeout);
   }, [location.key]);
 
-
   useEffect(() => {
-    if (cardData?.fullItem?.photos?.length > 0) {
-      const token = localStorage.getItem('token');
-      const firstPhoto = cardData.fullItem.photos[0];
-
-      const urls = Array.from({ length: cardData.fullItem.photos_count }).map((_, i) => {
-        if (i === 0) {
-          const url = new URL(firstPhoto.url);
-          url.searchParams.append('token', token);
-          return url.toString();
+    const loadImages = async () => {
+      if (!cardData?.fullItem?.id) return;
+  
+      const pointId = cardData.fullItem.id;
+      console.log('📌 Fetching more images for pointId:', pointId);
+  
+      try {
+        const data = await fetchPointDetailsWithPhotos(pointId);
+        console.log('✅ Response from /point/{id}?expand=photos:', data);
+  
+        const photos = data?.point?.photos;
+        if (photos?.length) {
+          const token = localStorage.getItem('token');
+          const urls = photos.map(photo => {
+            const url = new URL(photo.url);
+            url.searchParams.append('token', token);
+            return url.toString();
+          });
+  
+          setImageUrls(urls);
         } else {
-          return '/placeholder-image.jpg'; // Or a relevant stock image
+          console.warn('🚫 No photos found.');
         }
-      });
-
-      console.log('🖼️ Simulated multiple images:', urls);
-      setImageUrls(urls); // Set in state to render
-    }
+      } catch (err) {
+        console.error('❌ Error while fetching images:', err);
+      }
+    };
+  
+    loadImages();
   }, [cardData]);
-
+  
 
   useEffect(() => {
     const scrollArea = scrollRef.current;
@@ -373,10 +385,6 @@ export default function CardDetailScreen() {
       setPullHeight(0);
     };
 
-    const onUserScroll = () => {
-      userInteracted.current = true;
-    };
-
     const onScroll = () => {
       const currentScrollTop = scrollArea.scrollTop;
 
@@ -400,30 +408,23 @@ export default function CardDetailScreen() {
     };
 
     scrollArea.addEventListener('scroll', onScroll);
-    scrollArea.addEventListener('wheel', onUserScroll);
     scrollArea.addEventListener('touchstart', onTouchStart, { passive: false });
     scrollArea.addEventListener('touchmove', onTouchMove, { passive: false });
     scrollArea.addEventListener('touchend', onTouchEnd);
-    scrollArea.addEventListener('touchmove', onUserScroll);
 
     return () => {
       scrollArea.removeEventListener('scroll', onScroll);
-      scrollArea.removeEventListener('wheel', onUserScroll);
       scrollArea.removeEventListener('touchstart', onTouchStart);
       scrollArea.removeEventListener('touchmove', onTouchMove);
       scrollArea.removeEventListener('touchend', onTouchEnd);
-      scrollArea.removeEventListener('touchmove', onUserScroll);
     };
   }, [pullHeight, isPulling]);
 
-  if (!cardData) {
-    return <div>No data found. Please go back and select a card.</div>;
-  }
+  if (!cardData) return <div>No data found. Please go back and select a card.</div>;
 
   const { id, image, title, category, distance, fullItem } = cardData;
   const isFavorite = favorites.some(item => item.id === id);
 
-  // ✅ Token-based image logic added here
   const token = localStorage.getItem('token');
   let imageUrl = '/fallback.jpg';
 
@@ -485,7 +486,6 @@ export default function CardDetailScreen() {
                 <p>Loading image...</p>
               </div>
             )}
-
           </motion.div>
 
           <div className="cds-back-icon" onClick={() => navigate(-1)}>
@@ -500,10 +500,8 @@ export default function CardDetailScreen() {
             transition={{ duration: 0.4 }}
           >
             <FaHeart
-              className="cds-heart-filled"
               style={{
                 color: isFavorite ? 'red' : 'white',
-                cursor: 'pointer',
                 fontSize: '18px',
               }}
             />
@@ -531,27 +529,26 @@ export default function CardDetailScreen() {
           )}
         </motion.div>
 
+        {/* Buttons */}
         {fullItem?.buttons &&
           (fullItem.buttons.start_label || fullItem.buttons.center_label || fullItem.buttons.end_label) && (
             <div className="tabs-card">
-              {[fullItem.buttons.start_label, fullItem.buttons.center_label, fullItem.buttons.end_label]
-                .map((label, idx) => {
-                  const btn = {
-                    label,
-                    icon: fullItem.buttons[`${['start', 'center', 'end'][idx]}_icon`],
-                    link: fullItem.buttons[`${['start', 'center', 'end'][idx]}_link`],
-                  };
-                  return label ? (
-                    <button
-                      key={idx}
-                      className="pill-tab"
-                      onClick={() => btn.link && window.open(btn.link, '_blank')}
-                    >
-                      {btn.icon && <img src={btn.icon} alt="" style={{ height: 14, marginRight: 6 }} />}
-                      {btn.label}
-                    </button>
-                  ) : null;
-                })}
+              {['start', 'center', 'end'].map((pos, idx) => {
+                const label = fullItem.buttons[`${pos}_label`];
+                const icon = fullItem.buttons[`${pos}_icon`];
+                const link = fullItem.buttons[`${pos}_link`];
+
+                return label ? (
+                  <button
+                    key={idx}
+                    className="pill-tab"
+                    onClick={() => link && window.open(link, '_blank')}
+                  >
+                    {icon && <img src={icon} alt="" style={{ height: 14, marginRight: 6 }} />}
+                    {label}
+                  </button>
+                ) : null;
+              })}
             </div>
           )}
 
@@ -562,31 +559,10 @@ export default function CardDetailScreen() {
             <p className="distance">{distance}</p>
           </div>
 
-          {/* <div className="gallery-grid-custom">
-            {fullItem?.photos?.length > 0 ? (
-              fullItem.photos.slice(0, 4).map((photo, i) => (
-                <div
-                  key={i}
-                  className={`grid-item image-${i + 1}${i === 3 ? ' with-overlay' : ''}`}
-                >
-                  <img src={imageUrl} alt={`Image ${i + 1}`} />
-                  {i === 3 && fullItem.photos.length > 4 && (
-                    <div className="overlay-text">+{fullItem.photos.length - 3}</div>
-                  )}
-                </div>
-              ))
-            ) : (
-              Array.from({ length: 4 }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`grid-item image-${i + 1} image-placeholder`}
-                />
-              ))
-            )}
-          </div> */}
+          {/* 🔥 Images Grid */}
           <div className="gallery-grid-custom">
             {imageUrls.length > 0 ? (
-              imageUrls.map((url, index) => (
+              imageUrls.slice(0, 4).map((url, index) => (
                 <div
                   key={index}
                   className={`grid-item image-${index + 1}${index === 3 && imageUrls.length > 4 ? ' with-overlay' : ''}`}
@@ -602,7 +578,7 @@ export default function CardDetailScreen() {
             )}
           </div>
 
-
+          {/* OfferCard */}
           {category === 'Food & Drink' ? (
             <div style={{ margin: '20px 0px' }}>
               <OfferCard />

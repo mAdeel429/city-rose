@@ -451,10 +451,6 @@ export default function HomePage({
     });
   };
 
-  // if (isLoading) {
-  //   return <div className="loading">Loading attractions...</div>;
-  // }
-
   if (isLoading) {
     return (
       <div className="loading-container">

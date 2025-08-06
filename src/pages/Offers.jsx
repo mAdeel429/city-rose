@@ -410,11 +410,11 @@ export default function Offers() {
           <p>No events available right now.</p>
         </div>
       );
-    } else if (selectedType === 'Services') {
+    } else if (selectedType === 'Article') {
       return (
         <div style={{ textAlign: 'center', padding: '16px' }}>
-          <h2>No Services</h2>
-          <p>No services available in this city.</p>
+          <h2>No Article</h2>
+          <p>No article available in this city.</p>
         </div>
       );
     }
@@ -423,7 +423,7 @@ export default function Offers() {
   return (
     <div style={{ fontFamily: 'sans-serif' }}>
       <div className="offers-tab-bar">
-        {['Offers', 'Events', 'Services'].map((type) => (
+        {['Offers', 'Events', 'Article'].map((type) => (
           <div
             key={type}
             className={`offers-tab ${selectedType === type ? 'active' : ''}`}

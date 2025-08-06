@@ -280,7 +280,7 @@ import 'swiper/css/pagination';
 import './CardSlider.css';
 
 const HALF_HEIGHT = window.innerHeight * 0.6;
-const PEEK_HEIGHT = 120;
+const PEEK_HEIGHT = 160;
 const MAX_HEIGHT = window.innerHeight * 1.0;
 
 export default function CardSlider({
@@ -288,7 +288,7 @@ export default function CardSlider({
   points,
   activeMarker,
   setShowCardSheet,
-  setBottomBarVisible,
+  // setBottomBarVisible,
   onHeightChange,
 }) {
   const y = useMotionValue(window.innerHeight - PEEK_HEIGHT);
@@ -319,17 +319,17 @@ export default function CardSlider({
     snapTo(HALF_HEIGHT);
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = y.on('change', latestY => {
-      const currentHeight = window.innerHeight - latestY;
-      if (Math.abs(currentHeight - PEEK_HEIGHT) < 5) {
-        setBottomBarVisible(false);
-      } else {
-        setBottomBarVisible(true);
-      }
-    });
-    return () => unsubscribe();
-  }, [y, setBottomBarVisible]);
+  // useEffect(() => {
+  //   const unsubscribe = y.on('change', latestY => {
+  //     const currentHeight = window.innerHeight - latestY;
+  //     if (Math.abs(currentHeight - PEEK_HEIGHT) < 5) {
+  //       setBottomBarVisible(false);
+  //     } else {
+  //       setBottomBarVisible(true);
+  //     }
+  //   });
+  //   return () => unsubscribe();
+  // }, [y, setBottomBarVisible]);
 
   useEffect(() => {
     if (!activeMarker || !containerRef.current) return;

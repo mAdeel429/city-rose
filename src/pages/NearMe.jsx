@@ -520,7 +520,7 @@ const snazzyMapStyle = [
 
 
 
-export default function NearMe({ setBottomBarVisible }) {
+export default function NearMe() {
   const { categorizedData, isLoading } = usePoints(); // ✅ real points
   const [points, setPoints] = useState([]);
   const [macro, setMacro] = useState(null);
@@ -569,9 +569,9 @@ export default function NearMe({ setBottomBarVisible }) {
     }
   }, [categorizedData, isLoading]);
 
-  useEffect(() => {
-    setBottomBarVisible(false);
-  }, []);
+  // useEffect(() => {
+  //   setBottomBarVisible(false);
+  // }, []);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -733,7 +733,7 @@ export default function NearMe({ setBottomBarVisible }) {
           points={filteredPoints}
           activeMarker={activeMarker}
           setShowCardSheet={setShowCardSheet}
-          setBottomBarVisible={setBottomBarVisible}
+          // setBottomBarVisible={setBottomBarVisible}
         />
 
         <FilterBottomSheet
