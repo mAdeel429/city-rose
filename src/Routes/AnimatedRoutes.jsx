@@ -91,11 +91,9 @@ import {
   Routes,
   Route,
   Navigate,
-  useNavigate,
 } from 'react-router-dom';
 import { useTransition, animated } from '@react-spring/web';
 
-// Lazy-loaded pages
 const HomePage = lazy(() => import('../pages/HomePage'));
 const EditProfile = lazy(() => import('../pages/EditProfile'));
 const Insights = lazy(() => import('../pages/Insights'));
@@ -109,17 +107,14 @@ const FullImageGalleryScreen = lazy(() => import('../components/FullImageGallery
 const AuthLanding = lazy(() => import('../auth/AuthLanding'));
 const Login = lazy(() => import('../auth/Login'));
 const Register = lazy(() => import('../auth/Register'));
-const ForgotPassword = lazy(() => import('../auth/ForgotPassword'));
-
+const SingleOfferPage  = lazy(() => import('../cards/SingleOfferPage'));
 
 
 export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen, isCitySheetOpen, setSelectedCity, selectedCity={selectedCity} }) {
   const location = useLocation();
   const navigationType = useNavigationType();
   const isBack = navigationType === 'POP';
-  const navigate = useNavigate();
-
-  const isLoggedIn = !!localStorage.getItem('token'); // Assume token in localStorage
+  const isLoggedIn = !!localStorage.getItem('token');
 
   useEffect(() => {
     const authRoutes = ['/auth', '/login', '/register', '/forgot-password'];
@@ -161,19 +156,12 @@ export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen
         >
           <Suspense fallback={<div style={{ backgroundColor: 'var(--background-color)', height: '100vh' }} />}>
             <Routes location={loc}>
-              {/* Root redirect */}
               <Route path="/" element={<Navigate to={isLoggedIn ? '/home' : '/auth'} replace />} />
-
-              {/* Auth route */}
               <Route path="/auth" element={<AuthLanding />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
-
-              {/* Protected routes */}
               {isLoggedIn && (
                 <>
-                  {/* <Route path="/home" element={<HomePage setIsCitySheetOpen={setIsCitySheetOpen} isCitySheetOpen={isCitySheetOpen}/>} setSelectedCity={setSelectedCity}/> */}
                   <Route
                     path="/home"
                     element={
@@ -194,6 +182,7 @@ export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen
                   <Route path="/category/:category" element={<CategoryDetails />} />
                   <Route path="/add-to-favorite" element={<AddToFavorite />} />
                   <Route path="/gallery" element={<FullImageGalleryScreen />} />
+                  <Route path="//offersQR/:id" element={<SingleOfferPage  />} />
                 </>
               )}
 

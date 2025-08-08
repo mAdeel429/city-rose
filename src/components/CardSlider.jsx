@@ -452,7 +452,7 @@ export default function CardSlider({
     >
       <div className="sheet-drag-header" onClick={handleToggleHeight} onPointerDown={(e) => dragControls.start(e)}>
         <div className="handle-bar" />
-        <p className="sheet-heading">{points.length} places</p>
+        {/* <p className="sheet-heading">{points.length} places</p> */}
       </div>
 
       <div
@@ -503,7 +503,7 @@ export default function CardSlider({
                           className="attractionCardImage"
                         />
                         {activeSlideIndexes[point.id] === idx && (
-                          <div className="attractionCardCategory">{point.macro}</div>
+                          <div className="attractionCardCategory">{point.tags?.[0]}</div>
                         )}
                         {showBubbles && (
                           <div className="bubblesContainer">

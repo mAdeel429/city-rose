@@ -134,13 +134,14 @@ export default function OfferCard() {
   }
 
   return (
-    <div className={styles.offerCardWrapper}>
+    <div className={styles.offerCardWrapper} >
       {offers.map((item) => {
         const imageUrl = getImageUrlWithToken(item.photo?.url);
         const isFavorite = favorites.some(fav => fav.id === item.id);
 
         return (
-          <div key={item.id} className={styles.offerCard}>
+          <div key={item.id} className={styles.offerCard} onClick={() => navigate(`/offersQR/${item.id}`, { state: { offer: item } })}
+          >
             <div className={styles.offerImageContainer}>
               <img
                 src={imageUrl}

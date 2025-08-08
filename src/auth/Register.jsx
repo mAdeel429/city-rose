@@ -3,6 +3,7 @@
 // import { IoChevronBack } from 'react-icons/io5';
 // import { useNavigate } from 'react-router-dom';
 // import { v4 as uuidv4 } from 'uuid';
+// import { toast, Toaster } from 'sonner';
 
 // export default function Register() {
 //   const navigate = useNavigate();
@@ -12,6 +13,10 @@
 //   const [password, setPassword] = useState('');
 //   const [loading, setLoading] = useState(false);
 //   const [error, setError] = useState('');
+
+//   const [nameError, setNameError] = useState('');
+//   const [emailError, setEmailError] = useState('');
+//   const [passwordError, setPasswordError] = useState('');
 
 //   useEffect(() => {
 //     if (navigator.geolocation) {
@@ -35,18 +40,44 @@
 
 //   const handleRegister = async () => {
 //     setError('');
-//     if (!name.trim()) return alert('Name is required');
-//     if (name.trim().length < 3) return alert('Name must be at least 3 characters');
-//     if (!email.trim()) return alert('Email is required');
+//     setNameError('');
+//     setEmailError('');
+//     setPasswordError('');
+
+
 //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//     if (!emailRegex.test(email)) return alert('Enter a valid email address');
-//     if (!password) return alert('Password is required');
-//     if (password.length < 8) return alert('Password must be at least 8 characters');
 //     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-//     if (!passwordRegex.test(password)) {
-//       return alert('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character');
+
+//     let hasError = false;
+
+//     if (!name.trim()) {
+//       setNameError('Name is required');
+//       hasError = true;
+//     } else if (name.trim().length < 3) {
+//       setNameError('Name must be at least 3 characters');
+//       hasError = true;
 //     }
 
+//     if (!email.trim()) {
+//       setEmailError('Email is required');
+//       hasError = true;
+//     } else if (!emailRegex.test(email)) {
+//       setEmailError('Enter a valid email address');
+//       hasError = true;
+//     }
+
+//     if (!password) {
+//       setPasswordError('Password is required');
+//       hasError = true;
+//     } else if (password.length < 8) {
+//       setPasswordError('Password must be at least 8 characters');
+//       hasError = true;
+//     } else if (!passwordRegex.test(password)) {
+//       setPasswordError('Password must include uppercase, lowercase, number & special character');
+//       hasError = true;
+//     }
+
+//     if (hasError) return;
 
 //     setLoading(true);
 
@@ -62,11 +93,13 @@
 
 //       if (!response.ok || !data.access_token) {
 //         setError(data.message || data.error || 'Registration failed');
+//         toast.error(data.message || data.error || 'Registration failed');
 //         return;
 //       }
 
 //       const token = data.access_token;
 //       const deviceId = uuidv4();
+
 
 //       localStorage.setItem('token', token);
 //       localStorage.setItem('refresh_token', data.refresh_token || '');
@@ -96,13 +129,13 @@
 //         email: data.user?.email || email,
 //       }));
 
-//       alert('Registration successful!');
+//       toast.success('Registration successful!');
 //       navigate('/home', { state: { showBottomSheet: true } });
-//       window.location.reload();
 
 //     } catch (err) {
 //       console.error('❌ Registration Error:', err);
 //       setError('Something went wrong. Please try again.');
+//       toast.error('Something went wrong. Please try again.');
 //     } finally {
 //       setLoading(false);
 //     }
@@ -110,10 +143,13 @@
 
 //   return (
 //     <>
+//       <Toaster richColors position="top-center" />
+
 //       <div className="login-header">
 //         <IoChevronBack className="back-icon" onClick={handleBackClick} />
 //         <h1 className="login-title">Register</h1>
 //       </div>
+
 //       <div className="login-container">
 //         <p className="subheading">Discover City Rose world.</p>
 
@@ -126,6 +162,7 @@
 //             value={name}
 //             onChange={(e) => setName(e.target.value)}
 //           />
+//           {nameError && <p className="error-text">{nameError}</p>}
 //         </div>
 
 //         <div className="form-group">
@@ -137,6 +174,7 @@
 //             value={email}
 //             onChange={(e) => setEmail(e.target.value)}
 //           />
+//           {emailError && <p className="error-text">{emailError}</p>}
 //         </div>
 
 //         <div className="form-group">
@@ -148,12 +186,11 @@
 //             value={password}
 //             onChange={(e) => setPassword(e.target.value)}
 //           />
+//           {passwordError && <p className="error-text">{passwordError}</p>}
 //         </div>
 
-//         {error && <div className="error-text">{error}</div>}
-
 //         <button className="login-button" onClick={handleRegister} disabled={loading}>
-//           {loading ? 'Registering...' : 'Register'}
+//           {loading ? <span className="spinner" /> : 'Register'}
 //         </button>
 //       </div>
 //     </>
@@ -193,10 +230,12 @@ export default function Register() {
         },
         (error) => {
           console.warn('❌ Location permission denied or error:', error);
+          toast.error('Please enable location access to continue.');
         }
       );
     } else {
       console.warn('❌ Geolocation is not supported by this browser.');
+      toast.error('Geolocation is not supported by your browser.');
     }
   }, []);
 
@@ -207,6 +246,15 @@ export default function Register() {
     setNameError('');
     setEmailError('');
     setPasswordError('');
+
+    // 🚫 Location Check Before Register
+    const lat = localStorage.getItem('user_lat');
+    const lon = localStorage.getItem('user_lon');
+
+    if (!lat || !lon) {
+      toast.error('Please enable location access first.');
+      return;
+    }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
@@ -292,7 +340,17 @@ export default function Register() {
       }));
 
       toast.success('Registration successful!');
-      navigate('/home', { state: { showBottomSheet: true } });
+
+      if (!localStorage.getItem('selected_city')) {
+        localStorage.setItem(
+          'selected_city',
+          JSON.stringify({ id: 'default', name: 'Default City' })
+        );
+      }
+
+      navigate('/home');
+      window.location.reload();
+
 
     } catch (err) {
       console.error('❌ Registration Error:', err);

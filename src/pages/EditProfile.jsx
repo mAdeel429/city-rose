@@ -49,6 +49,7 @@ export default function EditProfile() {
           setName(user.name || '');
           setEmail(user.email || '');
           localStorage.setItem('user_info', JSON.stringify(user));
+          localStorage.setItem('user_id', user.id?.toString() || '');
         } else {
           console.warn('⚠️ No user object in response');
         }

@@ -1,60 +1,3 @@
-// import axiosInstance from './axiosInstance';
-
-// export const fetchPoints = async () => {
-//   try {
-//     const deviceId = localStorage.getItem('device_id');
-//     const deviceType = 'web';
-
-//     if (!deviceId) {
-//       console.warn('⚠️ Device ID not found in localStorage');
-//       return {
-//         nearby: [],
-//         mustSee: [],
-//         michelin: [],
-//         gelato: [],
-//         vegan: [],
-//       };
-//     }
-
-//     const pages = [1, 2, 3, 4, 5];
-
-//     const responses = await Promise.all(
-//       pages.map((page) =>
-//         axiosInstance.post('/point/list', {
-//           page,
-//           limit: 25,
-//           device_id: deviceId,
-//           device_type: deviceType,
-//         })
-//       )
-//     );
-
-//     const [nearby, mustSee, michelin, gelato, vegan] = responses.map(
-//       (res) => res.data.data || []
-//     );
-
-//     console.log('✅ Nearby Points:', nearby);
-
-//     return {
-//       nearby,
-//       mustSee,
-//       michelin,
-//       gelato,
-//       vegan,
-//     };
-//   } catch (error) {
-//     console.error('❌ Error fetching points:', error?.response?.data || error.message || error);
-//     return {
-//       nearby: [],
-//       mustSee: [],
-//       michelin: [],
-//       gelato: [],
-//       vegan: [],
-//     };
-//   }
-// };
-
-
 import axiosInstance from './axiosInstance';
 
 export const fetchPoints = async () => {
@@ -99,5 +42,31 @@ export const fetchPoints = async () => {
   }
 };
 
+// import axiosInstance from './axiosInstance';
 
+// export const fetchPointsByMacroId = async (macroId, geo = null) => {
+//   try {
+//     const deviceId = localStorage.getItem('device_id');
+//     const deviceType = 'web';
+
+//     const body = {
+//       macro_id: macroId,
+//       device_id: deviceId,
+//       device_type: deviceType,
+//       page: 1,
+//       limit: 50,
+//     };
+
+//     if (geo) {
+//       body.geo = geo;
+//     }
+
+//     const res = await axiosInstance.post('/point/list', body);
+//     console.log(`📥 Response for macro ${macroId}:`, res.data);
+//     return res.data.data || [];
+//   } catch (error) {
+//     console.error(`❌ Error fetching points for macroId ${macroId}:`, error);
+//     return [];
+//   }
+// };
 

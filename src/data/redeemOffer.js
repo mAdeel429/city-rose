@@ -1,15 +1,15 @@
-// import axiosInstance from './axiosInstance';
+import axiosInstance from './axiosInstance';
 
-// export const redeemOffer = async (offerId) => {
-//   try {
-//     const response = await axiosInstance.post(`/offer/redeem/${offerId}`);
-//     console.log('🎉 Offer Redeem Response:', response.data);
-//     return response.data;
-//   } catch (error) {
-//     console.error('❌ Error redeeming offer:', error?.response?.data || error.message);
-//     return null;
-//   }
-// };
+export const redeemOffer = async (offerId) => {
+  try {
+    const response = await axiosInstance.post(`/offer/redeem/${offerId}`);
+    console.log('🎉 Offer Redeem Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('❌ Error redeeming offer:', error?.response?.data || error.message);
+    return null;
+  }
+};
 
 // export const getOfferById = async (offerId) => {
 //   try {

@@ -290,13 +290,13 @@ export default function CardDetailScreen() {
   const [showBubbles, setShowBubbles] = useState(false);
   const [animateHeart, setAnimateHeart] = useState(false);
   const [imageUrls, setImageUrls] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   const hasElasticTriggered = useRef(false);
   const userInteracted = useRef(false);
+  const item = location.state || {};
 
   const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
 
-  // 🟢 Navigate to Full Gallery
   const handleGalleryClick = () => {
     navigate('/gallery', {
       state: {
@@ -306,7 +306,6 @@ export default function CardDetailScreen() {
     });
   };
 
-  // 🟢 Set card data from location
   useLayoutEffect(() => {
     if (location.state) {
       setCardData(location.state);
@@ -319,11 +318,11 @@ export default function CardDetailScreen() {
     return () => clearTimeout(timeout);
   }, [location.key]);
 
-  // 🟢 Load Images
   useEffect(() => {
     const loadImages = async () => {
       if (!cardData?.fullItem?.id) return;
 
+      setLoading(true);
       const pointId = cardData.fullItem.id;
       console.log('📌 Fetching more images for pointId:', pointId);
 
@@ -346,13 +345,14 @@ export default function CardDetailScreen() {
         }
       } catch (err) {
         console.error('❌ Error while fetching images:', err);
+      } finally {
+        setLoading(false);
       }
     };
 
     loadImages();
   }, [cardData]);
 
-  // 🟢 Pull & Scroll Effects
   useEffect(() => {
     const scrollArea = scrollRef.current;
     if (!scrollArea) return;
@@ -431,10 +431,10 @@ export default function CardDetailScreen() {
     };
   }, [pullHeight, isPulling]);
 
-  // 🟥 Stop render if no card
   if (!cardData) return <div>No data found. Please go back and select a card.</div>;
 
-  const { id, image, title, category, distance, fullItem } = cardData;
+  const { id, image, title, category, distance, fullItem } = cardData || {};
+
   const isFavorite = favorites.some(item => item.id === id);
 
   const token = localStorage.getItem('token');
@@ -564,15 +564,19 @@ export default function CardDetailScreen() {
             </div>
           )}
 
-        {/* Card Info & Grid */}
         <div className="cart-container">
           <div className="info">
             <h3>{title}</h3>
-            <p className="category">{category}</p>
-            <p className="distance">{distance}</p>
+            <p className="category">
+              {fullItem?.macros?.[0]?.name !== 'Offers' && fullItem?.macros?.[0]?.name}
+            </p>
+
+            <p className="distance">
+              {fullItem?.macros?.[0]?.name !== 'Offers' && distance}
+            </p>
+            <p className="description">{fullItem?.description}</p>
           </div>
 
-          {/* 🟡 Image Grid with click on 4th image */}
           <div className="gallery-grid-custom">
             {imageUrls.length > 0 ? (
               imageUrls.slice(0, 4).map((url, index) => (
@@ -592,7 +596,9 @@ export default function CardDetailScreen() {
             )}
           </div>
 
-          {category === 'Food & Drink' ? (
+          {(cardData?.isOffer ||
+            fullItem?.macros?.[0]?.name === 'Offers' ||
+            fullItem?.macros?.[0]?.name === 'Food & Drink') ? (
             <div style={{ margin: '20px 0px' }}>
               <OfferCard />
             </div>
@@ -601,12 +607,11 @@ export default function CardDetailScreen() {
               No relevant offers found for this category.
             </div>
           )}
-
           <div style={{ marginTop: '20px' }}>
             <MapCard
-              lat={fullItem.lat || 0}
-              lng={fullItem.lng || 0}
-              placeName={fullItem.macros?.[0]?.name || title}
+              lat={fullItem?.lat ?? 0}
+              lng={fullItem?.lng ?? 0}
+              placeName={fullItem?.macros?.[0]?.name || title}
             />
           </div>
 

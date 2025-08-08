@@ -8,7 +8,7 @@ import { PointsProvider } from './context/PointsContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+   
     <BrowserRouter>
     <GoogleOAuthProvider clientId="421800149281-k4qgbhmrv1t7k799itjd2hq2rcldmls2.apps.googleusercontent.com">
     <PointsProvider>
@@ -16,6 +16,6 @@ root.render(
     </PointsProvider>
     </GoogleOAuthProvider>
     </BrowserRouter>
-  </React.StrictMode>
+  
 );
 reportWebVitals();

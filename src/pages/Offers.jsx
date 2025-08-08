@@ -229,6 +229,7 @@ import './Offers.css';
 import { FaHeart } from 'react-icons/fa';
 import { useFavorites } from '../data/FavoritesContext';
 import { fetchOffers } from '../data/fetchOffers';
+import { useNavigate } from 'react-router-dom';
 
 export default function Offers() {
   const [offers, setOffers] = useState([]);
@@ -237,7 +238,8 @@ export default function Offers() {
   const [showBubbles, setShowBubbles] = useState(false);
   const [animateHeart, setAnimateHeart] = useState(null);
   const [deviceId, setDeviceId] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // loading state
+  const [isLoading, setIsLoading] = useState(true); 
+  const navigate = useNavigate();
 
   const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
   const token = localStorage.getItem('token');
@@ -342,11 +344,37 @@ export default function Offers() {
           <motion.div
             key={item.id}
             className="offers-card"
+            
             drag="y"
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={0.3}
             whileTap={{ scale: 0.98 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+
+            onClick={() => {
+              const fullItem = {
+                ...item.point,
+                id: item.point?.id || item.id,
+                lat: item.point?.lat,
+                lng: item.point?.lng,
+                macros: [{ name: 'Offers' }],
+                buttons: item.point?.buttons || {},
+                // Optionally include more fallback values
+                photo: item.photo,
+              };
+            
+              navigate('/details', {
+                state: {
+                  id: item.id,
+                  title: item.point?.name || item.title,  // ✅ This will show "Badiani"
+                  image: item.photo?.url,
+                  category: 'Offers',
+                  distance: item.distance || 'Unknown',
+                  fullItem: fullItem
+                }
+              });
+            }}
+            
           >
             <div className="offers-image-container" style={{ position: 'relative' }}>
               <img
