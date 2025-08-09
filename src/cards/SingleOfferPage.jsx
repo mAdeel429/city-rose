@@ -293,7 +293,7 @@ export default function SingleOfferPage() {
 
   const handleRedeem = async () => {
     if (!canRedeem) {
-      toast.warning("You are too far from the offer location to redeem.");
+      toast.warning("You must be closest to the spot in order to redeem the offer.");
       return;
     }
 
@@ -379,19 +379,12 @@ export default function SingleOfferPage() {
             bgColor="var(--bg-color)"
           />
         </div>
-
-        <p>
-          Your distance from offer location:{" "}
-          {distanceKm !== null ? `${distanceKm.toFixed(3)} km` : "Location not available"}
-        </p>
-
         <button
           className="offer-button"
           onClick={handleRedeem}
-          disabled={!canRedeem}
           title={canRedeem ? "" : "You must be near the offer location to redeem"}
         >
-          {canRedeem ? "Redeem Offer" : "Too far to redeem"}
+          Redeem Offer
         </button>
 
         <p className="offer-note">

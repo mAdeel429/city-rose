@@ -16,6 +16,7 @@ export const fetchCities = async () => {
         device_type: deviceType,
       });
   
+      console.log('cities',response.data)
       const cities = response.data.data || [];
   
   

@@ -24,8 +24,7 @@ export default function AttractionCard({
     macros?.[0]?.name?.trim?.() ||
     'Unknown';
 
-  // DEBUG: Check what's being received
-  console.log('AttractionCard props:', { title, category, macros, displayCategory });
+  // console.log('AttractionCard props:', { title, category, macros, displayCategory });
 
   const handleHeartClick = (e) => {
     e.stopPropagation();

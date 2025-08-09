@@ -40,6 +40,9 @@
   
   .heart-icon {
     color: var(--heart-color);
+    display: flex;
+  align-items: center;
+  justify-content: center;
   }
   
   .offer-content {
@@ -47,7 +50,7 @@
   }
   
   .offer-title {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: bold;
   }
   

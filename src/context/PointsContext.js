@@ -275,7 +275,6 @@ export const PointsProvider = ({ children }) => {
 
     result['nearby'] = sortedNearby;
 
-    console.log('✅ categorizedData:', result);
     setCategorizedData(result);
     setIsLoading(false);
   };

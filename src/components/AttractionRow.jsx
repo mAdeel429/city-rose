@@ -8,7 +8,7 @@ export default function AttractionRow({ title, data }) {
   const constraintsRef = useRef(null);
   const navigate = useNavigate();
 
-  console.log('Row:', title, data);
+  // console.log('Row:', title, data);
 
   return (
     <div className={styles.pageContainer} style={{ margin: '10px 0' }}>
@@ -28,8 +28,6 @@ export default function AttractionRow({ title, data }) {
               const id = `${title}-${raw.title || 'no-title'}-${index}`;
               const itemWithId = { ...item, id };
 
-              // DEBUG: check what is being passed
-              console.log("Item being sent to AttractionCard:", item);
 
               return (
                 <AttractionCard
@@ -38,9 +36,9 @@ export default function AttractionRow({ title, data }) {
                   image={item.image}
                   title={item.title}
                   category={item.category || item.fullItem?.category}
-                  macros={item.macros || item.fullItem?.macros}  // ✅ fixed here
+                  macros={item.macros || item.fullItem?.macros} 
                   distance={item.distance}
-                  fullItem={item.fullItem || item}  // ✅ pass full item for detail page
+                  fullItem={item.fullItem || item}
                   onClick={() => {
                     setTimeout(() => {
                       navigate('/details', { state: itemWithId });

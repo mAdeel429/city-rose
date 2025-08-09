@@ -10,6 +10,49 @@ export default function App() {
   const [bottomBarVisible, setBottomBarVisible] = useState(true);
   const [isCitySheetOpen, setIsCitySheetOpen] = useState(true);
   const [selectedCity, setSelectedCity] = useState(null);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem('token');
+      const deviceId = localStorage.getItem('device_id');
+
+      if (!token || !deviceId) {
+        console.error('🔴 Missing token or device ID');
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          'https://interstellar.cityrose.app/api/v1/auth/user',
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'cityrose-device-uuid': deviceId,
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Fetch failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('✅ User profile fetched in App.js:', data);
+
+        if (data.user) {
+          localStorage.setItem('user_info', JSON.stringify(data.user));
+          localStorage.setItem('user_id', data.user.id?.toString() || '');
+        }
+      } catch (err) {
+        console.error('❌ Error fetching user profile:', err.message);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
   
   useEffect(() => {
     const savedCity = localStorage.getItem('selected_city');
