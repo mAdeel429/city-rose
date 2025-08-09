@@ -251,10 +251,10 @@ export default function Register() {
     const lat = localStorage.getItem('user_lat');
     const lon = localStorage.getItem('user_lon');
 
-    if (!lat || !lon) {
-      toast.error('Please enable location access first.');
-      return;
-    }
+    // if (!lat || !lon) {
+    //   toast.error('Please enable location access first.');
+    //   return;
+    // }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;

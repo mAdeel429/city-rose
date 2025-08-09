@@ -243,10 +243,10 @@ export default function Login() {
     const lat = localStorage.getItem('user_lat');
     const lon = localStorage.getItem('user_lon');
 
-    if (!lat || !lon) {
-      toast.error('To continue, please allow location access.');
-      return;
-    }
+    // if (!lat || !lon) {
+    //   toast.error('To continue, please allow location access.');
+    //   return;
+    // }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     let hasError = false;

@@ -133,7 +133,7 @@ export default function Insights() {
   useEffect(() => {
     const loadDataFromLocal = async () => {
       try {
-        if (!hasAccess) return; // ❌ No access, no fetch
+        if (!hasAccess) return;
         const allOffers = await fetchOffers();
         const selectedOffer = offerId
           ? allOffers.find(o => o.id.toString() === offerId)
@@ -171,7 +171,6 @@ export default function Insights() {
     );
   }
 
-  // 🚫 Access Denied UI
   if (!hasAccess) {
     return (
       <div className="insights-container">
