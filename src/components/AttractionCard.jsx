@@ -18,13 +18,10 @@ export default function AttractionCard({
   const [showBubbles, setShowBubbles] = useState(false);
   const isFavorite = favorites.some(item => item.id === id);
 
-  // Safe fallback for category display
   const displayCategory =
     category?.trim?.() ||
     macros?.[0]?.name?.trim?.() ||
     'Unknown';
-
-  // console.log('AttractionCard props:', { title, category, macros, displayCategory });
 
   const handleHeartClick = (e) => {
     e.stopPropagation();
@@ -56,7 +53,7 @@ export default function AttractionCard({
 
   return (
     <div className={styles.attractionCard} onClick={() => onClick?.(fullItem)}>
-      <div className={styles.attractionCardImageContainer}>
+      <div className={styles.attractionCardImageContainer} style={{overflow: 'hidden'}}>
         <img
           src={imageUrl}
           alt={title}
