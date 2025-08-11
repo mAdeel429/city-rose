@@ -660,13 +660,6 @@ import homeIcon from '../assets/location.png';
 import { usePoints } from '../context/PointsContext';
 
 
-// const macroIcons = {
-//   Food: foodIcon,
-//   Tours: defaultIcon,
-//   Fashion: fashionIcon,
-//   Nightlife: nightlifeIcon,
-//   Education: educationIcon,
-// };
 
 const macroIcons = {
   'Food & Drink': foodIcon,

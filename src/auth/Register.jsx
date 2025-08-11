@@ -371,7 +371,7 @@ export default function Register() {
       </div>
 
       <div className="login-container">
-        <p className="subheading">Discover City Rose world.</p>
+        <p className="subheading">Discover cityRose world.</p>
 
         <div className="form-group">
           <label className="input-label">Name</label>
