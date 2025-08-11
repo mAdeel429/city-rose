@@ -1,39 +1,48 @@
-// import React, { useRef, useEffect, useState } from 'react';
+// import React, { useRef, useState, useEffect } from 'react';
+// import { useLocation } from 'react-router-dom';
 // import Header from '../components/Header';
 // import AttractionRow from '../components/AttractionRow';
 // import BottomSheet from '../components/BottomSheet';
+// import CityBottomSheet from '../components/CityBottomSheet';
+// import SecondCard from '../components/SecondCard';
+// import UpcomingEventCard from '../cards/UpcomingEventCard';
+// import BottomBar from '../components/BottomBar';
+// import { usePoints } from '../context/PointsContext';
 // import './HomePage.css';
-// import SecondCard from '../components/SecondCard'
-// import UpcomingEventCard from '../cards/UpcomingEventCard'
-// import { fetchPoints } from '../data/points';
 
-// export default function HomePage() {
+// export default function HomePage({
+//   setIsCitySheetOpen,
+//   isCitySheetOpen,
+//   setSelectedCity,
+//   selectedCity = {},
+// }) {
+//   const location = useLocation();
 //   const [isMenuOpen, setIsMenuOpen] = useState(false);
 //   const scrollRef = useRef(null);
 //   const [pullHeight, setPullHeight] = useState(0);
 //   const [isPulling, setIsPulling] = useState(false);
-//   const maxElasticHeight = 100;
+//   const [searchQuery, setSearchQuery] = useState('');
 //   const hasElasticTriggered = useRef(false);
 
+//   const { isLoading, categorizedData } = usePoints();
 
 //   useEffect(() => {
-//     const getPoints = async () => {
-//       const points = await fetchPoints();
-//       console.log('📍 Points data:', points);
-//     };
-
-//     getPoints();
-//   }, []);
+//     if (location.state?.showBottomSheet) {
+//       setIsCitySheetOpen(true);
+//     }
+//   }, [location.state, setIsCitySheetOpen]);
 
 //   useEffect(() => {
 //     const scrollArea = scrollRef.current;
-//     let startY = 0;
-//     let startX = 0;
+//     if (!scrollArea) return;
+
+//     let startY = 0, startX = 0;
 //     let pulling = false;
 //     let isHorizontalSwipe = false;
 //     let isDirectionLocked = false;
 //     const directionThreshold = 10;
 //     let lastScrollTop = scrollArea.scrollTop;
+
 //     const headerElement = scrollArea.querySelector('.elastic-header');
 
 //     const triggerElastic = () => {
@@ -47,8 +56,7 @@
 //     };
 
 //     const onTouchStart = (e) => {
-//       if (headerElement && headerElement.contains(e.target)) return;
-
+//       if (headerElement?.contains(e.target)) return;
 //       if (scrollArea.scrollTop === 0) {
 //         startY = e.touches[0].clientY;
 //         startX = e.touches[0].clientX;
@@ -61,7 +69,6 @@
 
 //     const onTouchMove = (e) => {
 //       if (!pulling) return;
-
 //       const currentY = e.touches[0].clientY;
 //       const currentX = e.touches[0].clientX;
 //       const diffY = currentY - startY;
@@ -71,16 +78,14 @@
 //         if (Math.abs(diffX) > directionThreshold || Math.abs(diffY) > directionThreshold) {
 //           isHorizontalSwipe = Math.abs(diffX) > Math.abs(diffY);
 //           isDirectionLocked = true;
-//         } else {
-//           return;
-//         }
+//         } else return;
 //       }
 
 //       if (isHorizontalSwipe) return;
 
 //       if (diffY > 0) {
 //         e.preventDefault();
-//         const pull = Math.min(diffY, maxElasticHeight);
+//         const pull = Math.min(diffY, 100);
 //         setPullHeight(pull);
 //       }
 //     };
@@ -89,7 +94,6 @@
 //       if (pullHeight > 10 && !isHorizontalSwipe) {
 //         triggerElastic();
 //       }
-
 //       pulling = false;
 //       isHorizontalSwipe = false;
 //       isDirectionLocked = false;
@@ -99,11 +103,9 @@
 
 //     const onScroll = () => {
 //       const currentScrollTop = scrollArea.scrollTop;
-
 //       if (lastScrollTop > 20 && currentScrollTop === 0 && !isPulling) {
 //         triggerElastic();
 //       }
-
 //       lastScrollTop = currentScrollTop;
 //     };
 
@@ -120,142 +122,61 @@
 //     };
 //   }, [isPulling]);
 
-//   // 🧠 DATA SECTIONS
-
-//   const mustSeeData = [
-//     {
-//       id: 1,
-//       image: 'http://bonjourvenise.fr/wp-content/uploads/2023/05/gallerie-dellacademia-venise.jpg',
-//       title: "Galleria dell'Accademia",
-//       category: 'Culture & Sights',
-//       distance: '1720.2',
-//     },
-//     {
-//       id: 2,
-//       image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6Q95W3CoMwgGaKgSfA7hlo6-sbLIK_rWZtQ&s',
-//       title: 'Cappelle Medicee',
-//       category: 'Culture & Sights',
-//       distance: '1720.7',
-//     },
-//     {
-//       id: 3,
-//       image: 'https://cdn.getyourguide.com/img/tour/299e73076c52bf898781974107678c9918132fde515df2972cf94002a1016b7f.jpeg/68.jpg',
-//       title: 'Duomo di Santa Maria del Fiore',
-//       category: 'Culture & Sights',
-//       distance: '1690.5',
-//     },
-//     {
-//       id: 4,
-//       image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSntCxMq8AD4M9-JD3wzRivTHDdq5qCKZxqSA&s',
-//       title: 'Battistero di San Giovanni',
-//       category: 'Culture & Sights',
-//       distance: '1718.8',
-//     },
-//     {
-//       id: 5,
-//       image: 'https://www.arte.it/foto/600x450/e0/16250-Facciata_santa_maria_novella.jpg',
-//       title: 'Basilica di Santa Maria Novella',
-//       category: 'Culture & Sights',
-//       distance: '1720.1',
-//     },
+//   const orderedCategories = [
+//     'nearby',        // First
+//     'mustSee',
+//     'gelato',
+//     'pizza',
+//     'vegan',
+//     'panini',
+//     'michelin',
+//     'perfumery',
+//     'artisan',
+//     'spa',
+//     'drinks',
+//     'clothing',
+//     'fineDining',
 //   ];
 
-//   const attractionsData = [
-//     {
-//       id: 1,
-//       image: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/08/49/07/0a/asmana-welness-world.jpg?w=800&h=500&s=1',
-//       title: 'Asmana',
-//       category: 'Activity & Wellness',
-//       distance: '1718.8',
-//     },
-//     {
-//       id: 2,
-//       image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTONRYGEZNdAM2JCjd3sVwHnc3MilBJdmeIPw&s',
-//       title: 'Ice Cream Cafe',
-//       category: 'Food & Drink',
-//       distance: '1720.1',
-//     },
-//     {
-//       id: 3,
-//       image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZeMh9HcYm16vhAkzaonM__vr2cJnJYX4DJw&s',
-//       title: 'Museum Tour',
-//       category: 'Culture',
-//       distance: '1690.5',
-//     },
-//   ];
 
-//   const michelinData = [
-//     {
-//       id: 1,
-//       image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNmzAWAPAB-LyasY54qxcu7YYj3ZDOXfdH8Q&s',
-//       title: 'Il Palagio (Four Seasons Hotel Firenze)',
-//       category: 'Food & Drink',
-//       distance: '1719.9',
-//     },
-//     {
-//       id: 2,
-//       image: 'https://i0.wp.com/eatweekguide.com/wp-content/uploads/2022/11/eatweekguide-1.jpg?fit=1600%2C1067&ssl=1',
-//       title: 'Gucci Osteria da Massimo Bottura',
-//       category: 'Food & Drink',
-//       distance: '1720.2',
-//     },
-//     {
-//       id: 3,
-//       image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgoam2cakTu3yu-Br1rw0uH6rOjZwUU6EL3A&s',
-//       title: 'Enoteca Pinchiorri',
-//       category: 'Food & Drink',
-//       distance: '1720.6',
-//     },
-//   ];
+//   const titles = {
+//     nearby: 'Nearby Attractions',
+//     mustSee: 'Must See',
+//     pizza: 'Pizza a Firenze',
+//     gelato: 'Best Gelato',
+//     vegan: 'Vegan Spots',
+//     panini: 'Panini e Street Food',
+//     michelin: 'Michelin Starred Restaurants',
+//     perfumery: 'Profumerie',
+//     artisan: 'Artigianato Fiorentino',
+//     spa: 'Spa',
+//     drinks: 'Aperitivo & Drinks',
+//     clothing: 'Abbigliamento',
+//     fineDining: 'Fine Dining',
+//   };
 
-//   const gelatoData = [
-//     {
-//       id: 1,
-//       image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ882_VNTWI0COo3OP97y44UyW892P4z_qHsg&s',
-//       title: 'Gelateria dei Neri',
-//       category: 'Food & Drink',
-//       distance: '1720.3',
-//     },
-//     {
-//       id: 2,
-//       image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaSALanQJ_kVb0LUbmxxws8MOj8JfH4Ep0pA&s',
-//       title: 'Vivoli',
-//       category: 'Food & Drink',
-//       distance: '1720.0',
-//     },
-//     {
-//       id: 3,
-//       image: 'http://dynamic-media-cdn.tripadvisor.com/media/photo-o/09/aa/59/e8/gelateria-la-carraia.jpg?w=900&h=500&s=1',
-//       title: 'Gelateria La Carraia',
-//       category: 'Food & Drink',
-//       distance: '1719.8',
-//     },
-//   ];
+//   const filterAttractions = (data) => {
+//     if (!Array.isArray(data)) return [];
 
-//   const veganData = [
-//     {
-//       id: 1,
-//       image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfH_kmiyroTpqHI5_fFcHbSvdQfKgXKKHndw&s',
-//       title: 'Universo Vegano',
-//       category: 'Food & Drink',
-//       distance: '1719.5',
-//     },
-//     {
-//       id: 2,
-//       image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZgKfO-UC2QHzJttGbD_0eD80wZdqJ4DXOgg&s',
-//       title: 'Brac Bookstore & Cafe',
-//       category: 'Vegan Friendly',
-//       distance: '1720.0',
-//     },
-//     {
-//       id: 3,
-//       image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnT8TfV1bB7lCNOyeoxt5ECFKFkl-SwF81NQ&s',
-//       title: 'Il Vegetariano',
-//       category: 'Vegan & Vegetarian',
-//       distance: '1720.4',
-//     },
-//   ];
+//     return data.filter((item) => {
+//       const title =
+//         item?.fullItem?.title ||
+//         item?.title ||
+//         item?.featured_pretty?.title;
 
+//       if (!title) return true; // show even if no title
+//       return title.toLowerCase().includes(searchQuery.toLowerCase());
+//     });
+//   };
+
+//   if (isLoading) {
+//     return (
+//       <div className="loading-container">
+//         <div className="loading-spinner"></div>
+//         <p>Loading attractions...</p>
+//       </div>
+//     );
+//   }
 
 //   return (
 //     <div className="full-page scrolling-container">
@@ -264,31 +185,48 @@
 //           className="header-wrapper elastic-header"
 //           style={{
 //             height: `${220 + pullHeight}px`,
-//             transition: isPulling ? 'none' : 'height 0.4s cubic-bezier(0.25, 1.5, 0.5, 1)',
+//             transition: isPulling ? 'none' : 'transform 0.2s cubic-bezier(0.33, 1.25, 0.68, 1)',
 //           }}
 //         >
 //           <Header
 //             setIsMenuOpen={setIsMenuOpen}
 //             pullHeight={pullHeight}
 //             isPulling={isPulling}
+//             onLocationClick={() => setIsCitySheetOpen(true)}
+//             selectedCity={selectedCity}
+//             searchQuery={searchQuery}
+//             setSearchQuery={setSearchQuery}
 //           />
 //         </div>
-
 //         <div className="card-container" style={{ paddingBottom: '110px' }}>
-//           <AttractionRow title="Popular Attractions" data={attractionsData} />
+//           {orderedCategories.map((key) => {
+//             const dataArray = categorizedData[key];
+//             const filtered = filterAttractions(dataArray);
+//             if (!filtered || filtered.length === 0) return null;
+
+//             return (
+//               <AttractionRow
+//                 key={key}
+//                 title={titles[key] || key}
+//                 data={filtered}
+//               />
+//             );
+//           })}
 //           <SecondCard />
-//           <AttractionRow title="Must-see" data={mustSeeData} />
-//           <AttractionRow title="Michelin Starred Restaurants" data={michelinData} />
-//           <AttractionRow title="Best Gelato in Town" data={gelatoData} />
-//           <AttractionRow title="Vegan Spots" data={veganData} />
 //           <UpcomingEventCard />
 //         </div>
 //       </div>
-
 //       <BottomSheet show={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+//       <CityBottomSheet
+//         show={isCitySheetOpen}
+//         onClose={() => setIsCitySheetOpen(false)}
+//         setSelectedCity={setSelectedCity}
+//       />
+//       <BottomBar visible={!isCitySheetOpen} />
 //     </div>
 //   );
 // }
+
 
 
 
@@ -302,7 +240,23 @@ import SecondCard from '../components/SecondCard';
 import UpcomingEventCard from '../cards/UpcomingEventCard';
 import BottomBar from '../components/BottomBar';
 import { usePoints } from '../context/PointsContext';
+import { fetchCities } from '../data/fetchCities';
 import './HomePage.css';
+
+function calculateDistance(coord1, coord2) {
+  const toRad = (x) => (x * Math.PI) / 180;
+  const R = 6371;
+  const dLat = toRad(coord2.lat - coord1.lat);
+  const dLon = toRad(coord2.lon - coord1.lon);
+  const lat1 = toRad(coord1.lat);
+  const lat2 = toRad(coord2.lat);
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.sin(dLon / 2) ** 2 * Math.cos(lat1) * Math.cos(lat2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c * 1000;
+}
 
 export default function HomePage({
   setIsCitySheetOpen,
@@ -316,9 +270,61 @@ export default function HomePage({
   const [pullHeight, setPullHeight] = useState(0);
   const [isPulling, setIsPulling] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [closestCities, setClosestCities] = useState([]);
   const hasElasticTriggered = useRef(false);
 
   const { isLoading, categorizedData } = usePoints();
+
+  useEffect(() => {
+    const initCitySelection = async () => {
+      const savedCity = localStorage.getItem('selected_city');
+
+      if (savedCity) {
+        setSelectedCity(JSON.parse(savedCity));
+        return;
+      }
+
+      try {
+        navigator.geolocation.getCurrentPosition(
+          async (pos) => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            localStorage.setItem('user_lat', lat);
+            localStorage.setItem('user_lon', lon);
+
+            const cities = await fetchCities();
+            const userCoords = { lat, lon };
+            const sorted = cities
+              .map((city) => ({
+                ...city,
+                distance: calculateDistance(userCoords, { lat: city.lat, lon: city.lng })
+              }))
+              .sort((a, b) => a.distance - b.distance);
+
+            setClosestCities(sorted);
+            setIsCitySheetOpen(true);
+          },
+          async () => {
+            const cities = await fetchCities();
+            const florence = cities.find((c) => c.name.toLowerCase() === 'florence') || cities[0];
+            setSelectedCity(florence);
+            localStorage.setItem('selected_city', JSON.stringify(florence));
+          }
+        );
+      } catch (err) {
+        console.error('Error getting location:', err);
+      }
+    };
+
+    initCitySelection();
+  }, [setSelectedCity, setIsCitySheetOpen]);
+
+  useEffect(() => {
+    const savedCity = localStorage.getItem('selected_city');
+    if (!savedCity && location.state?.showBottomSheet) {
+      setIsCitySheetOpen(true);
+    }
+  }, [location.state, setIsCitySheetOpen]);
 
   useEffect(() => {
     if (location.state?.showBottomSheet) {
@@ -414,24 +420,12 @@ export default function HomePage({
       scrollArea.removeEventListener('touchend', onTouchEnd);
       scrollArea.removeEventListener('scroll', onScroll);
     };
-  }, [isPulling]);
+  }, [isPulling, pullHeight]);
 
   const orderedCategories = [
-    'nearby',        // First
-    'mustSee',
-    'gelato',
-    'pizza',
-    'vegan',
-    'panini',
-    'michelin',
-    'perfumery',
-    'artisan',
-    'spa',
-    'drinks',
-    'clothing',
-    'fineDining',
+    'nearby', 'mustSee', 'gelato', 'pizza', 'vegan', 'panini', 'michelin',
+    'perfumery', 'artisan', 'spa', 'drinks', 'clothing', 'fineDining',
   ];
-
 
   const titles = {
     nearby: 'Nearby Attractions',
@@ -451,14 +445,9 @@ export default function HomePage({
 
   const filterAttractions = (data) => {
     if (!Array.isArray(data)) return [];
-
     return data.filter((item) => {
-      const title =
-        item?.fullItem?.title ||
-        item?.title ||
-        item?.featured_pretty?.title;
-
-      if (!title) return true; // show even if no title
+      const title = item?.fullItem?.title || item?.title || item?.featured_pretty?.title;
+      if (!title) return true;
       return title.toLowerCase().includes(searchQuery.toLowerCase());
     });
   };
@@ -471,7 +460,6 @@ export default function HomePage({
       </div>
     );
   }
-
   return (
     <div className="full-page scrolling-container">
       <div className="scroll-area" ref={scrollRef}>
@@ -492,31 +480,26 @@ export default function HomePage({
             setSearchQuery={setSearchQuery}
           />
         </div>
-        <div className="card-container" style={{ paddingBottom: '110px' }}>
+        <div className="card-container" style={{ paddingBottom: '110px'}}>
           {orderedCategories.map((key) => {
             const dataArray = categorizedData[key];
             const filtered = filterAttractions(dataArray);
             if (!filtered || filtered.length === 0) return null;
-
-            return (
-              <AttractionRow
-                key={key}
-                title={titles[key] || key}
-                data={filtered}
-              />
-            );
+            return <AttractionRow key={key} title={titles[key] || key} data={filtered} />;
           })}
           <SecondCard />
           <UpcomingEventCard />
         </div>
       </div>
+
       <BottomSheet show={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       <CityBottomSheet
         show={isCitySheetOpen}
         onClose={() => setIsCitySheetOpen(false)}
         setSelectedCity={setSelectedCity}
+        citiesData={closestCities.length ? closestCities : []}
       />
       <BottomBar visible={!isCitySheetOpen} />
     </div>
-  );
+    );
 }

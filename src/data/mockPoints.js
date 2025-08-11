@@ -201,26 +201,3 @@
 
 // export default mockPoints;
 
-
-
-// data/home.js
-import axiosInstance from './axiosInstance';
-
-export const fetchHomeData = async (lat = 43.7696, lng = 11.2558, radius = 5, cityId = 1) => {
-  try {
-    const res = await axiosInstance.post('/home/index', {
-      geo: {
-        lat,
-        lng,
-        radius,
-        only_distance: false,
-      },
-      city_id: cityId,
-    });
-
-    return res.data;
-  } catch (error) {
-    console.error('❌ Error fetching home data:', error.response?.data || error.message);
-    return null;
-  }
-};

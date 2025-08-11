@@ -8,10 +8,8 @@ export default function AttractionRow({ title, data }) {
   const constraintsRef = useRef(null);
   const navigate = useNavigate();
 
-  // console.log('Row:', title, data);
-
   return (
-    <div className={styles.pageContainer} style={{ margin: '10px 0' }}>
+    <div className={styles.pageContainer} style={{ margin: '10px 5px' }}>
       <div className={styles.attractionsWrapper}>
         <h2>{title}</h2>
 

@@ -43,6 +43,15 @@
 //     setEmailError('');
 //     setPasswordError('');
 
+//     // ✅ Location check
+//     const lat = localStorage.getItem('user_lat');
+//     const lon = localStorage.getItem('user_lon');
+
+//     // if (!lat || !lon) {
+//     //   toast.error('To continue, please allow location access.');
+//     //   return;
+//     // }
+
 //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 //     let hasError = false;
 
@@ -100,7 +109,7 @@
 //       } else {
 //         console.warn('⚠️ user.id not found in login response:', data);
 //       }
-      
+
 //       // Register device
 //       await fetchWithAuth('https://interstellar.cityrose.app/api/v1/device/register', {
 //         method: 'PUT',
@@ -119,14 +128,25 @@
 //       });
 
 //       console.log('User data:', data.user);
-//       localStorage.setItem('user_info', JSON.stringify({
-//         name: data.user?.name || '',
-//         email: data.user?.email || email,
-//       }));
+//       localStorage.setItem(
+//         'user_info',
+//         JSON.stringify({
+//           name: data.user?.name || '',
+//           email: data.user?.email || email,
+//         })
+//       );
 
 //       localStorage.setItem('user_id', data.user?.id || '');
 
 //       toast.success('Login successful');
+
+//       if (!localStorage.getItem('selected_city')) {
+//         localStorage.setItem(
+//           'selected_city',
+//           JSON.stringify({ id: 'default', name: 'Default City' })
+//         );
+//       }
+
 //       navigate('/home');
 //       window.location.reload();
 
@@ -185,6 +205,7 @@
 //             Forgot password?
 //           </a>
 //         </div>
+
 //         <button className="login-button" onClick={handleLogin} disabled={loading}>
 //           {loading ? <span className="spinner" /> : 'Login'}
 //         </button>
@@ -201,9 +222,11 @@ import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { fetchWithAuth } from './auth';
 import { toast, Toaster } from 'sonner';
+import { usePoints } from '../context/PointsContext'; // ✅ Import context
 
 export default function Login() {
   const navigate = useNavigate();
+  const { refetchPoints } = usePoints(); // ✅ Get the refetch function
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -213,7 +236,6 @@ export default function Login() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
-  // 📍 Request location on mount
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -238,15 +260,6 @@ export default function Login() {
     setError('');
     setEmailError('');
     setPasswordError('');
-
-    // ✅ Location check
-    const lat = localStorage.getItem('user_lat');
-    const lon = localStorage.getItem('user_lon');
-
-    // if (!lat || !lon) {
-    //   toast.error('To continue, please allow location access.');
-    //   return;
-    // }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     let hasError = false;
@@ -302,11 +315,8 @@ export default function Login() {
       if (data.user && data.user.id) {
         localStorage.setItem('user_id', data.user.id.toString());
         console.log('✅ user_id saved:', data.user.id);
-      } else {
-        console.warn('⚠️ user.id not found in login response:', data);
       }
 
-      // Register device
       await fetchWithAuth('https://interstellar.cityrose.app/api/v1/device/register', {
         method: 'PUT',
         headers: {
@@ -323,7 +333,6 @@ export default function Login() {
         }),
       });
 
-      console.log('User data:', data.user);
       localStorage.setItem(
         'user_info',
         JSON.stringify({
@@ -333,7 +342,6 @@ export default function Login() {
       );
 
       localStorage.setItem('user_id', data.user?.id || '');
-
       toast.success('Login successful');
 
       if (!localStorage.getItem('selected_city')) {
@@ -342,9 +350,10 @@ export default function Login() {
           JSON.stringify({ id: 'default', name: 'Default City' })
         );
       }
-      
-      navigate('/home');
-      window.location.reload();
+
+      await refetchPoints();
+      const alreadyHasCity = !!localStorage.getItem('selected_city');
+      navigate('/home', alreadyHasCity ? {} : { state: { showBottomSheet: true } });
 
     } catch (err) {
       console.error('❌ Login Error:', err);

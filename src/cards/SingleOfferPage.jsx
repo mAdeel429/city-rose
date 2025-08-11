@@ -199,7 +199,7 @@ import "./SingleOfferPage.css";
 import { QRCodeSVG } from "qrcode.react";
 import { redeemOffer as redeemOfferAPI } from "../data/redeemOffer";
 import { toast, Toaster } from "sonner";
-import { useFavorites } from "../data/FavoritesContext"; // ✅ Import Favorites Context
+import { useFavorites } from "../data/FavoritesContext";
 
 export default function SingleOfferPage() {
   const { id } = useParams();
@@ -208,7 +208,7 @@ export default function SingleOfferPage() {
 
   const token = localStorage.getItem("token");
 
-  const { favorites, addToFavorites, removeFromFavorites } = useFavorites(); // ✅ Use Favorites
+  const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
 
   let userId = localStorage.getItem("user_id");
   if (!userId) {
@@ -331,6 +331,9 @@ export default function SingleOfferPage() {
   const imageUrl = getImageUrlWithToken(offer.photo?.url);
   const offerId = offer.id;
   const qrValue = `cityrose://burn/userId:${userId};offerId:${offerId}`;
+  // const qrValue = `https://city-rose.vercel.app/offers/${offerId}?userId=${userId}`;
+
+  console.log(qrValue)
 
   let distanceKm = null;
   if (

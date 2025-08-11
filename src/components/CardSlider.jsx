@@ -280,7 +280,9 @@ import 'swiper/css/pagination';
 import './CardSlider.css';
 
 const HALF_HEIGHT = window.innerHeight * 0.6;
+const HALF_MAP_OFFSET = 60;
 const PEEK_HEIGHT = 160;
+const PEEK_MAP_OFFSET = 80;
 const MAX_HEIGHT = window.innerHeight * 1.0;
 
 export default function CardSlider({
@@ -301,6 +303,29 @@ export default function CardSlider({
   const [openedViaMarker, setOpenedViaMarker] = useState(false);
 
   useEffect(() => {
+    if (!onHeightChange) return;
+
+    const unsubscribe = y.on("change", latestY => {
+      let currentHeight = window.innerHeight - latestY;
+
+      if (Math.abs(currentHeight - PEEK_HEIGHT) < 5) {
+        currentHeight = PEEK_HEIGHT - PEEK_MAP_OFFSET;
+      } else if (Math.abs(currentHeight - HALF_HEIGHT) < 5) {
+        currentHeight = HALF_HEIGHT - HALF_MAP_OFFSET;
+      }
+
+      onHeightChange(currentHeight, false);
+    });
+
+    return () => unsubscribe();
+  }, [y, onHeightChange]);
+  
+  useEffect(() => {
+    setHeightState("half");
+    snapTo(HALF_HEIGHT);
+  }, []);
+  
+  useEffect(() => {
     if (onHeightChange) onHeightChange(heightState);
   }, [heightState, onHeightChange]);
 
@@ -317,18 +342,6 @@ export default function CardSlider({
     setHeightState('half');
     snapTo(HALF_HEIGHT);
   }, []);
-
-  // useEffect(() => {
-  //   const unsubscribe = y.on('change', latestY => {
-  //     const currentHeight = window.innerHeight - latestY;
-  //     if (Math.abs(currentHeight - PEEK_HEIGHT) < 5) {
-  //       setBottomBarVisible(false);
-  //     } else {
-  //       setBottomBarVisible(true);
-  //     }
-  //   });
-  //   return () => unsubscribe();
-  // }, [y, setBottomBarVisible]);
 
   useEffect(() => {
     if (!activeMarker || !containerRef.current) return;
@@ -375,32 +388,66 @@ export default function CardSlider({
     if (newY >= minY && newY <= maxY) y.set(newY);
   };
 
-  const handleDragEnd = (_, info) => {
-    const offsetY = info.offset.y;
-    const velocityY = info.velocity.y;
-    const DRAG_THRESHOLD = window.innerHeight * 0.15;
+  // const handleDragEnd = (_, info) => {
+  //   const offsetY = info.offset.y;
+  //   const velocityY = info.velocity.y;
+  //   const DRAG_THRESHOLD = window.innerHeight * 0.15;
 
-    if (offsetY > DRAG_THRESHOLD || velocityY > 500) {
-      if (heightState === 'full') {
-        setHeightState('half');
-        snapTo(HALF_HEIGHT);
-      } else {
-        setHeightState('peek');
-        snapTo(PEEK_HEIGHT);
-      }
-    } else if (offsetY < -DRAG_THRESHOLD || velocityY < -500) {
-      setHeightState('full');
-      snapTo(MAX_HEIGHT);
+  //   if (offsetY > DRAG_THRESHOLD || velocityY > 500) {
+  //     if (heightState === 'full') {
+  //       setHeightState('half');
+  //       snapTo(HALF_HEIGHT);
+  //     } else {
+  //       setHeightState('peek');
+  //       snapTo(PEEK_HEIGHT);
+  //     }
+  //   } else if (offsetY < -DRAG_THRESHOLD || velocityY < -500) {
+  //     setHeightState('full');
+  //     snapTo(MAX_HEIGHT);
+  //   } else {
+  //     if (heightState === 'full') {
+  //       snapTo(MAX_HEIGHT);
+  //     } else if (heightState === 'half') {
+  //       snapTo(HALF_HEIGHT);
+  //     } else {
+  //       snapTo(PEEK_HEIGHT);
+  //     }
+  //   }
+  // };
+
+  
+const handleDragEnd = (_, info) => {
+  const offsetY = info.offset.y;
+  const velocityY = info.velocity.y;
+  const DRAG_THRESHOLD = window.innerHeight * 0.15;
+
+  if (offsetY > DRAG_THRESHOLD || velocityY > 500) {
+    if (heightState === 'full') {
+      setHeightState('half');
+      snapTo(HALF_HEIGHT);
+      onHeightChange(HALF_HEIGHT, true); // final height
     } else {
-      if (heightState === 'full') {
-        snapTo(MAX_HEIGHT);
-      } else if (heightState === 'half') {
-        snapTo(HALF_HEIGHT);
-      } else {
-        snapTo(PEEK_HEIGHT);
-      }
+      setHeightState('peek');
+      snapTo(PEEK_HEIGHT);
+      onHeightChange(PEEK_HEIGHT, true);
     }
-  };
+  } else if (offsetY < -DRAG_THRESHOLD || velocityY < -500) {
+    setHeightState('full');
+    snapTo(MAX_HEIGHT);
+    onHeightChange(MAX_HEIGHT, true);
+  } else {
+    if (heightState === 'full') {
+      snapTo(MAX_HEIGHT);
+      onHeightChange(MAX_HEIGHT, true);
+    } else if (heightState === 'half') {
+      snapTo(HALF_HEIGHT);
+      onHeightChange(HALF_HEIGHT, true);
+    } else {
+      snapTo(PEEK_HEIGHT);
+      onHeightChange(PEEK_HEIGHT, true);
+    }
+  }
+};
 
   const handleHeartClick = (e, point) => {
     e.stopPropagation();
@@ -452,7 +499,6 @@ export default function CardSlider({
     >
       <div className="sheet-drag-header" onClick={handleToggleHeight} onPointerDown={(e) => dragControls.start(e)}>
         <div className="handle-bar" />
-        {/* <p className="sheet-heading">{points.length} places</p> */}
       </div>
 
       <div
@@ -535,10 +581,7 @@ export default function CardSlider({
                 <h3>{point.name}</h3>
                 <p>{point.tags?.join(', ')}</p>
                 <p>
-                  <strong>Hours:</strong> {point.openingHours}
-                </p>
-                <p>
-                  <strong>Distance:</strong> {point.distance}
+                  {point.distance}
                 </p>
               </div>
             </div>

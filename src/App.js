@@ -3,7 +3,6 @@ import AnimatedLayout from './Routes/AnimatedRoutes';
 import BottomBar from './components/BottomBar';
 import { FavoritesProvider } from './data/FavoritesContext';
 import './App.css';
-import { fetchHomeData } from './data/mockPoints';
 
 export default function App() {
   const [bottomSheetState, setBottomSheetState] = useState('collapsed');

@@ -34,7 +34,6 @@ export const fetchPoints = async () => {
       }
     }
 
-    // console.log('allPoints', allPoints)
     return allPoints;
   } catch (error) {
     console.error('❌ Error fetching points:', error?.response?.data || error.message || error);

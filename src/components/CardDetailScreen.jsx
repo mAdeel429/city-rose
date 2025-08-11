@@ -600,11 +600,18 @@ export default function CardDetailScreen() {
             fullItem?.macros?.[0]?.name === 'Offers' ||
             fullItem?.macros?.[0]?.name === 'Food & Drink') ? (
             <div style={{ margin: '20px 0px' }}>
-              <OfferCard />
+              <OfferCard
+                offerId={(() => {
+                  const id = fullItem?.offerId || location.state?.offerId;
+                  console.log("Offer ID:", id);
+                  return id;
+                })()}
+                category={fullItem?.macros?.[0]?.name}
+              />
+
             </div>
           ) : (
             <div style={{ padding: '16px', textAlign: 'center', color: '#888' }}>
-              No relevant offers found for this category.
             </div>
           )}
           <div style={{ marginTop: '20px' }}>
