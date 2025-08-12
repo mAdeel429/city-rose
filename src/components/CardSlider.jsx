@@ -343,21 +343,43 @@ export default function CardSlider({
     snapTo(HALF_HEIGHT);
   }, []);
 
+  // useEffect(() => {
+  //   if (!activeMarker || !containerRef.current) return;
+
+  //   if (heightState !== 'full') {
+  //     setHeightState('full');
+  //     snapTo(MAX_HEIGHT);
+  //   }
+
+  //   setTimeout(() => {
+  //     const cardElement = document.getElementById(`card-${activeMarker}`);
+  //     if (cardElement) {
+  //       cardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  //     }
+  //   }, 350);
+  // }, [activeMarker]);
+
   useEffect(() => {
     if (!activeMarker || !containerRef.current) return;
-
-    if (heightState !== 'full') {
-      setHeightState('full');
-      snapTo(MAX_HEIGHT);
+  
+    if (heightState !== 'half') {
+      setHeightState('half');
+      snapTo(HALF_HEIGHT);
     }
-
+  
     setTimeout(() => {
+      const scrollContainer = containerRef.current;
       const cardElement = document.getElementById(`card-${activeMarker}`);
-      if (cardElement) {
-        cardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (cardElement && scrollContainer) {
+        const cardOffsetTop = cardElement.offsetTop;
+        scrollContainer.scrollTo({
+          top: cardOffsetTop - 20, // 20px padding
+          behavior: 'smooth'
+        });
       }
     }, 350);
   }, [activeMarker]);
+  
 
   useEffect(() => {
     const scrollContainer = containerRef.current;

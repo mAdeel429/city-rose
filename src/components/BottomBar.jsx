@@ -102,6 +102,7 @@ const BottomBar = ({ visible = true }) => {
             transform: 'rotate(90deg)',
             color: 'var(--icon-color)',
             opacity: getOpacity('/offers'),
+            fontSize: '26px'
           }}
         />
       </Link>
@@ -113,7 +114,8 @@ const BottomBar = ({ visible = true }) => {
           style={{
             opacity: getOpacity('/home'),
             filter: 'var(--icon-filter)',
-            // height: '40px'
+            height: '38px',
+            width: '38px'
           }}
         />
       </Link>

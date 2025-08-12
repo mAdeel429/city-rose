@@ -36,7 +36,6 @@ export default function Offers() {
     getOffers();
   }, [selectedType, deviceId]);
 
-  // Prevent body scroll when bottom sheet is open
   useEffect(() => {
     if (showBottomSheet) {
       document.body.style.overflow = 'hidden';
@@ -119,7 +118,8 @@ export default function Offers() {
                 category: 'Offers',
                 distance: item.distance || 'Unknown',
                 fullItem,
-                offerId: item.id
+                offerId: item.id,
+                fromOfferCard: true
               }
             });
           }}
@@ -201,9 +201,6 @@ export default function Offers() {
           </div>
         )}
       </div>
-
-
-
       <AnimatePresence>
         {showBottomSheet && (
           <motion.div

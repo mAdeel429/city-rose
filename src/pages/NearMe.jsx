@@ -651,12 +651,12 @@ import {
   GiWeightLiftingUp,
 } from 'react-icons/gi';
 
-import foodIcon from '../assets/restaurant (2).png';
+import foodIcon from '../assets/fok.png';
 import nightlifeIcon from '../assets/bar-pin.png';
-import defaultIcon from '../assets/map pin.png';
-import shopping from '../assets/shop-location.png';
-import wellness from '../assets/location_18362812.png';
-import homeIcon from '../assets/location.png';
+import defaultIcon from '../assets/default.png';
+import shopping from '../assets/shopping.png';
+import wellness from '../assets/wellness.png';
+import homeIcon from '../assets/home.png';
 import { usePoints } from '../context/PointsContext';
 
 
@@ -993,7 +993,6 @@ export default function NearMe() {
     googleMapsApiKey: 'AIzaSyAvJVIP2hU3dlLigoB7dmhWoutpwJ12wDM',
   });
 
-  // Update container height when card slider height changes
   useEffect(() => {
     setContainerStyle({
       width: '100%',
@@ -1001,7 +1000,6 @@ export default function NearMe() {
     });
   }, [cardSliderHeight]);
 
-  // Also update if window resizes
   useEffect(() => {
     const handleResize = () => {
       setContainerStyle({
@@ -1013,7 +1011,6 @@ export default function NearMe() {
     return () => window.removeEventListener('resize', handleResize);
   }, [cardSliderHeight]);
 
-  // ---------- LOAD POINTS ----------
   useEffect(() => {
     if (!isLoading) {
       const flat = Object.values(categorizedData)
@@ -1043,7 +1040,6 @@ export default function NearMe() {
     }
   }, [categorizedData, isLoading]);
 
-  // ---------- GET USER LOCATION ----------
   useEffect(() => {
     if (!isLoaded) return;
 
@@ -1060,17 +1056,17 @@ export default function NearMe() {
           mapRef.current.setZoom(14);
         }
 
-        const nearest = getNearestPoint(location, points);
-        if (nearest) {
-          setActiveMarker(nearest.id);
-          setShowCardSheet(true);
-          setTimeout(() => {
-            const card = document.getElementById(`card-${nearest.id}`);
-            if (card) {
-              card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-          }, 500);
-        }
+        // const nearest = getNearestPoint(location, points);
+        // if (nearest) {
+        //   setActiveMarker(nearest.id);
+        //   setShowCardSheet(true);
+        //   setTimeout(() => {
+        //     const card = document.getElementById(`card-${nearest.id}`);
+        //     if (card) {
+        //       card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        //     }
+        //   }, 500);
+        // }
       },
       (err) => {
         console.error('Geolocation error:', err);
