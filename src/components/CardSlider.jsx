@@ -313,7 +313,7 @@ import './CardSlider.css';
 
 
 const HALF_HEIGHT = window.innerHeight * 0.6;
-const PEEK_HEIGHT = 170;
+const PEEK_HEIGHT = 166;
 const MAX_HEIGHT = window.innerHeight * 1.0;
 
 export default function CardSlider({

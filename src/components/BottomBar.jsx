@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { FaTag, FaHeart, FaUser } from 'react-icons/fa';
 import styles from './PointList.module.css';
 import CenterIcon from '../assets/CityRose Logo Condiviso (2).png';
-import NearMeIcon from '../assets/icon 1.png';
+import NearMeIcon from '../assets/bottom bar.png';
 
 const BottomBar = ({ visible = true }) => {
   const location = useLocation();
@@ -17,7 +17,7 @@ const BottomBar = ({ visible = true }) => {
     >
       <Link to="/near-me" className={styles.tabItem}>
         <img
-          src='https://static.thenounproject.com/png/2204581-200.png'
+          src={NearMeIcon}
           alt="Near Me Icon"
           className={styles.tabIcon}
           style={{

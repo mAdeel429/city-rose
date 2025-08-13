@@ -696,10 +696,10 @@ import { usePoints } from '../context/PointsContext';
 const macroIcons = {
   'Food & Drink': foodIcon,
   Tours: defaultIcon,
-  Nightlife: nightlifeIcon,              // fixed case to match common data
+  Nightlife: nightlifeIcon,
   Shopping: shopping,
   'Culture & Sights': homeIcon,
-  'Activity & Wellness': wellness,       // fixed typo: "Activty" -> "Activity"
+  'Activity & Wellness': wellness,
 };
 
 const macroButton = {
@@ -986,18 +986,8 @@ export default function NearMe() {
     height: '100vh',
   };
 
-  // const handleSliderHeightChange = (height, isFinal) => {
-  //   setCardSliderHeight(height);
-  //   if (isFinal && mapRef.current) {
-  //     mapRef.current.setOptions({
-  //       padding: { top: 0, left: 0, right: 0, bottom: height || 0 },
-  //     });
-  //   }
-  // };
-
   const handleSliderHeightChange = useCallback((height, isFinal) => {
     setMapPadding(height);
-    // map ka padding sirf drag end par adjust karo
     if (mapRef.current && isFinal) {
       mapRef.current.setOptions({
         padding: { top: 0, bottom: height, left: 0, right: 0 }
@@ -1052,7 +1042,7 @@ export default function NearMe() {
       },
       (err) => {
         console.error('Geolocation error:', err);
-        const fallback = { lat: 59.9139, lng: 10.7522 };
+        const fallback = { lat: 43.7699, lng: 11.2556 };
         setUserLocation(fallback);
         mapRef.current?.setCenter(fallback);
         mapRef.current?.setZoom(12);
@@ -1201,7 +1191,7 @@ export default function NearMe() {
   return (
     <div id="near-me-container">
       {/* Keep this container at full height. The map fills it; the sheet floats on top */}
-      <div className="nearme-container" style={{ position: 'relative', height: '100vh' }}>
+      <div className="nearme-container" style={{ position: 'relative', height: '90vh' }}>
         <div className="nearme-header" style={{ position: 'absolute', zIndex: 3, left: 0, right: 0 }}>
           <input
             type="text"
