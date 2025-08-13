@@ -26,21 +26,7 @@
   --icon-filter: invert(1) brightness(1.2);
 }
 
-
 /* .bottomTabs {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  background: var(--bg-color);
-  justify-content: space-around;
-  padding: 15px 0;
-  border-top: 1px solid var(--border-color);
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-} */
-.bottomTabs {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -54,25 +40,11 @@
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
-
-/* .tabItem {
-  text-align: center;
-  text-decoration: none;
-  color: var(--text-color);
-  font-size: 22px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.3s ease;
-} */
-
-
 .tabItem {
   text-align: center;
   text-decoration: none;
   color: var(--text-color);
-  font-size: 26px; /* icon ka size bara */
+  font-size: 26px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -91,12 +63,6 @@
   filter: var(--icon-filter);
   transition: filter 0.3s ease;
 }
-
-/* .centerIcon {
-  width: 34px;
-  height: 34px;
-  border-radius: 20px;
-} */
 
 
 .centerIcon {
@@ -117,11 +83,100 @@
   height: 30px;
 }
 
+.tabLabel {
+  font-size: 10px;
+  line-height: 1.1;
+  opacity: 0.6;
+  white-space: nowrap;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.tabItem.active .tabIcon {
+  opacity: 1 !important;
+  color: #000; 
+} */
 
 
+.bottomTabs {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  padding: 12px 0 25px;
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.85);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+}
 
+.tabItem {
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  font-size: 11px;
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+}
 
+.tabIcon {
+  font-size: 28px;
+  margin-bottom: 3px;
+  color: var(--icon-color);
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
 
+.tabLabel {
+  font-size: 12px;
+  line-height: 1.1;
+  opacity: 0.6;
+  white-space: nowrap;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.tabItem.active .tabIcon {
+  color: #000;
+  opacity: 1 !important;
+}
+
+.tabItem.active .tabLabel {
+  opacity: 1;
+  color: #000;
+  font-weight: 500;
+}
+
+.centerTab {
+  position: relative;
+  /* margin-top: -20px; */
+}
+
+.centerButton {
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.centerIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  filter: var(--icon-filter);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.centerTab.active .centerIcon {
+  transform: scale(1.1);
+}
 
 .divider {
   border: none;

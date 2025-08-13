@@ -4,13 +4,16 @@
 // import { Pagination } from 'swiper/modules';
 // import { useFavorites } from '../data/FavoritesContext';
 // import { AiFillHeart } from 'react-icons/ai';
+// import { useSpring, useTransform } from 'framer-motion';
 
 // import 'swiper/css';
 // import 'swiper/css/pagination';
 // import './CardSlider.css';
 
 // const HALF_HEIGHT = window.innerHeight * 0.6;
-// const PEEK_HEIGHT = 120;
+// const HALF_MAP_OFFSET = 60;
+// const PEEK_HEIGHT = 170;
+// const PEEK_MAP_OFFSET = 80;
 // const MAX_HEIGHT = window.innerHeight * 1.0;
 
 // export default function CardSlider({
@@ -18,7 +21,6 @@
 //   points,
 //   activeMarker,
 //   setShowCardSheet,
-//   setBottomBarVisible,
 //   onHeightChange,
 // }) {
 //   const y = useMotionValue(window.innerHeight - PEEK_HEIGHT);
@@ -31,7 +33,25 @@
 //   const dragControls = useDragControls();
 //   const [openedViaMarker, setOpenedViaMarker] = useState(false);
 
+//   const smoothY = useSpring(y, { stiffness: 200, damping: 30, mass: 0.5 });
 
+// const mapHeight = useTransform(smoothY, latestY => {
+//   return window.innerHeight - latestY;
+// });
+
+// useEffect(() => {
+//   if (!onHeightChange) return;
+//   const unsub = mapHeight.on("change", height => {
+//     onHeightChange(height, false);
+//   });
+//   return () => unsub();
+// }, [mapHeight, onHeightChange]);
+  
+//   useEffect(() => {
+//     setHeightState("half");
+//     snapTo(HALF_HEIGHT);
+//   }, []);
+  
 //   useEffect(() => {
 //     if (onHeightChange) onHeightChange(heightState);
 //   }, [heightState, onHeightChange]);
@@ -51,30 +71,22 @@
 //   }, []);
 
 //   useEffect(() => {
-//     const unsubscribe = y.on('change', latestY => {
-//       const currentHeight = window.innerHeight - latestY;
-//       if (Math.abs(currentHeight - PEEK_HEIGHT) < 5) {
-//         setBottomBarVisible(false);
-//       } else {
-//         setBottomBarVisible(true);
-//       }
-//     });
-//     return () => unsubscribe();
-//   }, [y, setBottomBarVisible]);
-
-//   useEffect(() => {
 //     if (!activeMarker || !containerRef.current) return;
   
-//     if (heightState !== 'full') {
-//       setHeightState('full');
-//       snapTo(MAX_HEIGHT);
-      
+//     if (heightState !== 'half') {
+//       setHeightState('half');
+//       snapTo(HALF_HEIGHT);
 //     }
   
 //     setTimeout(() => {
+//       const scrollContainer = containerRef.current;
 //       const cardElement = document.getElementById(`card-${activeMarker}`);
-//       if (cardElement) {
-//         cardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+//       if (cardElement && scrollContainer) {
+//         const cardOffsetTop = cardElement.offsetTop;
+//         scrollContainer.scrollTo({
+//           top: cardOffsetTop - 20,
+//           behavior: 'smooth'
+//         });
 //       }
 //     }, 350);
 //   }, [activeMarker]);
@@ -108,33 +120,39 @@
 //     const maxY = window.innerHeight - PEEK_HEIGHT;
 //     if (newY >= minY && newY <= maxY) y.set(newY);
 //   };
+  
+// const handleDragEnd = (_, info) => {
+//   const offsetY = info.offset.y;
+//   const velocityY = info.velocity.y;
+//   const DRAG_THRESHOLD = window.innerHeight * 0.15;
 
-//   const handleDragEnd = (_, info) => {
-//     const offsetY = info.offset.y;
-//     const velocityY = info.velocity.y;
-//     const DRAG_THRESHOLD = window.innerHeight * 0.15;
-
-//     if (offsetY > DRAG_THRESHOLD || velocityY > 500) {
-//       if (heightState === 'full') {
-//         setHeightState('half');
-//         snapTo(HALF_HEIGHT);
-//       } else {
-//         setHeightState('peek');
-//         snapTo(PEEK_HEIGHT);
-//       }
-//     } else if (offsetY < -DRAG_THRESHOLD || velocityY < -500) {
-//       setHeightState('full');
-//       snapTo(MAX_HEIGHT);
+//   if (offsetY > DRAG_THRESHOLD || velocityY > 500) {
+//     if (heightState === 'full') {
+//       setHeightState('half');
+//       snapTo(HALF_HEIGHT);
+//       onHeightChange(HALF_HEIGHT, true); 
 //     } else {
-//       if (heightState === 'full') {
-//         snapTo(MAX_HEIGHT);
-//       } else if (heightState === 'half') {
-//         snapTo(HALF_HEIGHT);
-//       } else {
-//         snapTo(PEEK_HEIGHT);
-//       }
+//       setHeightState('peek');
+//       snapTo(PEEK_HEIGHT);
+//       onHeightChange(PEEK_HEIGHT, true);
 //     }
-//   };
+//   } else if (offsetY < -DRAG_THRESHOLD || velocityY < -500) {
+//     setHeightState('full');
+//     snapTo(MAX_HEIGHT);
+//     onHeightChange(MAX_HEIGHT, true);
+//   } else {
+//     if (heightState === 'full') {
+//       snapTo(MAX_HEIGHT);
+//       onHeightChange(MAX_HEIGHT, true);
+//     } else if (heightState === 'half') {
+//       snapTo(HALF_HEIGHT);
+//       onHeightChange(HALF_HEIGHT, true);
+//     } else {
+//       snapTo(PEEK_HEIGHT);
+//       onHeightChange(PEEK_HEIGHT, true);
+//     }
+//   }
+// };
 
 //   const handleHeartClick = (e, point) => {
 //     e.stopPropagation();
@@ -186,11 +204,9 @@
 //     >
 //       <div className="sheet-drag-header" onClick={handleToggleHeight} onPointerDown={(e) => dragControls.start(e)}>
 //         <div className="handle-bar" />
-//         <p className="sheet-heading">{points.length} places</p>
 //       </div>
 
 //       <div
-//         // className="card-vertical-scroll" ref={containerRef}
 //         className={`card-vertical-scroll ${heightState === 'peek' ? 'no-scroll' : ''}`}
 //         ref={containerRef}
 //       >
@@ -199,7 +215,7 @@
 //           const showBubbles = heartBubbles[point.id];
 //           return (
 //             <div
-//               key={point.id}
+//               key={`${point.id}-${index}`}
 //               id={`card-${point.id}`}
 //               className="card-vertical"
 //               style={{ marginBottom: index === points.length - 1 ? '80px' : '12px' }}
@@ -215,46 +231,62 @@
 //                   }))
 //                 }
 //               >
-//                 {point.images.map((img, idx) => (
-//                   <SwiperSlide key={idx}>
-//                     <div className="attractionCardImageContainer">
-//                       <img src={img} alt={`${point.name}-${idx}`} className="attractionCardImage" />
-//                       {activeSlideIndexes[point.id] === idx && (
-//                         <div className="attractionCardCategory">{point.macro}</div>
-//                       )}
-//                       {showBubbles && (
-//                         <div className="bubblesContainer">
-//                           {Array.from({ length: 5 }).map((_, i) => (
-//                             <span
-//                               key={i}
-//                               className="bubble"
-//                               style={{ left: `${10 + Math.random() * 20}px` }}
-//                             />
-//                           ))}
-//                         </div>
-//                       )}
-//                       <div className="attractionCardHeartIcon" onClick={e => handleHeartClick(e, point)}>
-//                         <AiFillHeart
-//                           style={{
-//                             color: isFavorite ? 'red' : 'white',
-//                             fontSize: '22px',
-//                           }}
-//                           className={showBubbles ? 'heartAnimate' : ''}
+//                 {point.images.map((img, idx) => {
+//                   const token = localStorage.getItem('token');
+//                   let imageUrl = '/fallback.jpg';
+
+//                   if (img) {
+//                     try {
+//                       const url = new URL(img);
+//                       url.searchParams.append('token', token);
+//                       imageUrl = url.toString();
+//                     } catch (err) {
+//                       console.error('Invalid image URL:', err);
+//                     }
+//                   }
+
+//                   return (
+//                     <SwiperSlide key={idx}>
+//                       <div className="attractionCardImageContainer">
+//                         <img
+//                           src={imageUrl}
+//                           alt={`${point.name}-${idx}`}
+//                           className="attractionCardImage"
 //                         />
+//                         {activeSlideIndexes[point.id] === idx && (
+//                           <div className="attractionCardCategory">{point.tags?.[0]}</div>
+//                         )}
+//                         {showBubbles && (
+//                           <div className="bubblesContainer">
+//                             {Array.from({ length: 5 }).map((_, i) => (
+//                               <span
+//                                 key={i}
+//                                 className="bubble"
+//                                 style={{ left: `${10 + Math.random() * 20}px` }}
+//                               />
+//                             ))}
+//                           </div>
+//                         )}
+//                         <div className="attractionCardHeartIcon" onClick={e => handleHeartClick(e, point)}>
+//                           <AiFillHeart
+//                             style={{
+//                               color: isFavorite ? 'red' : 'white',
+//                               fontSize: '22px',
+//                             }}
+//                             className={showBubbles ? 'heartAnimate' : ''}
+//                           />
+//                         </div>
 //                       </div>
-//                     </div>
-//                   </SwiperSlide>
-//                 ))}
+//                     </SwiperSlide>
+//                   );
+//                 })}
 //               </Swiper>
 
 //               <div className="attractionCardDetails">
 //                 <h3>{point.name}</h3>
 //                 <p>{point.tags?.join(', ')}</p>
 //                 <p>
-//                   <strong>Hours:</strong> {point.openingHours}
-//                 </p>
-//                 <p>
-//                   <strong>Distance:</strong> {point.distance}
+//                   {point.distance}
 //                 </p>
 //               </div>
 //             </div>
@@ -267,22 +299,21 @@
 
 
 
-
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, animate, useMotionValue, useDragControls } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { useFavorites } from '../data/FavoritesContext';
 import { AiFillHeart } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
 import './CardSlider.css';
 
+
 const HALF_HEIGHT = window.innerHeight * 0.6;
-const HALF_MAP_OFFSET = 60;
-const PEEK_HEIGHT = 160;
-const PEEK_MAP_OFFSET = 80;
+const PEEK_HEIGHT = 170;
 const MAX_HEIGHT = window.innerHeight * 1.0;
 
 export default function CardSlider({
@@ -292,94 +323,51 @@ export default function CardSlider({
   setShowCardSheet,
   onHeightChange,
 }) {
-  const y = useMotionValue(window.innerHeight - PEEK_HEIGHT);
+  const y = useMotionValue(window.innerHeight - HALF_HEIGHT);
   const [heightState, setHeightState] = useState('half');
   const [canDragSheet, setCanDragSheet] = useState(true);
   const containerRef = useRef(null);
   const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
   const [heartBubbles, setHeartBubbles] = useState({});
   const [activeSlideIndexes, setActiveSlideIndexes] = useState({});
-  const dragControls = useDragControls();
-  const [openedViaMarker, setOpenedViaMarker] = useState(false);
+  const dragControls = useDragControls()
+  const navigate = useNavigate();
+
 
   useEffect(() => {
-    if (!onHeightChange) return;
-
-    const unsubscribe = y.on("change", latestY => {
-      let currentHeight = window.innerHeight - latestY;
-
-      if (Math.abs(currentHeight - PEEK_HEIGHT) < 5) {
-        currentHeight = PEEK_HEIGHT - PEEK_MAP_OFFSET;
-      } else if (Math.abs(currentHeight - HALF_HEIGHT) < 5) {
-        currentHeight = HALF_HEIGHT - HALF_MAP_OFFSET;
-      }
-
-      onHeightChange(currentHeight, false);
-    });
-
-    return () => unsubscribe();
-  }, [y, onHeightChange]);
-  
-  useEffect(() => {
-    setHeightState("half");
-    snapTo(HALF_HEIGHT);
+    setHeightState('half');
+    snapTo(HALF_HEIGHT, true);
   }, []);
-  
-  useEffect(() => {
-    if (onHeightChange) onHeightChange(heightState);
-  }, [heightState, onHeightChange]);
 
   useEffect(() => {
     if (!points || !points.length) return;
     const initialIndexes = {};
-    points.forEach(point => {
+    points.forEach((point) => {
       initialIndexes[point.id] = 0;
     });
     setActiveSlideIndexes(initialIndexes);
   }, [points]);
 
   useEffect(() => {
-    setHeightState('half');
-    snapTo(HALF_HEIGHT);
-  }, []);
-
-  // useEffect(() => {
-  //   if (!activeMarker || !containerRef.current) return;
-
-  //   if (heightState !== 'full') {
-  //     setHeightState('full');
-  //     snapTo(MAX_HEIGHT);
-  //   }
-
-  //   setTimeout(() => {
-  //     const cardElement = document.getElementById(`card-${activeMarker}`);
-  //     if (cardElement) {
-  //       cardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  //     }
-  //   }, 350);
-  // }, [activeMarker]);
-
-  useEffect(() => {
     if (!activeMarker || !containerRef.current) return;
-  
+
     if (heightState !== 'half') {
       setHeightState('half');
-      snapTo(HALF_HEIGHT);
+      snapTo(HALF_HEIGHT, true);
     }
-  
+
     setTimeout(() => {
       const scrollContainer = containerRef.current;
       const cardElement = document.getElementById(`card-${activeMarker}`);
       if (cardElement && scrollContainer) {
         const cardOffsetTop = cardElement.offsetTop;
         scrollContainer.scrollTo({
-          top: cardOffsetTop - 20, // 20px padding
-          behavior: 'smooth'
+          top: cardOffsetTop - 20,
+          behavior: 'smooth',
         });
       }
     }, 350);
   }, [activeMarker]);
-  
 
   useEffect(() => {
     const scrollContainer = containerRef.current;
@@ -394,12 +382,15 @@ export default function CardSlider({
     return () => scrollContainer.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const snapTo = targetHeight => {
+  const snapTo = (targetHeight, isFinal = false) => {
     animate(y, window.innerHeight - targetHeight, {
       type: 'spring',
       stiffness: 200,
       damping: 25,
       mass: 0.5,
+      onComplete: () => {
+        if (onHeightChange) onHeightChange(targetHeight, !!isFinal);
+      },
     });
   };
 
@@ -410,70 +401,22 @@ export default function CardSlider({
     if (newY >= minY && newY <= maxY) y.set(newY);
   };
 
-  // const handleDragEnd = (_, info) => {
-  //   const offsetY = info.offset.y;
-  //   const velocityY = info.velocity.y;
-  //   const DRAG_THRESHOLD = window.innerHeight * 0.15;
+  const [height, setHeight] = useState(PEEK_HEIGHT);
+  const FULL_HEIGHT = window.innerHeight * 1.0;
+  const handleDragEnd = (event, info) => {
+    const offset = info.offset.y;
+    let newHeight = height;
 
-  //   if (offsetY > DRAG_THRESHOLD || velocityY > 500) {
-  //     if (heightState === 'full') {
-  //       setHeightState('half');
-  //       snapTo(HALF_HEIGHT);
-  //     } else {
-  //       setHeightState('peek');
-  //       snapTo(PEEK_HEIGHT);
-  //     }
-  //   } else if (offsetY < -DRAG_THRESHOLD || velocityY < -500) {
-  //     setHeightState('full');
-  //     snapTo(MAX_HEIGHT);
-  //   } else {
-  //     if (heightState === 'full') {
-  //       snapTo(MAX_HEIGHT);
-  //     } else if (heightState === 'half') {
-  //       snapTo(HALF_HEIGHT);
-  //     } else {
-  //       snapTo(PEEK_HEIGHT);
-  //     }
-  //   }
-  // };
+    if (offset < -100) newHeight = FULL_HEIGHT;
+    else if (offset > 100) newHeight = PEEK_HEIGHT;
+    else newHeight = HALF_HEIGHT;
 
-  
-const handleDragEnd = (_, info) => {
-  const offsetY = info.offset.y;
-  const velocityY = info.velocity.y;
-  const DRAG_THRESHOLD = window.innerHeight * 0.15;
-
-  if (offsetY > DRAG_THRESHOLD || velocityY > 500) {
-    if (heightState === 'full') {
-      setHeightState('half');
-      snapTo(HALF_HEIGHT);
-      onHeightChange(HALF_HEIGHT, true); // final height
-    } else {
-      setHeightState('peek');
-      snapTo(PEEK_HEIGHT);
-      onHeightChange(PEEK_HEIGHT, true);
-    }
-  } else if (offsetY < -DRAG_THRESHOLD || velocityY < -500) {
-    setHeightState('full');
-    snapTo(MAX_HEIGHT);
-    onHeightChange(MAX_HEIGHT, true);
-  } else {
-    if (heightState === 'full') {
-      snapTo(MAX_HEIGHT);
-      onHeightChange(MAX_HEIGHT, true);
-    } else if (heightState === 'half') {
-      snapTo(HALF_HEIGHT);
-      onHeightChange(HALF_HEIGHT, true);
-    } else {
-      snapTo(PEEK_HEIGHT);
-      onHeightChange(PEEK_HEIGHT, true);
-    }
-  }
-};
-
+    setHeight(newHeight);
+    if (onHeightChange) onHeightChange(newHeight, true);
+  };
   const handleHeartClick = (e, point) => {
     e.stopPropagation();
-    const isFav = favorites.some(fav => fav.id === point.id);
+    const isFav = favorites.some((fav) => fav.id === point.id);
     if (isFav) {
       removeFromFavorites(point.id);
     } else {
@@ -486,22 +429,22 @@ const handleDragEnd = (_, info) => {
       };
       addToFavorites(favItem);
     }
-    setHeartBubbles(prev => ({ ...prev, [point.id]: true }));
+    setHeartBubbles((prev) => ({ ...prev, [point.id]: true }));
     setTimeout(() => {
-      setHeartBubbles(prev => ({ ...prev, [point.id]: false }));
+      setHeartBubbles((prev) => ({ ...prev, [point.id]: false }));
     }, 1000);
   };
 
   const handleToggleHeight = () => {
     if (heightState === 'peek') {
       setHeightState('half');
-      snapTo(HALF_HEIGHT);
+      snapTo(HALF_HEIGHT, true);
     } else if (heightState === 'half') {
       setHeightState('full');
-      snapTo(MAX_HEIGHT);
+      snapTo(MAX_HEIGHT, true);
     } else {
       setHeightState('peek');
-      snapTo(PEEK_HEIGHT);
+      snapTo(PEEK_HEIGHT, true);
     }
   };
 
@@ -510,7 +453,15 @@ const handleDragEnd = (_, info) => {
   return (
     <motion.div
       className="bottom-sheet-card"
-      style={{ y }}
+      style={{
+        y,
+        position: 'fixed',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 2,        
+        touchAction: 'none',
+      }}
       drag="y"
       dragElastic={0.1}
       dragMomentum={false}
@@ -519,7 +470,11 @@ const handleDragEnd = (_, info) => {
       onDrag={handleDrag}
       onDragEnd={handleDragEnd}
     >
-      <div className="sheet-drag-header" onClick={handleToggleHeight} onPointerDown={(e) => dragControls.start(e)}>
+      <div
+        className="sheet-drag-header"
+        onClick={handleToggleHeight}
+        onPointerDown={(e) => dragControls.start(e)}
+      >
         <div className="handle-bar" />
       </div>
 
@@ -528,7 +483,7 @@ const handleDragEnd = (_, info) => {
         ref={containerRef}
       >
         {points.map((point, index) => {
-          const isFavorite = favorites.some(fav => fav.id === point.id);
+          const isFavorite = favorites.some((fav) => fav.id === point.id);
           const showBubbles = heartBubbles[point.id];
           return (
             <div
@@ -536,13 +491,27 @@ const handleDragEnd = (_, info) => {
               id={`card-${point.id}`}
               className="card-vertical"
               style={{ marginBottom: index === points.length - 1 ? '80px' : '12px' }}
+              onClick={() => {
+                const itemWithId = {
+                  id: point.id,
+                  title: point.name,
+                  image: point.images?.[0] || '',
+                  description: point.tags?.join(', '),
+                  category: point.macro || 'Attractions',
+                  distance: point.distance,
+                  fullItem: point, // taake details page ko full data mile
+                };
+                setTimeout(() => {
+                  navigate('/details', { state: itemWithId });
+                }, 50);
+              }}
             >
               <Swiper
                 modules={[Pagination]}
                 pagination={{ clickable: true }}
                 className="swiper-container"
-                onSlideChange={swiper =>
-                  setActiveSlideIndexes(prev => ({
+                onSlideChange={(swiper) =>
+                  setActiveSlideIndexes((prev) => ({
                     ...prev,
                     [point.id]: swiper.activeIndex,
                   }))
@@ -555,7 +524,7 @@ const handleDragEnd = (_, info) => {
                   if (img) {
                     try {
                       const url = new URL(img);
-                      url.searchParams.append('token', token);
+                      if (token) url.searchParams.append('token', token);
                       imageUrl = url.toString();
                     } catch (err) {
                       console.error('Invalid image URL:', err);
@@ -571,7 +540,9 @@ const handleDragEnd = (_, info) => {
                           className="attractionCardImage"
                         />
                         {activeSlideIndexes[point.id] === idx && (
-                          <div className="attractionCardCategory">{point.tags?.[0]}</div>
+                          <div className="attractionCardCategory">
+                            {point.tags?.[0]}
+                          </div>
                         )}
                         {showBubbles && (
                           <div className="bubblesContainer">
@@ -584,7 +555,10 @@ const handleDragEnd = (_, info) => {
                             ))}
                           </div>
                         )}
-                        <div className="attractionCardHeartIcon" onClick={e => handleHeartClick(e, point)}>
+                        <div
+                          className="attractionCardHeartIcon"
+                          onClick={(e) => handleHeartClick(e, point)}
+                        >
                           <AiFillHeart
                             style={{
                               color: isFavorite ? 'red' : 'white',
@@ -602,9 +576,7 @@ const handleDragEnd = (_, info) => {
               <div className="attractionCardDetails">
                 <h3>{point.name}</h3>
                 <p>{point.tags?.join(', ')}</p>
-                <p>
-                  {point.distance}
-                </p>
+                <p>{point.distance}</p>
               </div>
             </div>
           );

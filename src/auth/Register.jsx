@@ -344,7 +344,7 @@ export default function Register() {
       if (!localStorage.getItem('selected_city')) {
         localStorage.setItem(
           'selected_city',
-          JSON.stringify({ id: 'default', name: 'Default City' })
+          JSON.stringify({ id: 'default', name: 'Florence' })
         );
       }
 

@@ -13,20 +13,21 @@
 //   GiWeightLiftingUp,
 // } from 'react-icons/gi';
 
-// import foodIcon from '../assets/restaurant.png';
-// import fashionIcon from '../assets/fashionIcon.png';
+// import foodIcon from '../assets/fok.png';
 // import nightlifeIcon from '../assets/bar-pin.png';
-// import educationIcon from '../assets/restaurant.png';
-// import defaultIcon from '../assets/defaultIcon.png';
-
+// import defaultIcon from '../assets/default.png';
+// import shopping from '../assets/shopping.png';
+// import wellness from '../assets/wellness.png';
+// import homeIcon from '../assets/home.png';
 // import { usePoints } from '../context/PointsContext';
 
 // const macroIcons = {
-//   Food: foodIcon,
-//   Tours: defaultIcon,
-//   Fashion: fashionIcon,
-//   Nightlife: nightlifeIcon,
-//   Education: educationIcon,
+//   'Food & Drink': foodIcon,
+//   'Tours': defaultIcon,
+//   'nightlife': nightlifeIcon,
+//   'Shopping': shopping,
+//   'Culture & Sights': homeIcon,
+//   'Activty & Wellness': wellness
 // };
 
 // const macroButton = {
@@ -35,11 +36,6 @@
 //   'Culture & Sights': <GiMountainCave size={24} />,
 //   'Activity & Wellness': <GiWeightLiftingUp size={24} />,
 //   Nightlife: <GiMartini size={24} />,
-// };
-
-// const containerStyle = {
-//   width: '100%',
-//   height: 'calc(100vh - 30px)',
 // };
 
 // function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
@@ -82,7 +78,6 @@
 
 //   return nearest;
 // }
-
 
 // const snazzyMapStyle = [
 //   {
@@ -318,6 +313,7 @@
 //   }
 // ]
 
+
 // export default function NearMe() {
 //   const { categorizedData, isLoading } = usePoints();
 //   const [points, setPoints] = useState([]);
@@ -331,12 +327,62 @@
 //   const [userLocation, setUserLocation] = useState(null);
 //   const [mapInteracted, setMapInteracted] = useState(false);
 //   const [mapLoaded, setMapLoaded] = useState(false);
+//   const [cardSliderHeight, setCardSliderHeight] = useState(160);
+//   const mapContainerRef = useRef(null);
+//   const resizeTimeout = useRef(null);
+//   const [containerStyle, setContainerStyle] = useState({
+//     width: '100%',
+//     height: `${window.innerHeight - cardSliderHeight}px`
+//   });
+
+//   const handleSliderHeightChange = (height, isFinal) => {
+//     if (mapContainerRef.current) {
+//       const mapHeight = window.innerHeight - height;
+//       mapContainerRef.current.style.transform = `translate3d(0, 0, 0)`; 
+//       mapContainerRef.current.style.height = `${mapHeight}px`;
+//     if (mapContainerRef.current) {
+//       const mapHeight = window.innerHeight - height;
+//       mapContainerRef.current.style.height = `${mapHeight}px`;
+    
+//       if (isFinal) {
+//         window.google.maps.event.trigger(mapRef.current, 'resize');
+//       } else {
+//         clearTimeout(resizeTimeout.current);
+//         resizeTimeout.current = setTimeout(() => {
+//           if (mapRef.current) {
+//             window.google.maps.event.trigger(mapRef.current, 'resize');
+//           }
+//         }, 100);
+//       }
+//     }
+
+//     }
+    
+//   };
 
 //   const mapRef = useRef(null);
 
 //   const { isLoaded } = useJsApiLoader({
 //     googleMapsApiKey: 'AIzaSyAvJVIP2hU3dlLigoB7dmhWoutpwJ12wDM',
 //   });
+
+//   useEffect(() => {
+//     setContainerStyle({
+//       width: '100%',
+//       height: `${window.innerHeight - cardSliderHeight}px`
+//     });
+//   }, [cardSliderHeight]);
+
+//   useEffect(() => {
+//     const handleResize = () => {
+//       setContainerStyle({
+//         width: '100%',
+//         height: `${window.innerHeight - cardSliderHeight}px`
+//       });
+//     };
+//     window.addEventListener('resize', handleResize);
+//     return () => window.removeEventListener('resize', handleResize);
+//   }, [cardSliderHeight]);
 
 //   useEffect(() => {
 //     if (!isLoading) {
@@ -382,18 +428,6 @@
 //           mapRef.current.setCenter(location);
 //           mapRef.current.setZoom(14);
 //         }
-
-//         const nearest = getNearestPoint(location, points);
-//         if (nearest) {
-//           setActiveMarker(nearest.id);
-//           setShowCardSheet(true);
-//           setTimeout(() => {
-//             const card = document.getElementById(`card-${nearest.id}`);
-//             if (card) {
-//               card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-//             }
-//           }, 500);
-//         }
 //       },
 //       (err) => {
 //         console.error('Geolocation error:', err);
@@ -411,12 +445,12 @@
 //       !macro ||
 //       (Array.isArray(p.category)
 //         ? p.category.some(
-//             (c) =>
-//               typeof c === 'string' &&
-//               c.toLowerCase().trim() === macro.toLowerCase().trim()
-//           )
+//           (c) =>
+//             typeof c === 'string' &&
+//             c.toLowerCase().trim() === macro.toLowerCase().trim()
+//         )
 //         : typeof p.category === 'string' &&
-//           p.category.toLowerCase().trim() === macro.toLowerCase().trim());
+//         p.category.toLowerCase().trim() === macro.toLowerCase().trim());
 
 //     const combinedTagsRaw = [
 //       ...(Array.isArray(p.tags) ? p.tags : []),
@@ -475,12 +509,12 @@
 //         !macroKey ||
 //         (Array.isArray(p.category)
 //           ? p.category.some(
-//               (c) =>
-//                 typeof c === 'string' &&
-//                 c.toLowerCase().trim() === macroKey.toLowerCase().trim()
-//             )
+//             (c) =>
+//               typeof c === 'string' &&
+//               c.toLowerCase().trim() === macroKey.toLowerCase().trim()
+//           )
 //           : typeof p.category === 'string' &&
-//             p.category.toLowerCase().trim() === macroKey.toLowerCase().trim());
+//           p.category.toLowerCase().trim() === macroKey.toLowerCase().trim());
 
 //       const combinedTagsRaw = [
 //         ...(Array.isArray(p.tags) ? p.tags : []),
@@ -511,9 +545,9 @@
 //       setMacro(null);
 //       setTags([]);
 //       setActiveFiltersCount(0);
-//       setShowFilterSheet(true); 
-//       setShowCardSheet(true);    
-//       setActiveMarker(null);  
+//       setShowFilterSheet(true);
+//       setShowCardSheet(true);
+//       setActiveMarker(null);
 
 //     } else if (mapRef.current && window.google?.maps?.LatLngBounds) {
 //       const bounds = new window.google.maps.LatLngBounds();
@@ -558,12 +592,12 @@
 //             )}
 //           </div>
 //         </div>
-
 //         <CardSlider
 //           show={showCardSheet}
 //           points={filteredPoints}
 //           activeMarker={activeMarker}
 //           setShowCardSheet={setShowCardSheet}
+//           onHeightChange={setCardSliderHeight}
 //         />
 
 //         <FilterBottomSheet
@@ -636,7 +670,7 @@
 // }
 
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback  } from 'react';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import './NearMe.css';
 import FilterBottomSheet from '../components/PointsBottomSheet';
@@ -659,17 +693,14 @@ import wellness from '../assets/wellness.png';
 import homeIcon from '../assets/home.png';
 import { usePoints } from '../context/PointsContext';
 
-
-
 const macroIcons = {
   'Food & Drink': foodIcon,
-  'Tours': defaultIcon,
-  'nightlife': nightlifeIcon,
-  'Shopping': shopping,
+  Tours: defaultIcon,
+  Nightlife: nightlifeIcon,              // fixed case to match common data
+  Shopping: shopping,
   'Culture & Sights': homeIcon,
-  'Activty & Wellness': wellness
+  'Activity & Wellness': wellness,       // fixed typo: "Activty" -> "Activity"
 };
-
 
 const macroButton = {
   'Food & Drink': <GiKnifeFork size={24} />,
@@ -679,7 +710,6 @@ const macroButton = {
   Nightlife: <GiMartini size={24} />,
 };
 
-// ---------- HELPER FUNCTIONS ----------
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -687,38 +717,11 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos((lat1 * Math.PI) / 180) *
-    Math.cos((lat2 * Math.PI) / 180) *
-    Math.sin(dLon / 2) *
-    Math.sin(dLon / 2);
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
-}
-
-function getNearestPoint(userLocation, points) {
-  if (!userLocation || !points.length) return null;
-
-  let nearest = points[0];
-  let minDist = getDistanceFromLatLonInKm(
-    userLocation.lat,
-    userLocation.lng,
-    nearest.lat,
-    nearest.lng
-  );
-
-  for (let i = 1; i < points.length; i++) {
-    const dist = getDistanceFromLatLonInKm(
-      userLocation.lat,
-      userLocation.lng,
-      points[i].lat,
-      points[i].lng
-    );
-    if (dist < minDist) {
-      minDist = dist;
-      nearest = points[i];
-    }
-  }
-
-  return nearest;
 }
 
 const snazzyMapStyle = [
@@ -955,7 +958,6 @@ const snazzyMapStyle = [
   }
 ]
 
-
 export default function NearMe() {
   const { categorizedData, isLoading } = usePoints();
   const [points, setPoints] = useState([]);
@@ -969,23 +971,9 @@ export default function NearMe() {
   const [userLocation, setUserLocation] = useState(null);
   const [mapInteracted, setMapInteracted] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
-  const [cardSliderHeight, setCardSliderHeight] = useState(160);
-  const mapContainerRef = useRef(null);
-
-  const [containerStyle, setContainerStyle] = useState({
-    width: '100%',
-    height: `${window.innerHeight - cardSliderHeight}px`
-  });
-
-    const handleSliderHeightChange = (height, isFinal) => {
-    if (mapContainerRef.current) {
-      const mapHeight = window.innerHeight - height;
-      mapContainerRef.current.style.height = `${mapHeight}px`;
-    }
-    if (isFinal) {
-      setCardSliderHeight(height);
-    }
-  };
+  const [mapPadding, setMapPadding] = useState(0);
+  
+  const [cardSliderHeight, setCardSliderHeight] = useState(0);
 
   const mapRef = useRef(null);
 
@@ -993,23 +981,29 @@ export default function NearMe() {
     googleMapsApiKey: 'AIzaSyAvJVIP2hU3dlLigoB7dmhWoutpwJ12wDM',
   });
 
-  useEffect(() => {
-    setContainerStyle({
-      width: '100%',
-      height: `${window.innerHeight - cardSliderHeight}px`
-    });
-  }, [cardSliderHeight]);
+  const containerStyle = {
+    width: '100%',
+    height: '100vh',
+  };
 
-  useEffect(() => {
-    const handleResize = () => {
-      setContainerStyle({
-        width: '100%',
-        height: `${window.innerHeight - cardSliderHeight}px`
+  // const handleSliderHeightChange = (height, isFinal) => {
+  //   setCardSliderHeight(height);
+  //   if (isFinal && mapRef.current) {
+  //     mapRef.current.setOptions({
+  //       padding: { top: 0, left: 0, right: 0, bottom: height || 0 },
+  //     });
+  //   }
+  // };
+
+  const handleSliderHeightChange = useCallback((height, isFinal) => {
+    setMapPadding(height);
+    // map ka padding sirf drag end par adjust karo
+    if (mapRef.current && isFinal) {
+      mapRef.current.setOptions({
+        padding: { top: 0, bottom: height, left: 0, right: 0 }
       });
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [cardSliderHeight]);
+    }
+  }, []);
 
   useEffect(() => {
     if (!isLoading) {
@@ -1055,18 +1049,6 @@ export default function NearMe() {
           mapRef.current.setCenter(location);
           mapRef.current.setZoom(14);
         }
-
-        // const nearest = getNearestPoint(location, points);
-        // if (nearest) {
-        //   setActiveMarker(nearest.id);
-        //   setShowCardSheet(true);
-        //   setTimeout(() => {
-        //     const card = document.getElementById(`card-${nearest.id}`);
-        //     if (card) {
-        //       card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        //     }
-        //   }, 500);
-        // }
       },
       (err) => {
         console.error('Geolocation error:', err);
@@ -1079,18 +1061,17 @@ export default function NearMe() {
     );
   }, [isLoaded, points]);
 
-  // ---------- FILTER POINTS ----------
   const filteredPoints = points.filter((p) => {
     const macroMatch =
       !macro ||
       (Array.isArray(p.category)
         ? p.category.some(
-          (c) =>
-            typeof c === 'string' &&
-            c.toLowerCase().trim() === macro.toLowerCase().trim()
-        )
+            (c) =>
+              typeof c === 'string' &&
+              c.toLowerCase().trim() === macro.toLowerCase().trim()
+          )
         : typeof p.category === 'string' &&
-        p.category.toLowerCase().trim() === macro.toLowerCase().trim());
+          p.category.toLowerCase().trim() === macro.toLowerCase().trim());
 
     const combinedTagsRaw = [
       ...(Array.isArray(p.tags) ? p.tags : []),
@@ -1118,12 +1099,16 @@ export default function NearMe() {
     const proximityMatch =
       !userLocation || mapInteracted
         ? true
-        : getDistanceFromLatLonInKm(userLocation.lat, userLocation.lng, p.lat, p.lng) <= 1;
+        : getDistanceFromLatLonInKm(
+            userLocation.lat,
+            userLocation.lng,
+            p.lat,
+            p.lng
+          ) <= 1;
 
     return macroMatch && tagMatch && searchMatch && proximityMatch;
   });
 
-  // ---------- FIT MAP TO FILTERED POINTS ----------
   useEffect(() => {
     if (
       mapLoaded &&
@@ -1135,10 +1120,10 @@ export default function NearMe() {
       const bounds = new window.google.maps.LatLngBounds();
       filteredPoints.forEach((p) => bounds.extend({ lat: p.lat, lng: p.lng }));
       mapRef.current.fitBounds(bounds, {
-        padding: { top: 250, bottom: 50, left: 100, right: 100 },
+        padding: { top: 250, bottom: (cardSliderHeight || 50), left: 100, right: 100 },
       });
     }
-  }, [filteredPoints, mapLoaded, mapInteracted]);
+  }, [filteredPoints, mapLoaded, mapInteracted, cardSliderHeight]);
 
   const handleFilterApply = (macroKey, selectedTags) => {
     setMacro(macroKey);
@@ -1150,12 +1135,12 @@ export default function NearMe() {
         !macroKey ||
         (Array.isArray(p.category)
           ? p.category.some(
-            (c) =>
-              typeof c === 'string' &&
-              c.toLowerCase().trim() === macroKey.toLowerCase().trim()
-          )
+              (c) =>
+                typeof c === 'string' &&
+                c.toLowerCase().trim() === macroKey.toLowerCase().trim()
+            )
           : typeof p.category === 'string' &&
-          p.category.toLowerCase().trim() === macroKey.toLowerCase().trim());
+            p.category.toLowerCase().trim() === macroKey.toLowerCase().trim());
 
       const combinedTagsRaw = [
         ...(Array.isArray(p.tags) ? p.tags : []),
@@ -1189,12 +1174,11 @@ export default function NearMe() {
       setShowFilterSheet(true);
       setShowCardSheet(true);
       setActiveMarker(null);
-
     } else if (mapRef.current && window.google?.maps?.LatLngBounds) {
       const bounds = new window.google.maps.LatLngBounds();
       matches.forEach((p) => bounds.extend({ lat: p.lat, lng: p.lng }));
       mapRef.current.fitBounds(bounds, {
-        padding: { top: 250, bottom: 50, left: 100, right: 100 },
+        padding: { top: 250, bottom: (cardSliderHeight || 50), left: 100, right: 100 },
       });
     }
   };
@@ -1216,8 +1200,9 @@ export default function NearMe() {
 
   return (
     <div id="near-me-container">
-      <div className="nearme-container">
-        <div className="nearme-header">
+      {/* Keep this container at full height. The map fills it; the sheet floats on top */}
+      <div className="nearme-container" style={{ position: 'relative', height: '100vh' }}>
+        <div className="nearme-header" style={{ position: 'absolute', zIndex: 3, left: 0, right: 0 }}>
           <input
             type="text"
             placeholder="Search places..."
@@ -1234,39 +1219,14 @@ export default function NearMe() {
           </div>
         </div>
 
-        {/* <CardSlider
-          show={showCardSheet}
-          points={filteredPoints}
-          activeMarker={activeMarker}
-          setShowCardSheet={setShowCardSheet}
-          onHeightChange={setCardSliderHeight}
-        /> */}
-
-        <CardSlider
-          show={showCardSheet}
-          points={filteredPoints}
-          activeMarker={activeMarker}
-          setShowCardSheet={setShowCardSheet}
-          onHeightChange={setCardSliderHeight}
-        />
-
-        <FilterBottomSheet
-          show={showFilterSheet}
-          onClose={() => setShowFilterSheet(false)}
-          onClearFilters={handleClearFilters}
-          setMacro={setMacro}
-          setTags={setTags}
-          setActiveFiltersCount={setActiveFiltersCount}
-          macro={macro}
-          onApplyFilters={handleFilterApply}
-          allPoints={points}
-        />
-
         <GoogleMap
           mapContainerStyle={containerStyle}
           onLoad={(map) => {
             mapRef.current = map;
             setMapLoaded(true);
+            if (cardSliderHeight) {
+              map.setOptions({ padding: { top: 0, left: 0, right: 0, bottom: cardSliderHeight } });
+            }
           }}
           onZoomChanged={() => setMapInteracted(true)}
           onDragEnd={() => setMapInteracted(true)}
@@ -1277,6 +1237,7 @@ export default function NearMe() {
             fullscreenControl: false,
             styles: snazzyMapStyle,
             disableDefaultUI: true,
+            padding: { top: 0, bottom: mapPadding, left: 0, right: 0 }
           }}
           zoom={17}
           center={userLocation || { lat: 59.9139, lng: 10.7522 }}
@@ -1314,6 +1275,27 @@ export default function NearMe() {
             />
           ))}
         </GoogleMap>
+
+        {/* SHEETS — rendered after the map so they float on top */}
+        <CardSlider
+          show={showCardSheet}
+          points={filteredPoints}
+          activeMarker={activeMarker}
+          setShowCardSheet={setShowCardSheet}
+          onHeightChange={handleSliderHeightChange}
+        />
+
+        <FilterBottomSheet
+          show={showFilterSheet}
+          onClose={() => setShowFilterSheet(false)}
+          onClearFilters={handleClearFilters}
+          setMacro={setMacro}
+          setTags={setTags}
+          setActiveFiltersCount={setActiveFiltersCount}
+          macro={macro}
+          onApplyFilters={handleFilterApply}
+          allPoints={points}
+        />
       </div>
     </div>
   );
