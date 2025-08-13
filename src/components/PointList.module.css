@@ -26,7 +26,7 @@
   --icon-filter: invert(1) brightness(1.2);
 }
 
-/* .bottomTabs {
+ .bottomTabs {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -34,7 +34,7 @@
   width: 100%;
   background: var(--bg-color);
   justify-content: space-around;
-  padding-top: 18px;
+  padding-top: 15px;
   padding-bottom: 30px;
   border-top: 1px solid var(--border-color);
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
@@ -94,10 +94,10 @@
 .tabItem.active .tabIcon {
   opacity: 1 !important;
   color: #000; 
-} */
+}
 
 
-.bottomTabs {
+/* .bottomTabs {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -155,7 +155,6 @@
 
 .centerTab {
   position: relative;
-  /* margin-top: -20px; */
 }
 
 .centerButton {
@@ -176,7 +175,7 @@
 
 .centerTab.active .centerIcon {
   transform: scale(1.1);
-}
+} */
 
 .divider {
   border: none;
