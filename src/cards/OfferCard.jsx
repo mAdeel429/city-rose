@@ -182,12 +182,10 @@ export default function OfferCard({ offerId, category }) {
         console.log("Filtered by category:", filtered);
       }
   
-      // 3️⃣ Agar dono se kuch nahi mila to sab me se ek random offer
       if (filtered.length === 0) {
         filtered = offersData;
       }
   
-      // 4️⃣ Sirf ek offer select karo
       if (filtered.length > 0) {
         const singleOffer = filtered[Math.floor(Math.random() * filtered.length)];
         setOffers([singleOffer]);
@@ -222,17 +220,21 @@ export default function OfferCard({ offerId, category }) {
     if (isFavorite) {
       removeFromFavorites(item.id);
     } else {
-      addToFavorites(item);
+      addToFavorites({
+        ...item,
+        id: item.id || item.point?.id,
+        category: 'Offers'
+      });
       setShowBubbles(true);
       setAnimateHeart(item.id);
-
+    
       setTimeout(() => {
         setShowBubbles(false);
         setAnimateHeart(null);
       }, 1000);
+      
     }
   };
-
   if (offers.length === 0) {
     return <div style={{ padding: '16px', textAlign: 'center' }}>No offer found</div>;
   }
@@ -247,9 +249,6 @@ export default function OfferCard({ offerId, category }) {
           <div
             key={item.id}
             className={styles.offerCard}
-            // onClick={() =>
-            //   navigate(`/offersQR/${item.id}`, { state: { offerId: item.id } })
-            // }
           >
             <div className={styles.offerImageContainer}>
               <img

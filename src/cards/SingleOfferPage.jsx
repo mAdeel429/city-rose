@@ -320,9 +320,14 @@ export default function SingleOfferPage() {
     if (isFavorite) {
       removeFromFavorites(offer.id);
     } else {
-      addToFavorites(offer);
+      addToFavorites({
+        ...offer,
+        id: offer.id || offer.point?.id,
+        category: 'Offers'
+      });
     }
   };
+
 
   if (!offer) {
     return <div className="single-offer-container">Loading offer details...</div>;

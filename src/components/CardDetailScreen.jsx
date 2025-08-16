@@ -624,43 +624,6 @@ export default function CardDetailScreen() {
               />
             </div>
           )}
-          {/* <div className="gallery-grid-custom">
-            {imageUrls.length > 0 ? (
-              imageUrls.slice(0, 4).map((url, index) => (
-                <div
-                  key={index}
-                  className={`grid-item image-${index + 1}${index === 3 && imageUrls.length > 4 ? ' with-overlay' : ''}`}
-                  onClick={index === 3 && imageUrls.length > 4 ? handleGalleryClick : undefined}
-                >
-                  <img src={url} alt={`Image ${index + 1}`} />
-                  {index === 3 && imageUrls.length > 4 && (
-                    <div className="overlay-text">+{imageUrls.length - 4}</div>
-                  )}
-                </div>
-              ))
-            ) : (
-              <div>No images found</div>
-            )}
-          </div>
-
-          {(cardData?.isOffer ||
-            fullItem?.macros?.[0]?.name === 'Offers' ||
-            fullItem?.macros?.[0]?.name === 'Food & Drink') ? (
-            <div style={{ margin: '20px 0px' }}>
-              <OfferCard
-                offerId={(() => {
-                  const id = fullItem?.offerId || location.state?.offerId;
-                  console.log("Offer ID:", id);
-                  return id;
-                })()}
-                category={fullItem?.macros?.[0]?.name}
-              />
-
-            </div>
-          ) : (
-            <div style={{ padding: '16px', textAlign: 'center', color: '#888' }}>
-            </div>
-          )} */}
           <div style={{ marginTop: '20px' }}>
             <MapCard
               lat={fullItem?.lat ?? 0}
