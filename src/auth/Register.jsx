@@ -29,10 +29,12 @@
 //         },
 //         (error) => {
 //           console.warn('❌ Location permission denied or error:', error);
+//           toast.error('Please enable location access to continue.');
 //         }
 //       );
 //     } else {
 //       console.warn('❌ Geolocation is not supported by this browser.');
+//       toast.error('Geolocation is not supported by your browser.');
 //     }
 //   }, []);
 
@@ -44,6 +46,14 @@
 //     setEmailError('');
 //     setPasswordError('');
 
+//     // 🚫 Location Check Before Register
+//     const lat = localStorage.getItem('user_lat');
+//     const lon = localStorage.getItem('user_lon');
+
+//     // if (!lat || !lon) {
+//     //   toast.error('Please enable location access first.');
+//     //   return;
+//     // }
 
 //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 //     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
@@ -100,7 +110,6 @@
 //       const token = data.access_token;
 //       const deviceId = uuidv4();
 
-
 //       localStorage.setItem('token', token);
 //       localStorage.setItem('refresh_token', data.refresh_token || '');
 //       localStorage.setItem('token_type', data.token_type || '');
@@ -130,7 +139,17 @@
 //       }));
 
 //       toast.success('Registration successful!');
-//       navigate('/home', { state: { showBottomSheet: true } });
+
+//       if (!localStorage.getItem('selected_city')) {
+//         localStorage.setItem(
+//           'selected_city',
+//           JSON.stringify({ id: 'default', name: 'Florence' })
+//         );
+//       }
+
+//       navigate('/home');
+//       window.location.reload();
+
 
 //     } catch (err) {
 //       console.error('❌ Registration Error:', err);
@@ -151,7 +170,7 @@
 //       </div>
 
 //       <div className="login-container">
-//         <p className="subheading">Discover City Rose world.</p>
+//         <p className="subheading">Discover cityRose world.</p>
 
 //         <div className="form-group">
 //           <label className="input-label">Name</label>
@@ -199,6 +218,7 @@
 
 
 
+
 import React, { useState, useEffect } from 'react';
 import './Login.css';
 import { IoChevronBack } from 'react-icons/io5';
@@ -230,7 +250,6 @@ export default function Register() {
         },
         (error) => {
           console.warn('❌ Location permission denied or error:', error);
-          toast.error('Please enable location access to continue.');
         }
       );
     } else {
@@ -246,15 +265,6 @@ export default function Register() {
     setNameError('');
     setEmailError('');
     setPasswordError('');
-
-    // 🚫 Location Check Before Register
-    const lat = localStorage.getItem('user_lat');
-    const lon = localStorage.getItem('user_lon');
-
-    // if (!lat || !lon) {
-    //   toast.error('Please enable location access first.');
-    //   return;
-    // }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
@@ -341,17 +351,10 @@ export default function Register() {
 
       toast.success('Registration successful!');
 
-      if (!localStorage.getItem('selected_city')) {
-        localStorage.setItem(
-          'selected_city',
-          JSON.stringify({ id: 'default', name: 'Florence' })
-        );
-      }
+      const alreadyHasCity = !!localStorage.getItem('selected_city');
 
-      navigate('/home');
+      navigate('/home', alreadyHasCity ? {} : { state: { showBottomSheet: true } });
       window.location.reload();
-
-
     } catch (err) {
       console.error('❌ Registration Error:', err);
       setError('Something went wrong. Please try again.');
@@ -371,7 +374,7 @@ export default function Register() {
       </div>
 
       <div className="login-container">
-        <p className="subheading">Discover cityRose world.</p>
+        <p className="subheading">Discover CityRose world.</p>
 
         <div className="form-group">
           <label className="input-label">Name</label>

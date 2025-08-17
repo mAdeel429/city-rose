@@ -222,11 +222,11 @@ import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { fetchWithAuth } from './auth';
 import { toast, Toaster } from 'sonner';
-import { usePoints } from '../context/PointsContext'; // ✅ Import context
+import { usePoints } from '../context/PointsContext';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { refetchPoints } = usePoints(); // ✅ Get the refetch function
+  const { refetchPoints } = usePoints();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
