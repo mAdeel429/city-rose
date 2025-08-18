@@ -302,7 +302,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { useFavorites } from '../data/FavoritesContext';
 import { AiFillHeart } from 'react-icons/ai';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -321,15 +321,16 @@ export default function CardSlider({
 }) {
   const y = useMotionValue(window.innerHeight - HALF_HEIGHT);
   const [heightState, setHeightState] = useState('half');
-  const [canDragSheet, setCanDragSheet] = useState(true);
+  const [canDragSheet] = useState(true);
   const containerRef = useRef(null);
   const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
   const [heartBubbles, setHeartBubbles] = useState({});
   const [activeSlideIndexes, setActiveSlideIndexes] = useState({});
   const dragControls = useDragControls();
   const navigate = useNavigate();
-  const location = useLocation();
 
+  // --- Scroll position memory ---
+  const scrollPosRef = useRef(0);
 
   useEffect(() => {
     setHeightState('half');
@@ -345,29 +346,31 @@ export default function CardSlider({
     setActiveSlideIndexes(initialIndexes);
   }, [points]);
 
+  // --- Restore scroll AFTER points are ready ---
   useEffect(() => {
+    if (!points?.length) return;
     const scrollContainer = containerRef.current;
     if (!scrollContainer) return;
-  
-    if (location.state?.restoreScroll !== undefined) {
-      scrollContainer.scrollTo({
-        top: location.state.restoreScroll,
-        behavior: "instant",
-      });
-  
-      if (location.state.activeCardId) {
-        const cardElement = document.getElementById(`card-${location.state.activeCardId}`);
-        if (cardElement) {
-          scrollContainer.scrollTo({
-            top: cardElement.offsetTop - 20,
-            behavior: "smooth",
-          });
-        }
-      }
-    }
-  }, [points, location.state]);
-  
 
+    // 1) Try in-memory ref (if we didn't unmount fully)
+    let savedPos = scrollPosRef.current;
+
+    // 2) Fallback to sessionStorage (if we did unmount during transitions)
+    if (!savedPos) {
+      const stored = sessionStorage.getItem('cardScrollPos');
+      if (stored) savedPos = parseInt(stored, 10);
+    }
+
+    if (Number.isFinite(savedPos) && savedPos > 0) {
+      // Use "instant" to avoid jumpy animations against your bottom sheet drag
+      scrollContainer.scrollTo({ top: savedPos, behavior: 'instant' });
+
+      // Clear in-memory ref only (do not remove from sessionStorage yet)
+      scrollPosRef.current = 0;
+    }
+  }, [points]);
+
+  // If map marker focuses a card, center it
   useEffect(() => {
     if (!activeMarker || !containerRef.current) return;
 
@@ -380,26 +383,13 @@ export default function CardSlider({
       const scrollContainer = containerRef.current;
       const cardElement = document.getElementById(`card-${activeMarker}`);
       if (cardElement && scrollContainer) {
-        const cardOffsetTop = cardElement.offsetTop;
         scrollContainer.scrollTo({
-          top: cardOffsetTop - 20,
+          top: cardElement.offsetTop - 20,
           behavior: 'smooth',
         });
       }
     }, 350);
-  }, [activeMarker]);
-
-  useEffect(() => {
-    const scrollContainer = containerRef.current;
-    if (!scrollContainer) return;
-  
-    if (location.state?.restoreScroll !== undefined) {
-      scrollContainer.scrollTo({
-        top: location.state.restoreScroll,
-        behavior: "instant"
-      });
-    }
-  }, [points, location.state]);
+  }, [activeMarker, heightState]);
 
   const snapTo = (targetHeight, isFinal = false) => {
     animate(y, window.innerHeight - targetHeight, {
@@ -521,23 +511,6 @@ export default function CardSlider({
               id={`card-${point.id}`}
               className="card-vertical"
               style={{ marginBottom: index === points.length - 1 ? '80px' : '12px' }}
-              // onClick={() => {
-              //   const itemWithId = {
-              //     id: point.id,
-              //     title: point.name,
-              //     image: point.images?.[0] || '',
-              //     description: point.tags?.join(', '),
-              //     category: point.macro || 'Attractions',
-              //     distance: point.distance,
-              //     fullItem: point,
-              //   };
-              //   const scrollContainer = containerRef.current;
-              //   const scrollPos = scrollContainer ? scrollContainer.scrollTop : 0;
-
-              //   setTimeout(() => {
-              //     navigate('/details', { state: { ...itemWithId, prevScroll: scrollPos } });
-              //   }, 50);
-              // }}
               onClick={() => {
                 const itemWithId = {
                   id: point.id,
@@ -550,9 +523,17 @@ export default function CardSlider({
                 };
                 const scrollContainer = containerRef.current;
                 const scrollPos = scrollContainer ? scrollContainer.scrollTop : 0;
-              
-                // 🔥 prevScroll bhejna zaroori
-                navigate('/details', { state: { ...itemWithId, prevScroll: scrollPos } });
+
+                scrollPosRef.current = scrollPos;
+                sessionStorage.setItem('cardScrollPos', String(scrollPos));
+
+                navigate('/details', { state: { ...itemWithId } });
+
+                console.log('Before navigate:', sessionStorage.getItem('cardScrollPos'));
+                setTimeout(() => {
+                  console.log('After 1s (still on detail page):', sessionStorage.getItem('cardScrollPos'));
+                }, 1000);
+
               }}
             >
               <Swiper

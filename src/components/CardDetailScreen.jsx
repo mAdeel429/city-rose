@@ -306,6 +306,10 @@ export default function CardDetailScreen() {
     });
   };
 
+  useEffect(() => {
+    console.log('On DetailScreen mount, cardScrollPos =', sessionStorage.getItem('cardScrollPos'));
+  }, []);
+  
   useLayoutEffect(() => {
     if (location.state) {
       setCardData(location.state);
@@ -502,10 +506,7 @@ export default function CardDetailScreen() {
 
           <div className="cds-back-icon" 
             onClick={() => {
-              navigate(-1, { state: { 
-                restoreScroll: location.state?.prevScroll ?? 0,
-                activeCardId: location.state?.id
-              } });
+              navigate(-1);
             }}
           >
             <FaArrowLeft />

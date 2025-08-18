@@ -1,4 +1,4 @@
-// import React, { lazy, Suspense } from 'react';
+// import React, { lazy, Suspense, useEffect } from 'react';
 // import {
 //   useLocation,
 //   useNavigationType,
@@ -8,7 +8,6 @@
 // } from 'react-router-dom';
 // import { useTransition, animated } from '@react-spring/web';
 
-// // Lazy-loaded pages
 // const HomePage = lazy(() => import('../pages/HomePage'));
 // const EditProfile = lazy(() => import('../pages/EditProfile'));
 // const Insights = lazy(() => import('../pages/Insights'));
@@ -18,11 +17,27 @@
 // const Offers = lazy(() => import('../pages/Offers'));
 // const CategoryDetails = lazy(() => import('../pages/CategoryDetails'));
 // const AddToFavorite = lazy(() => import('../pages/AddToFavorite'));
+// const FullImageGalleryScreen = lazy(() => import('../components/FullImageGalleryScreen'));
+// const AuthLanding = lazy(() => import('../auth/AuthLanding'));
+// const Login = lazy(() => import('../auth/Login'));
+// const Register = lazy(() => import('../auth/Register'));
+// const SingleOfferPage  = lazy(() => import('../cards/SingleOfferPage'));
 
-// export default function AnimatedRoutes({setBottomBarVisible}) {
+
+// export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen, isCitySheetOpen, setSelectedCity, selectedCity={selectedCity} }) {
 //   const location = useLocation();
 //   const navigationType = useNavigationType();
 //   const isBack = navigationType === 'POP';
+//   const isLoggedIn = !!localStorage.getItem('token');
+
+//   useEffect(() => {
+//     const authRoutes = ['/auth', '/login', '/register', '/forgot-password'];
+//     if (authRoutes.includes(location.pathname)) {
+//       setBottomBarVisible(false);
+//     } else {
+//       setBottomBarVisible(true);
+//     }
+//   }, [location.pathname, setBottomBarVisible]);
 
 //   const transitions = useTransition(location, {
 //     from: {
@@ -55,24 +70,38 @@
 //         >
 //           <Suspense fallback={<div style={{ backgroundColor: 'var(--background-color)', height: '100vh' }} />}>
 //             <Routes location={loc}>
-//               <Route path="/" element={<Navigate to="/near-me" replace />} />
-//               <Route path="/home" element={<HomePage />} />
-//               <Route path="/editProfile" element={<EditProfile />} />
-//               <Route path="/insights" element={<Insights />} />
-//               <Route path="/settings" element={<Settings />} />
-//               <Route path="/offers" element={<Offers />} />
-//               {/* <Route path="/near-me" element={<NearMe />} /> */}
-//               <Route
-//                 path="/near-me"
-//                 element={<NearMe setBottomBarVisible={setBottomBarVisible} />}
-//               />
+//               <Route path="/" element={<Navigate to={isLoggedIn ? '/home' : '/auth'} replace />} />
+//               <Route path="/auth" element={<AuthLanding />} />
+//               <Route path="/login" element={<Login />} />
+//               <Route path="/register" element={<Register />} />
+//               {isLoggedIn && (
+//                 <>
+//                   <Route
+//                     path="/home"
+//                     element={
+//                       <HomePage
+//                         setIsCitySheetOpen={setIsCitySheetOpen}
+//                         isCitySheetOpen={isCitySheetOpen}
+//                         setSelectedCity={setSelectedCity}
+//                         selectedCity={selectedCity}
+//                       />
+//                     }
+//                   />
+//                   <Route path="/editProfile" element={<EditProfile offerId={2}/>} />
+//                   <Route path="/insights" element={<Insights />} />
+//                   <Route path="/settings" element={<Settings />} />
+//                   <Route path="/offers" element={<Offers />} />
+//                   <Route path="/near-me" element={<NearMe setBottomBarVisible={setBottomBarVisible} />} />
+//                   {/* <Route path="/details" element={<CardDetailScreen key={location.key} />} /> */}
+//                   <Route path="/details" element={<CardDetailScreen />} />
+//                   <Route path="/category/:category" element={<CategoryDetails />} />
+//                   <Route path="/add-to-favorite" element={<AddToFavorite />} />
+//                   <Route path="/gallery" element={<FullImageGalleryScreen />} />
+//                   <Route path="//offersQR/:id" element={<SingleOfferPage  />} />
+//                 </>
+//               )}
 
-//               <Route
-//                 path="/details"
-//                 element={<CardDetailScreen key={location.key} />}
-//               />
-//               <Route path="/category/:category" element={<CategoryDetails />} />
-//               <Route path="/add-to-favorite" element={<AddToFavorite />} />
+//               <Route path="*" element={<Navigate to="/" replace />} />
 //             </Routes>
 //           </Suspense>
 //         </animated.div>
@@ -107,15 +136,21 @@ const FullImageGalleryScreen = lazy(() => import('../components/FullImageGallery
 const AuthLanding = lazy(() => import('../auth/AuthLanding'));
 const Login = lazy(() => import('../auth/Login'));
 const Register = lazy(() => import('../auth/Register'));
-const SingleOfferPage  = lazy(() => import('../cards/SingleOfferPage'));
+const SingleOfferPage = lazy(() => import('../cards/SingleOfferPage'));
 
-
-export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen, isCitySheetOpen, setSelectedCity, selectedCity={selectedCity} }) {
+export default function AnimatedRoutes({
+  setBottomBarVisible,
+  setIsCitySheetOpen,
+  isCitySheetOpen,
+  setSelectedCity,
+  selectedCity,
+}) {
   const location = useLocation();
   const navigationType = useNavigationType();
   const isBack = navigationType === 'POP';
   const isLoggedIn = !!localStorage.getItem('token');
 
+  // Only control bottom bar visibility — do not touch sessionStorage
   useEffect(() => {
     const authRoutes = ['/auth', '/login', '/register', '/forgot-password'];
     if (authRoutes.includes(location.pathname)) {
@@ -130,10 +165,7 @@ export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen
       opacity: 0,
       transform: isBack ? 'translateX(-100%)' : 'translateX(100%)',
     },
-    enter: {
-      opacity: 1,
-      transform: 'translateX(0%)',
-    },
+    enter: { opacity: 1, transform: 'translateX(0%)' },
     leave: {
       opacity: 0,
       transform: isBack ? 'translateX(100%)' : 'translateX(-100%)',
@@ -145,7 +177,7 @@ export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen
     <div style={{ position: 'relative', height: '100vh' }}>
       {transitions((style, loc) => (
         <animated.div
-          key={loc.key}
+          key={loc.pathname} // <-- IMPORTANT: Use pathname to prevent full remounts
           style={{
             ...style,
             position: 'absolute',
@@ -154,12 +186,27 @@ export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen
             backgroundColor: 'var(--background-color)',
           }}
         >
-          <Suspense fallback={<div style={{ backgroundColor: 'var(--background-color)', height: '100vh' }} />}>
+          <Suspense
+            fallback={
+              <div
+                style={{
+                  backgroundColor: 'var(--background-color)',
+                  height: '100vh',
+                }}
+              />
+            }
+          >
             <Routes location={loc}>
-              <Route path="/" element={<Navigate to={isLoggedIn ? '/home' : '/auth'} replace />} />
+              <Route
+                path="/"
+                element={
+                  <Navigate to={isLoggedIn ? '/home' : '/auth'} replace />
+                }
+              />
               <Route path="/auth" element={<AuthLanding />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+
               {isLoggedIn && (
                 <>
                   <Route
@@ -173,16 +220,19 @@ export default function AnimatedRoutes({ setBottomBarVisible, setIsCitySheetOpen
                       />
                     }
                   />
-                  <Route path="/editProfile" element={<EditProfile offerId={2}/>} />
+                  <Route path="/editProfile" element={<EditProfile offerId={2} />} />
                   <Route path="/insights" element={<Insights />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/offers" element={<Offers />} />
-                  <Route path="/near-me" element={<NearMe setBottomBarVisible={setBottomBarVisible} />} />
-                  <Route path="/details" element={<CardDetailScreen key={location.key} />} />
+                  <Route
+                    path="/near-me"
+                    element={<NearMe setBottomBarVisible={setBottomBarVisible} />}
+                  />
+                  <Route path="/details" element={<CardDetailScreen />} />
                   <Route path="/category/:category" element={<CategoryDetails />} />
                   <Route path="/add-to-favorite" element={<AddToFavorite />} />
                   <Route path="/gallery" element={<FullImageGalleryScreen />} />
-                  <Route path="//offersQR/:id" element={<SingleOfferPage  />} />
+                  <Route path="/offersQR/:id" element={<SingleOfferPage />} />
                 </>
               )}
 
