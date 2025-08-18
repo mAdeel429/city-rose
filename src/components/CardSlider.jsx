@@ -10,9 +10,8 @@
 // import 'swiper/css/pagination';
 // import './CardSlider.css';
 
-
 // const HALF_HEIGHT = window.innerHeight * 0.6;
-// const PEEK_HEIGHT = 166;
+// const PEEK_HEIGHT = 175;
 // const MAX_HEIGHT = window.innerHeight * 1.0;
 
 // export default function CardSlider({
@@ -29,9 +28,8 @@
 //   const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
 //   const [heartBubbles, setHeartBubbles] = useState({});
 //   const [activeSlideIndexes, setActiveSlideIndexes] = useState({});
-//   const dragControls = useDragControls()
+//   const dragControls = useDragControls();
 //   const navigate = useNavigate();
-
 
 //   useEffect(() => {
 //     setHeightState('half');
@@ -97,22 +95,33 @@
 //     const newY = y.get() + info.delta.y;
 //     const minY = window.innerHeight - MAX_HEIGHT;
 //     const maxY = window.innerHeight - PEEK_HEIGHT;
-//     if (newY >= minY && newY <= maxY) y.set(newY);
+//     if (newY >= minY && newY <= maxY) {
+//       y.set(newY);
+//     }
 //   };
 
 //   const [height, setHeight] = useState(PEEK_HEIGHT);
 //   const FULL_HEIGHT = window.innerHeight * 1.0;
+
 //   const handleDragEnd = (event, info) => {
 //     const offset = info.offset.y;
-//     let newHeight = height;
+//     let newHeight;
 
-//     if (offset < -100) newHeight = FULL_HEIGHT;
-//     else if (offset > 100) newHeight = PEEK_HEIGHT;
-//     else newHeight = HALF_HEIGHT;
+//     if (offset < -100) {
+//       newHeight = FULL_HEIGHT;
+//       setHeightState('full');
+//     } else if (offset > 100) {
+//       newHeight = PEEK_HEIGHT;
+//       setHeightState('peek');
+//     } else {
+//       newHeight = HALF_HEIGHT; 
+//       setHeightState('half');
+//     }
 
 //     setHeight(newHeight);
-//     if (onHeightChange) onHeightChange(newHeight, true);
+//     snapTo(newHeight, true);
 //   };
+
 //   const handleHeartClick = (e, point) => {
 //     e.stopPropagation();
 //     const isFav = favorites.some((fav) => fav.id === point.id);
@@ -158,7 +167,7 @@
 //         left: 0,
 //         right: 0,
 //         bottom: 0,
-//         zIndex: 2,        
+//         zIndex: 2,
 //         touchAction: 'none',
 //       }}
 //       drag="y"
@@ -198,7 +207,7 @@
 //                   description: point.tags?.join(', '),
 //                   category: point.macro || 'Attractions',
 //                   distance: point.distance,
-//                   fullItem: point, // taake details page ko full data mile
+//                   fullItem: point,
 //                 };
 //                 setTimeout(() => {
 //                   navigate('/details', { state: itemWithId });
@@ -293,14 +302,14 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { useFavorites } from '../data/FavoritesContext';
 import { AiFillHeart } from 'react-icons/ai';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
 import './CardSlider.css';
 
 const HALF_HEIGHT = window.innerHeight * 0.6;
-const PEEK_HEIGHT = 166;
+const PEEK_HEIGHT = 175;
 const MAX_HEIGHT = window.innerHeight * 1.0;
 
 export default function CardSlider({
@@ -319,6 +328,8 @@ export default function CardSlider({
   const [activeSlideIndexes, setActiveSlideIndexes] = useState({});
   const dragControls = useDragControls();
   const navigate = useNavigate();
+  const location = useLocation();
+
 
   useEffect(() => {
     setHeightState('half');
@@ -333,6 +344,29 @@ export default function CardSlider({
     });
     setActiveSlideIndexes(initialIndexes);
   }, [points]);
+
+  useEffect(() => {
+    const scrollContainer = containerRef.current;
+    if (!scrollContainer) return;
+  
+    if (location.state?.restoreScroll !== undefined) {
+      scrollContainer.scrollTo({
+        top: location.state.restoreScroll,
+        behavior: "instant",
+      });
+  
+      if (location.state.activeCardId) {
+        const cardElement = document.getElementById(`card-${location.state.activeCardId}`);
+        if (cardElement) {
+          scrollContainer.scrollTo({
+            top: cardElement.offsetTop - 20,
+            behavior: "smooth",
+          });
+        }
+      }
+    }
+  }, [points, location.state]);
+  
 
   useEffect(() => {
     if (!activeMarker || !containerRef.current) return;
@@ -358,15 +392,14 @@ export default function CardSlider({
   useEffect(() => {
     const scrollContainer = containerRef.current;
     if (!scrollContainer) return;
-
-    const handleScroll = () => {
-      const atTop = scrollContainer.scrollTop === 0;
-      setCanDragSheet(atTop);
-    };
-
-    scrollContainer.addEventListener('scroll', handleScroll);
-    return () => scrollContainer.removeEventListener('scroll', handleScroll);
-  }, []);
+  
+    if (location.state?.restoreScroll !== undefined) {
+      scrollContainer.scrollTo({
+        top: location.state.restoreScroll,
+        behavior: "instant"
+      });
+    }
+  }, [points, location.state]);
 
   const snapTo = (targetHeight, isFinal = false) => {
     animate(y, window.innerHeight - targetHeight, {
@@ -397,13 +430,13 @@ export default function CardSlider({
     let newHeight;
 
     if (offset < -100) {
-      newHeight = FULL_HEIGHT;      // Dragged up -> full height
+      newHeight = FULL_HEIGHT;
       setHeightState('full');
     } else if (offset > 100) {
-      newHeight = PEEK_HEIGHT;      // Dragged down -> snap to peek height only
+      newHeight = PEEK_HEIGHT;
       setHeightState('peek');
     } else {
-      newHeight = HALF_HEIGHT;      // In between -> half height
+      newHeight = HALF_HEIGHT;
       setHeightState('half');
     }
 
@@ -488,6 +521,23 @@ export default function CardSlider({
               id={`card-${point.id}`}
               className="card-vertical"
               style={{ marginBottom: index === points.length - 1 ? '80px' : '12px' }}
+              // onClick={() => {
+              //   const itemWithId = {
+              //     id: point.id,
+              //     title: point.name,
+              //     image: point.images?.[0] || '',
+              //     description: point.tags?.join(', '),
+              //     category: point.macro || 'Attractions',
+              //     distance: point.distance,
+              //     fullItem: point,
+              //   };
+              //   const scrollContainer = containerRef.current;
+              //   const scrollPos = scrollContainer ? scrollContainer.scrollTop : 0;
+
+              //   setTimeout(() => {
+              //     navigate('/details', { state: { ...itemWithId, prevScroll: scrollPos } });
+              //   }, 50);
+              // }}
               onClick={() => {
                 const itemWithId = {
                   id: point.id,
@@ -498,9 +548,11 @@ export default function CardSlider({
                   distance: point.distance,
                   fullItem: point,
                 };
-                setTimeout(() => {
-                  navigate('/details', { state: itemWithId });
-                }, 50);
+                const scrollContainer = containerRef.current;
+                const scrollPos = scrollContainer ? scrollContainer.scrollTop : 0;
+              
+                // 🔥 prevScroll bhejna zaroori
+                navigate('/details', { state: { ...itemWithId, prevScroll: scrollPos } });
               }}
             >
               <Swiper

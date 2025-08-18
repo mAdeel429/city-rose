@@ -500,7 +500,14 @@ export default function CardDetailScreen() {
             )}
           </motion.div>
 
-          <div className="cds-back-icon" onClick={() => navigate(-1)}>
+          <div className="cds-back-icon" 
+            onClick={() => {
+              navigate(-1, { state: { 
+                restoreScroll: location.state?.prevScroll ?? 0,
+                activeCardId: location.state?.id
+              } });
+            }}
+          >
             <FaArrowLeft />
           </div>
 
