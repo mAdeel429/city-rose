@@ -309,7 +309,7 @@ import 'swiper/css/pagination';
 import './CardSlider.css';
 
 const HALF_HEIGHT = window.innerHeight * 0.6;
-const PEEK_HEIGHT = 180;
+const PEEK_HEIGHT = 186;
 const MAX_HEIGHT = window.innerHeight * 1.0;
 
 export default function CardSlider({
